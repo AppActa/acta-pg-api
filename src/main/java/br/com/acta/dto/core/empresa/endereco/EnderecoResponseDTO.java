@@ -1,0 +1,25 @@
+package br.com.acta.dto.core.empresa.endereco;
+
+import br.com.acta.entity.enums.UF;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.time.OffsetDateTime;
+
+@Schema(description = "Resposta para Endereço")
+public record EnderecoResponseDTO(
+        String cep,
+        UF uf,
+        String cidade,
+        String bairro,
+        String logradouro,
+        String numero,
+        String complemento,
+        Boolean principal,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime criadoEm,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime atualizadoEm
+) {
+}

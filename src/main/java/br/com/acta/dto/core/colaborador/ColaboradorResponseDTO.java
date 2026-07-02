@@ -1,0 +1,40 @@
+package br.com.acta.dto.core.colaborador;
+
+import br.com.acta.dto.core.contato.email.EmailResponseDTO;
+import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
+import br.com.acta.entity.enums.StatusGeral;
+import com.fasterxml.jackson.annotation.JsonFormat;
+import io.swagger.v3.oas.annotations.media.Schema;
+
+import java.time.LocalDate;
+import java.time.OffsetDateTime;
+import java.util.List;
+
+@Schema(description = "Resposta detalhada do colaborador")
+public record ColaboradorResponseDTO(
+        Long id,
+        String cpf,
+        String nome,
+        String cargo,
+        String area,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+        LocalDate dataNascimento,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+        LocalDate dataContratacao,
+
+        Boolean permissaoGestor,
+        StatusGeral status,
+        Long idUsuario,
+        Long idEmpresa,
+        List<TelefoneResponseDTO> telefones,
+        List<EmailResponseDTO> emails,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime criadoEm,
+
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime atualizadoEm
+) {
+}
