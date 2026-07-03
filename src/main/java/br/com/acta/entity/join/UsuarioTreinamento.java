@@ -12,7 +12,7 @@ import lombok.Setter;
 import java.time.OffsetDateTime;
 
 @Entity
-@Table(name = "usuario_treinamento", schema = "pdca")
+@Table(name = "usuario_treinamento", schema = "pdca", uniqueConstraints = @UniqueConstraint(name = "usuario_treinamento_unique_0", columnNames = {"id_usuario", "id_treinamento"}))
 @Getter
 @Setter
 @NoArgsConstructor
@@ -32,6 +32,6 @@ public class UsuarioTreinamento extends ModelBase {
     @Enumerated(EnumType.STRING)
     private StatusTreinamento status;
 
-    @Column(name = "confirmado_em", updatable = false)
+    @Column(name = "terminado_em", updatable = false)
     private OffsetDateTime confirmadoEm;
 }

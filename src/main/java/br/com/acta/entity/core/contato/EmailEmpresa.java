@@ -10,7 +10,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "email_empresa", schema = "public",
         uniqueConstraints = @UniqueConstraint(name = "email_empresa_unique_0", columnNames = {"id_empresa", "email"}))
-@AttributeOverride(name = "contato", column = @Column(name = "email", nullable = false))
+@AttributeOverride(name = "contato", column = @Column(name = "email", nullable = false, length = 254))
 @Getter
 @Setter
 @NoArgsConstructor

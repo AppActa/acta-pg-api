@@ -13,10 +13,10 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Endereco extends AuditoriaBase {
-    @Column(name = "cep", length = 8, nullable = false)
+    @Column(name = "cep", length = 8, nullable = false, columnDefinition = "CHAR(8)")
     private String cep;
 
-    @Column(name = "uf", length = 2, nullable = false)
+    @Column(name = "uf", length = 2, nullable = false, columnDefinition = "CHAR(2)")
     @Enumerated(EnumType.STRING)
     private UF uf;
 

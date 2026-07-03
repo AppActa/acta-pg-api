@@ -11,7 +11,8 @@ import lombok.Setter;
 import java.math.BigDecimal;
 
 @Entity
-@Table(name = "priorizacao_problema_usuario", schema = "pdca")
+@Table(name = "priorizacao_problema_usuario", schema = "pdca",
+        uniqueConstraints = @UniqueConstraint(name = "priorizacao_problema_usuario_unique_0", columnNames = {"id_problema", "id_usuario"}))
 @Getter
 @Setter
 @NoArgsConstructor
