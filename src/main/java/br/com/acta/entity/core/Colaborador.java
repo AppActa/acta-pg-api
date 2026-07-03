@@ -4,8 +4,6 @@ import br.com.acta.entity.base.auditoria.AuditoriaBase;
 import br.com.acta.entity.core.contato.EmailColaborador;
 import br.com.acta.entity.core.contato.TelefoneColaborador;
 import br.com.acta.entity.enums.StatusGeral;
-import br.com.acta.entity.join.UsuarioCiclo;
-import br.com.acta.entity.pdca.Meta;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -18,7 +16,7 @@ import java.util.Set;
 @Table(name = "colaborador", schema = "public")
 @Getter @Setter @NoArgsConstructor
 public class Colaborador extends AuditoriaBase {
-    @Column(name = "cpf", length = 11, updatable = false, nullable = false, unique = true)
+    @Column(name = "cpf", length = 11, updatable = false, nullable = false, unique = true, columnDefinition = "CHAR(11)")
     private String cpf;
 
     @Column(name = "nome", length = 160, nullable = false)

@@ -28,7 +28,7 @@ public class EfeitoSecundario extends AuditoriaBase {
     @JoinColumn(name = "id_verificacao_resultado", nullable = false)
     private VerificacaoResultado verificacaoResultado;
 
-    @Column(name = "tipo")
+    @Column(name = "tipo", length = 8)
     @Enumerated(EnumType.STRING)
     private TipoEfeitoSecundario tipo;
 }

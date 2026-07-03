@@ -1,6 +1,6 @@
 package br.com.acta.entity.join;
 
-import br.com.acta.entity.base.auditoria.ImutavelBase;
+import br.com.acta.entity.base.ModelBase;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.PapelCiclo;
 import br.com.acta.entity.pdca.Ciclo;
@@ -16,7 +16,7 @@ uniqueConstraints = {@UniqueConstraint(name = "usuario_ciclo_unique_0", columnNa
 @Getter
 @Setter
 @NoArgsConstructor
-public class UsuarioCiclo extends ImutavelBase {
+public class UsuarioCiclo extends ModelBase {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_usuario", nullable = false)
     private Usuario usuario;

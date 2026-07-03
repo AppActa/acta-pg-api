@@ -20,7 +20,7 @@ import java.util.Set;
 @Setter
 @NoArgsConstructor
 public class Empresa extends AuditoriaBase {
-    @Column(name = "cnpj", nullable = false, length = 14, updatable = false, unique = true)
+    @Column(name = "cnpj", nullable = false, length = 14, updatable = false, unique = true, columnDefinition = "CHAR(14)")
     private String cnpj;
 
     @Column(name = "nome", nullable = false, length = 160)
