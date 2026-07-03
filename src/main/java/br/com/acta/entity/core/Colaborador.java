@@ -1,0 +1,57 @@
+package br.com.acta.entity.core;
+
+import br.com.acta.entity.base.auditoria.AuditoriaBase;
+import br.com.acta.entity.core.contato.EmailColaborador;
+import br.com.acta.entity.core.contato.TelefoneColaborador;
+import br.com.acta.entity.enums.StatusGeral;
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+
+import java.time.LocalDate;
+import java.util.Set;
+
+@Entity
+@Table(name = "colaborador", schema = "public")
+@Getter @Setter @NoArgsConstructor
+public class Colaborador extends AuditoriaBase {
+    @Column(name = "cpf", length = 11, updatable = false, nullable = false, unique = true, columnDefinition = "CHAR(11)")
+    private String cpf;
+
+    @Column(name = "nome", length = 160, nullable = false)
+    private String nome;
+
+    @Column(name = "cargo", length = 100, nullable = false)
+    private String cargo;
+
+    @Column(name = "area", length = 100, nullable = false)
+    private String area;
+
+    @Column(name = "data_nascimento", nullable = false)
+    private LocalDate dataNascimento;
+
+    @Column(name = "data_contratacao", nullable = false)
+    private LocalDate dataContratacao;
+
+    @Column(name = "permissao_gestor", nullable = false)
+    private Boolean permissaoGestor;
+
+    @Column(name = "status", nullable = false)
+    @Enumerated(EnumType.STRING)
+    private StatusGeral status;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_empresa", nullable = false, updatable = false)
+    private Empresa empresa;
+
+    @OneToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_usuario", nullable = false)
+    private Usuario usuario;
+
+    @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<EmailColaborador> emails;
+
+    @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Set<TelefoneColaborador> telefones;
+}
