@@ -42,4 +42,7 @@ public class Ciclo extends TituloDescricaoBase {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_responsavel", nullable = false)
     private Usuario gestor;
+
+    @Column(name = "id_ishikawa_mongo")
+    private Integer idIshikawaMongo;
 }

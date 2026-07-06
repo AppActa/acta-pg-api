@@ -1,6 +1,6 @@
 package br.com.acta.entity.pdca;
 
-import br.com.acta.entity.base.ModelBase;
+import br.com.acta.entity.base.auditoria.ImutavelBase;
 import br.com.acta.entity.core.Usuario;
 import jakarta.persistence.*;
 import lombok.Getter;
@@ -11,15 +11,13 @@ import java.time.OffsetDateTime;
 
 @Entity
 @Table(name = "alerta_prazo", schema = "pdca")
+@AttributeOverride(name = "criadoEm", column = @Column(name = "enviado_em", nullable = false, updatable = false))
 @Getter
 @Setter
 @NoArgsConstructor
-public class AlertaPrazo extends ModelBase {
+public class AlertaPrazo extends ImutavelBase {
     @Column(name = "mensagem", nullable = false, updatable = false, columnDefinition = "TEXT")
     private String mensagem;
-
-    @Column(name = "enviado_em", updatable = false)
-    private OffsetDateTime enviadoEm;
 
     @Column(name = "lido_em")
     private OffsetDateTime lidoEm;
