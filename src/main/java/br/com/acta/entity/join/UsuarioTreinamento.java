@@ -38,5 +38,5 @@ public class UsuarioTreinamento{
     private StatusTreinamento status;
 
     @Column(name = "terminado_em", updatable = false)
-    private OffsetDateTime confirmadoEm;
+    private OffsetDateTime terminadoEm;
 }
