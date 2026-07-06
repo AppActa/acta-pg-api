@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Entity
 @Table(name = "problema", schema = "pdca")
@@ -38,6 +39,9 @@ public class Problema extends TituloDescricaoBase {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id_problema_pai")
     private Problema problemaPai;
+
+    @OneToMany(mappedBy = "problemaPai")
+    private List<Problema> subProblemas;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "criado_por", nullable = false)

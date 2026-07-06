@@ -10,6 +10,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.util.List;
+
 @Entity
 @Table(name = "plano_acao", schema = "pdca")
 @Getter
@@ -41,4 +43,10 @@ public class PlanoAcao extends AuditoriaBase {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "criado_por", nullable = false)
     private Usuario criadoPor;
+
+    @OneToOne(mappedBy = "planoAcao")
+    private Plano5W2H plano5W2H;
+
+    @OneToMany(mappedBy = "planoAcao", fetch = FetchType.LAZY)
+    private List<Tarefa> tarefas;
 }

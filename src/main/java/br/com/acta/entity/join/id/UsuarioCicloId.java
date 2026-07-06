@@ -2,9 +2,15 @@ package br.com.acta.entity.join.id;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Embeddable;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.io.Serializable;
 
 @Embeddable
-public class UsuarioCicloId {
+@Getter
+@Setter
+public class UsuarioCicloId implements Serializable {
     @Column(name = "id_usuario", nullable = false)
     private Long idUsuario;
 
