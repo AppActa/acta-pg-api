@@ -6,12 +6,9 @@ import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TamanhoEmpresa;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Schema(description = "Resposta para Empresa")
 public record EmpresaResponseDTO(
         Long id,
         String cnpj,

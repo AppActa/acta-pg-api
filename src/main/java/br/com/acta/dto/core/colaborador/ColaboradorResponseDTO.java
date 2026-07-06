@@ -4,13 +4,10 @@ import br.com.acta.dto.core.contato.email.EmailResponseDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.entity.enums.StatusGeral;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
 
-@Schema(description = "Resposta detalhada do colaborador")
 public record ColaboradorResponseDTO(
         Long id,
         String cpf,

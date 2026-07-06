@@ -2,11 +2,8 @@ package br.com.acta.dto.pdca.causa_raiz;
 
 import br.com.acta.entity.enums.OrigemRegistro;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.OffsetDateTime;
 
-@Schema(description = "Resposta para Causa Raiz")
 public record CausaRaizResponseDTO(
         Long id,
         String descricao,

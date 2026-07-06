@@ -2,11 +2,8 @@ package br.com.acta.dto.core.empresa.endereco;
 
 import br.com.acta.entity.enums.UF;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.OffsetDateTime;
 
-@Schema(description = "Resposta para Endereço")
 public record EnderecoResponseDTO(
         Long id,
         String cep,

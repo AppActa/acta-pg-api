@@ -2,11 +2,8 @@ package br.com.acta.dto.join.usuario_ciclo;
 
 import br.com.acta.entity.enums.PapelCiclo;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.time.OffsetDateTime;
 
-@Schema(description = "Resposta para a entidade UsuarioCiclo")
 public record UsuarioCicloResponseDTO(
         Long idUsuario,
         Long idCiclo,

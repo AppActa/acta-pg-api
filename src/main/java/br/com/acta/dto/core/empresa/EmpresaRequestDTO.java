@@ -1,5 +1,6 @@
 package br.com.acta.dto.core.empresa;
 
+import br.com.acta.config.swagger.SwaggerExamples;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
@@ -16,22 +17,22 @@ import org.hibernate.validator.constraints.br.CNPJ;
 import java.util.List;
 
 public record EmpresaRequestDTO(
-        @Schema(description = "CNPJ da empresa", example = "12345678000195")
+        @Schema(description = "CNPJ da empresa", example = SwaggerExamples.CNPJ)
         @NotBlank(message = "{validation.empresa.cnpj.notblank}")
         @Size(min = 14, max = 14, message = "{validation.empresa.cnpj.size}")
         @CNPJ(message = "{validation.empresa.cnpj.invalid}")
         String cnpj,
 
-        @Schema(description = "Nome da empresa", example = "Empresa Exemplo")
+        @Schema(description = "Nome da empresa", example = SwaggerExamples.EMPRESA_NOME)
         @NotBlank(message = "{validation.empresa.nome.notblank}")
         @Size(max = 160, message = "{validation.empresa.nome.size}")
         String nome,
 
-        @Schema(description = "Tamanho da empresa", example = "PEQUENA", implementation = TamanhoEmpresa.class)
+        @Schema(description = "Tamanho da empresa", example = SwaggerExamples.TAMANHO_EMPRESA, implementation = TamanhoEmpresa.class)
         @NotNull(message = "{validation.empresa.tamanho.notnull}")
         TamanhoEmpresa tamanho,
 
-        @Schema(description = "Setor da empresa", example = "Tecnologia")
+        @Schema(description = "Setor da empresa", example = SwaggerExamples.SETOR)
         @NotBlank(message = "{validation.empresa.setor.notblank}")
         @Size(max = 100, message = "{validation.empresa.setor.size}")
         String setor,
