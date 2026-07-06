@@ -10,7 +10,7 @@ import java.math.BigDecimal;
 public record ProblemaRequestDTO(
         @Schema(description = "Título do problema", example = SwaggerExamples.TITULO_PROBLEMA)
         @NotBlank(message = "{validation.titulo.notblank}")
-        @Size(max = 180, message = "{validation.titulo.size}")
+        @Size(max = 160, message = "{validation.titulo.size}")
         String titulo,
 
         @Schema(description = "Descrição do problema", example = SwaggerExamples.DESCRICAO_PROBLEMA)
