@@ -37,16 +37,16 @@ public record EmpresaRequestDTO(
         String setor,
 
         @ArraySchema(schema = @Schema(implementation = TelefoneRequestDTO.class), minItems = 1, uniqueItems = true, arraySchema = @Schema(description = "Lista de telefones da empresa"))
-        @NotEmpty(message = "{validation.telefones.notEmpty}")
+        @NotEmpty(message = "{validation.telefones.notempty}")
         List<@Valid TelefoneRequestDTO> telefones,
 
         @ArraySchema(schema = @Schema(implementation = EmailRequestDTO.class), minItems = 1, uniqueItems = true, arraySchema = @Schema(description = "Lista de emails da empresa"))
-        @NotEmpty(message = "{validation.emails.notEmpty}")
+        @NotEmpty(message = "{validation.emails.notempty}")
         List<@Valid EmailRequestDTO> emails,
 
         @ArraySchema(schema = @Schema(implementation = EnderecoRequestDTO.class), minItems = 1, uniqueItems = true, arraySchema = @Schema(description = "Lista de endereços da empresa"))
         @Schema(description = "Lista de endereços da empresa")
-        @NotEmpty(message = "{validation.enderecos.notEmpty}")
+        @NotEmpty(message = "{validation.enderecos.notempty}")
         List<@Valid EnderecoRequestDTO> enderecos
 ) {
 }

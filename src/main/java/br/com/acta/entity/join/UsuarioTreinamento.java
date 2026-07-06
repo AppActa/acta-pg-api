@@ -32,6 +32,6 @@ public class UsuarioTreinamento extends ModelBase {
     @Enumerated(EnumType.STRING)
     private StatusTreinamento status;
 
-    @Column(name = "confirmado_em", updatable = false)
-    private OffsetDateTime confirmadoEm;
+    @Column(name = "terminado_em", updatable = false)
+    private OffsetDateTime terminadoEm;
 }

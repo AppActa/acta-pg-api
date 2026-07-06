@@ -8,6 +8,7 @@ import java.time.OffsetDateTime;
 
 @Schema(description = "Resposta para Endereço")
 public record EnderecoResponseDTO(
+        Long id,
         String cep,
         UF uf,
         String cidade,

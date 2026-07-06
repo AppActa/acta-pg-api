@@ -18,7 +18,7 @@ public record PlanoAcaoResponseDTO(
         StatusPlanoAcao status,
         OrigemRegistro origem,
         Long idCiclo,
-        Long idCausaRaiz,
+        Long idCriadoPor,
         Plano5W2HResponseDTO plano5W2H,
         List<TarefaSummaryResponseDTO> tarefas,
 

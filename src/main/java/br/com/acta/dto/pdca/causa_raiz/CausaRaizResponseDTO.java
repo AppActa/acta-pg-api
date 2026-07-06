@@ -16,6 +16,8 @@ public record CausaRaizResponseDTO(
         OffsetDateTime validadaEm,
         Long idCiclo,
         Long idValidadaPor,
+        Long idProblema,
+        Long idPlanoAcao,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,

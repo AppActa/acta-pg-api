@@ -35,13 +35,13 @@ public record ColaboradorRequestDTO(
         String area,
 
         @Schema(description = "Data de nascimento do colaborador", example = "1990-01-01", format = "yyyy-MM-dd", type = "string")
-        @NotNull(message = "{validation.colaborador.dataNascimento.notNull}")
+        @NotNull(message = "{validation.colaborador.dataNascimento.notnull}")
         @Past(message = "{validation.colaborador.dataNascimento.past}")
         LocalDate dataNascimento,
 
         @Schema(description = "Data de contratação do colaborador", example = "2020-01-01", format = "yyyy-MM-dd", type = "string")
-        @NotNull(message = "{validation.colaborador.dataContratacao.notNull}")
-        @PastOrPresent(message = "{validation.colaborador.dataContratacao.pastOrPresent}")
+        @NotNull(message = "{validation.colaborador.dataContratacao.notnull}")
+        @PastOrPresent(message = "{validation.colaborador.dataContratacao.pastorpresent}")
         LocalDate dataContratacao,
 
         @Schema(description = "Permissão de gestor do colaborador", example = "true")
@@ -49,16 +49,15 @@ public record ColaboradorRequestDTO(
         Boolean permissaoGestor,
 
         @ArraySchema(schema = @Schema(implementation = EmailRequestDTO.class), minItems = 1, uniqueItems = true, arraySchema = @Schema(description = "Lista de emails do colaborador"))
-        @NotEmpty(message = "{validation.emails.notEmpty}")
+        @NotEmpty(message = "{validation.emails.notempty}")
         List<@Valid EmailRequestDTO> emails,
 
         @ArraySchema(schema = @Schema(implementation = TelefoneRequestDTO.class), minItems = 1, uniqueItems = true, arraySchema = @Schema(description = "Lista de telefones do colaborador"))
-        @NotEmpty(message = "{validation.telefones.notEmpty}")
+        @NotEmpty(message = "{validation.telefones.notempty}")
         List<@Valid TelefoneRequestDTO> telefones,
 
-        @Schema(description = "ID do usuário do colaborador", example = "1")
-        @Positive(message = "{validation.colaborador.idUsuario.positive}")
-        @NotNull(message = "{validation.colaborador.idUsuario.notnull}")
+        @Schema(description = "Requisição de usuário do colaborador", example = "1")
+        @NotNull(message = "{validation.idUsuario.notnull}")
         @Valid
         UsuarioRequestDTO usuario,
 

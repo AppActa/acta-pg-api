@@ -4,7 +4,6 @@ import br.com.acta.entity.enums.OrigemRegistro;
 import br.com.acta.entity.enums.Prioridade;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record PlanoAcaoRequestDTO(
@@ -19,10 +18,6 @@ public record PlanoAcaoRequestDTO(
         Prioridade prioridade,
 
         @NotNull(message = "{validation.origem.notnull}")
-        OrigemRegistro origem,
-
-        @NotNull(message = "{validation.idCausaRaiz.notnull}")
-        @Positive(message = "{validation.idCausaRaiz.positive}")
-        Long idCausaRaiz
+        OrigemRegistro origem
 ) {
 }

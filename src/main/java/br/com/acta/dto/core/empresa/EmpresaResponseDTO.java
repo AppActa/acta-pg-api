@@ -4,6 +4,7 @@ import br.com.acta.dto.core.contato.email.EmailResponseDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.entity.enums.StatusGeral;
+import br.com.acta.entity.enums.TamanhoEmpresa;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -15,7 +16,7 @@ public record EmpresaResponseDTO(
         Long id,
         String cnpj,
         String nome,
-        String tamanho,
+        TamanhoEmpresa tamanho,
         String setor,
         List<TelefoneResponseDTO> telefones,
         List<EmailResponseDTO> emails,

@@ -1,5 +1,6 @@
 package br.com.acta.dto.core.usuario;
 
+import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TipoUsuario;
 import io.swagger.v3.oas.annotations.media.Schema;
 
@@ -12,6 +13,7 @@ public record UsuarioResponseDTO(
         String email,
         TipoUsuario tipo,
         Long idEmpresa,
+        StatusGeral status,
         OffsetDateTime criadoEm,
         OffsetDateTime atualizadoEm
 ) {

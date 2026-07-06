@@ -22,14 +22,10 @@ public record ProblemaRequestDTO(
         @NotNull(message = "{validation.origem.notnull}")
         OrigemRegistro origem,
 
-        @NotNull(message = "validation.problema.persistente.notnull")
+        @NotNull(message = "{validation.problema.persistente.notnull}")
         Boolean persistente,
 
-        @Positive(message = "validation.problema.idProblemaPai.positive")
-        Long idProblemaPai,
-
-        @NotNull(message = "validation.idCausaRaiz.notnull")
-        @Positive(message = "validation.idCausaRaiz.positive")
-        Long idCausaRaiz
+        @Positive(message = "{validation.problema.idProblemaPai.positive}")
+        Long idProblemaPai
 ) {
 }

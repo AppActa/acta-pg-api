@@ -1,6 +1,7 @@
 package br.com.acta.dto.pdca.tarefa;
 
 import br.com.acta.entity.enums.Prioridade;
+import br.com.acta.entity.enums.StatusTarefa;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
@@ -25,6 +26,7 @@ public record TarefaResponseDTO(
         String nomeResponsavel,
         List<TarefaSummaryResponseDTO> dependencias,
         List<TarefaSummaryResponseDTO> dependentes,
+        StatusTarefa status,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,

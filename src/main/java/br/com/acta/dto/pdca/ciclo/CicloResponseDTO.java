@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.ciclo;
 
-import br.com.acta.dto.join.colaborador_ciclo.ColaboradorCicloResponseDTO;
+import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
@@ -23,7 +23,7 @@ public record CicloResponseDTO(
 
         Long idEmpresa,
         Long idGestor,
-        List<ColaboradorCicloResponseDTO> colaboradores,
+        List<UsuarioCicloResponseDTO> colaboradores,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,

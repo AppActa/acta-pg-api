@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.meta;
 
-import br.com.acta.dto.core.colaborador.ColaboradorSummaryResponseDTO;
+import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
 import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusMeta;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -25,7 +25,7 @@ public record MetaResponseDTO(
         String area,
         String categoria,
         Long idCiclo,
-        List<ColaboradorSummaryResponseDTO> responsaveis,
+        List<UsuarioSummaryResponseDTO> responsaveis,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,

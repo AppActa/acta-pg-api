@@ -9,11 +9,12 @@ public record TreinamentoRequestDTO(
         @Size(max = 160, message = "{validation.titulo.size}")
         String titulo,
 
+        @NotBlank(message = "{validation.treinamento.descricao.notblank}")
         @Size(max = 1000, message = "{validation.descricao.size}")
         String descricao,
 
-        @NotNull(message = "{validation.treinamento.dataTreinamento.notNull}")
-        @FutureOrPresent(message = "{validation.treinamento.dataTreinamento.futureOrPresent}")
+        @NotNull(message = "{validation.treinamento.dataTreinamento.notnull}")
+        @FutureOrPresent(message = "{validation.treinamento.dataTreinamento.futureorpresent}")
         LocalDate dataTreinamento,
 
         @NotNull(message = "{validation.obrigatorio.notnull}")

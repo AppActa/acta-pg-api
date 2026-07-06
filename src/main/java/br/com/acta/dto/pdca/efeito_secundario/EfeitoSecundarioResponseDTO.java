@@ -1,5 +1,6 @@
 package br.com.acta.dto.pdca.efeito_secundario;
 
+import br.com.acta.entity.enums.TipoEfeitoSecundario;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.math.BigDecimal;
@@ -11,6 +12,7 @@ public record EfeitoSecundarioResponseDTO(
         BigDecimal peso,
         String impactoEstimado,
         Long idVerificacaoResultado,
+        TipoEfeitoSecundario tipo,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,

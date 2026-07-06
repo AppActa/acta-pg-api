@@ -10,14 +10,14 @@ public record CicloRequestDTO(
         String titulo,
 
         @NotBlank(message = "{validation.ciclo.descricao.notblank}")
-        @Size(max = 1000, message = "{validation.ciclo.descricao.size}")
+        @Size(max = 1000, message = "{validation.descricao.size}")
         String descricao,
 
-        @NotNull(message = "{validation.ciclo.dataInicio.notNull}")
-        @FutureOrPresent(message = "{validation.ciclo.dataInicio.futureOrPresent}")
+        @NotNull(message = "{validation.ciclo.dataInicio.notnull}")
+        @FutureOrPresent(message = "{validation.ciclo.dataInicio.futureorpresent}")
         LocalDate dataInicio,
 
-        @NotNull(message = "{validation.ciclo.dataEstimadaFim.notNull}")
+        @NotNull(message = "{validation.ciclo.dataEstimadaFim.notnull}")
         @FutureOrPresent(message = "{validation.ciclo.dataEstimadaFim.future}")
         LocalDate dataEstimadaFim,
 

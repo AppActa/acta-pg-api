@@ -18,10 +18,10 @@ public record Plano5W2HRequestDTO(
         @Size(max = 1000, message = "{validation.plano5w2h.whereLocal.size}")
         String whereLocal,
 
-        @FutureOrPresent(message = "{validation.plano5w2h.whenInicio.futureOrPresent}")
+        @FutureOrPresent(message = "{validation.plano5w2h.whenInicio.futureorpresent}")
         LocalDate whenInicio,
 
-        @NotNull(message = "{validation.plano5w2h.whenFim.notNull}")
+        @NotNull(message = "{validation.plano5w2h.whenFim.notnull}")
         @FutureOrPresent(message = "{validation.plano5w2h.whenFim.future}")
         LocalDate whenFim,
 
@@ -30,7 +30,7 @@ public record Plano5W2HRequestDTO(
         String howModoExecucao,
 
         @NotNull(message = "{validation.plano5w2h.howMuchCusto.notnull}")
-        @PositiveOrZero(message = "{validation.plano5w2h.howMuchCusto.positiveOrZero}")
+        @PositiveOrZero(message = "{validation.plano5w2h.howMuchCusto.positiveorzero}")
         @Digits(integer = 3, fraction = 2, message = "{validation.plano5w2h.howMuchCusto.digits}")
         BigDecimal howMuchCusto,
 

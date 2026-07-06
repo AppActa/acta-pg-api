@@ -7,7 +7,7 @@ import jakarta.validation.constraints.*;
 public record UsuarioRequestDTO(
         @Schema(description = "Nome do usuário", example = "Jones Prado")
         @NotBlank(message = "{validation.usuario.nome.notblank}")
-        @Size(max = 160, message = "{validation.usuario.nome.size}")
+        @Size(max = 160, message = "{validation.nome.size}")
         String nome,
 
         @Schema(description = "Email do usuário", example = "jones@example.com")
@@ -17,8 +17,8 @@ public record UsuarioRequestDTO(
         String email,
 
         @Schema(description = "Senha do usuário", example = "senha123")
-        @NotBlank(message = "{validation.usuario.senha.notblank}")
-        @Size(min = 8, max = 128, message = "{validation.usuario.senha.size}")
+        @NotBlank(message = "{validation.senha.notblank}")
+        @Size(min = 8, max = 128, message = "{validation.senha.size}")
         String senha,
 
         @Schema(description = "Tipo do usuário", example = "ADMIN", implementation = TipoUsuario.class)

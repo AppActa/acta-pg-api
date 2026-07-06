@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.treinamento;
 
-import br.com.acta.dto.join.colaborador_treinamento.ColaboradorTreinamentoRequestDTO;
+import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDate;
@@ -18,11 +18,11 @@ public record TreinamentoResponseDTO(
         Long idResponsavel,
         String nomeResponsavel,
         Integer idAnexoMongo,
-        List<ColaboradorTreinamentoRequestDTO> participantes,
+        List<UsuarioTreinamentoResponseDTO> participantes,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-        OffsetDateTime dataCriacao,
+        OffsetDateTime criadoEm,
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
-        OffsetDateTime dataAtualizacao
+        OffsetDateTime atualizadoEm
 ) {
 }

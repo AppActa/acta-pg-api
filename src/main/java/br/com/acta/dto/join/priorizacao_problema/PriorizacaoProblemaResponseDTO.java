@@ -8,11 +8,10 @@ import java.time.OffsetDateTime;
 
 @Schema(description = "Resposta para a priorização de problemas")
 public record PriorizacaoProblemaResponseDTO(
-        Long id,
         Long idProblema,
         String tituloProblema,
-        Long idColaborador,
-        String nomeColaborador,
+        Long idUsuario,
+        String nomeUsuario,
         Integer posicao,
         BigDecimal pesoCalculado,
 

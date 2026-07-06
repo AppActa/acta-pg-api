@@ -5,7 +5,6 @@ import jakarta.validation.constraints.*;
 
 import java.time.LocalDate;
 
-// TODO verificar como fazer as dependencias e dependentes
 public record TarefaRequestDTO(
         @NotBlank(message = "{validation.titulo.notblank}")
         @Size(max = 160, message = "{validation.titulo.size}")
@@ -18,7 +17,7 @@ public record TarefaRequestDTO(
         @NotNull(message = "{validation.prioridade.notnull}")
         Prioridade prioridade,
 
-        @NotNull(message = "{validation.tarefa.dataFimPrevista.notNull}")
+        @NotNull(message = "{validation.tarefa.dataFimPrevista.notnull}")
         @Future(message = "{validation.tarefa.dataFimPrevista.future}")
         LocalDate dataFimPrevista,
 

@@ -1,5 +1,7 @@
 package br.com.acta.dto.pdca.efeito_secundario;
 
+import br.com.acta.entity.enums.TipoEfeitoSecundario;
+import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
 import java.math.BigDecimal;
@@ -14,8 +16,11 @@ public record EfeitoSecundarioRequestDTO(
         @Digits(integer = 3, fraction = 2, message = "{validation.peso.digits}")
         BigDecimal peso,
 
-        @NotBlank(message = "{validation.efeitoSecundario.impactoEstimado.notblank}")
         @Size(max = 1000, message = "{validation.efeitoSecundario.impactoEstimado.size}")
-        String impactoEstimado
+        String impactoEstimado,
+
+        @Schema(implementation = TipoEfeitoSecundario.class)
+        @NotNull(message = "{validation.efeitoSecundario.tipo.notnull}")
+        TipoEfeitoSecundario tipo
 ) {
 }

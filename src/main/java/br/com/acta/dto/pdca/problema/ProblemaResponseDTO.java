@@ -17,11 +17,13 @@ public record ProblemaResponseDTO(
         OrigemRegistro origem,
         Boolean persistente,
         Long idProblemaPai,
-        Long idCausaRaiz,
+        Long idCiclo,
         Long idCriadoPor,
         List<ProblemaSummaryResponseDTO> subproblemas,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSSZ")
-        OffsetDateTime criadoEm
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime criadoEm,
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
+        OffsetDateTime atualizadoEm
 ) {
 }

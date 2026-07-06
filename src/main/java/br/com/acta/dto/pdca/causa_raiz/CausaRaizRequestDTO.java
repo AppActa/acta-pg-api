@@ -3,6 +3,7 @@ package br.com.acta.dto.pdca.causa_raiz;
 import br.com.acta.entity.enums.OrigemRegistro;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
 public record CausaRaizRequestDTO(
@@ -16,7 +17,8 @@ public record CausaRaizRequestDTO(
         @NotNull(message = "{validation.causaRaiz.principal.notnull}")
         Boolean principal,
 
-        @NotNull(message = "{validation.causaRaiz.aceita.notnull}")
-        Boolean aceita
+        @NotNull(message = "{validation.idProblema.notnull}")
+        @Positive(message = "{validation.idProblema.positive}")
+        Long idProblema
 ) {
 }
