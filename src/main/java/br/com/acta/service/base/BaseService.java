@@ -1,7 +1,7 @@
 package br.com.acta.service.base;
 
 import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.BaseMapper;
+import br.com.acta.mapper.base.BaseMapper;
 import br.com.acta.repository.BaseRepository;
 import lombok.RequiredArgsConstructor;
 

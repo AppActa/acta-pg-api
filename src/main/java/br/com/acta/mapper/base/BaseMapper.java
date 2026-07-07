@@ -1,4 +1,4 @@
-package br.com.acta.mapper;
+package br.com.acta.mapper.base;
 
 import org.mapstruct.MappingTarget;
 

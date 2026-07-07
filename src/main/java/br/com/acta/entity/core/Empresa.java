@@ -47,7 +47,7 @@ public class Empresa extends AuditoriaBase {
     private Set<Colaborador> colaboradores = new LinkedHashSet<>();
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EmailEmpresa> email;
+    private Set<EmailEmpresa> emails;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TelefoneEmpresa> telefones;
