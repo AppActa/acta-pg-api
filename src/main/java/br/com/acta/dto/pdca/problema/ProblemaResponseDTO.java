@@ -19,7 +19,7 @@ public record ProblemaResponseDTO(
         Long idProblemaPai,
         Long idCiclo,
         Long idCriadoPor,
-        List<ProblemaSummaryResponseDTO> subproblemas,
+        List<ProblemaSummaryResponseDTO> subProblemas,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
         OffsetDateTime criadoEm,
