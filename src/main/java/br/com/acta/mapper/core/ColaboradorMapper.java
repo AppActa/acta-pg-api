@@ -6,16 +6,18 @@ import br.com.acta.entity.core.Colaborador;
 import br.com.acta.mapper.base.AuditoriaBaseMapper;
 import br.com.acta.mapper.core.contato.EmailColaboradorMapper;
 import br.com.acta.mapper.core.contato.TelefoneColaboradorMapper;
+import br.com.acta.utils.Formatador;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {EmailColaboradorMapper.class, TelefoneColaboradorMapper.class})
+@Mapper(componentModel = "spring", uses = {EmailColaboradorMapper.class, TelefoneColaboradorMapper.class, Formatador.class})
 public interface ColaboradorMapper
 extends AuditoriaBaseMapper<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
     @Mapping(source = "usuario.id", target = "idUsuario")
     @Mapping(source = "empresa.id", target = "idEmpresa")
+    @Mapping(source = "cpf", target = "cpf", qualifiedByName = "formatarCpf")
     @Override
     ColaboradorResponseDTO toResponse(Colaborador colaborador);
 

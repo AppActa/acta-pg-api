@@ -4,13 +4,18 @@ import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.entity.core.Endereco;
 import br.com.acta.mapper.base.AuditoriaBaseMapper;
+import br.com.acta.utils.Formatador;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = {Formatador.class})
 public interface EnderecoMapper
 extends AuditoriaBaseMapper<EnderecoRequestDTO, EnderecoResponseDTO, Endereco> {
+    @Mapping(source = "cep", target = "cep", qualifiedByName = "formatarCep")
+    @Override
+    EnderecoResponseDTO toResponse(Endereco endereco);
+
     @Mapping(target = "empresa", ignore = true)
     @Override
     Endereco toEntity(EnderecoRequestDTO dto);

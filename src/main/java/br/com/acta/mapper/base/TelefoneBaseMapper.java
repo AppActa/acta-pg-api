@@ -8,7 +8,6 @@ import org.mapstruct.MappingTarget;
 
 public interface TelefoneBaseMapper<ENT extends ContatoBase>
 extends BaseMapper<TelefoneRequestDTO, TelefoneResponseDTO, ENT> {
-    @Mapping(source = "contato", target = "numero")
     @Override
     TelefoneResponseDTO toResponse(ENT ent);
 

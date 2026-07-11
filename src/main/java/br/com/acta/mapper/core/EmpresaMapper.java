@@ -7,14 +7,16 @@ import br.com.acta.entity.core.Empresa;
 import br.com.acta.mapper.base.AuditoriaBaseMapper;
 import br.com.acta.mapper.core.contato.EmailEmpresaMapper;
 import br.com.acta.mapper.core.contato.TelefoneEmpresaMapper;
+import br.com.acta.utils.Formatador;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring", uses = {EnderecoMapper.class, EmailEmpresaMapper.class, TelefoneEmpresaMapper.class})
+@Mapper(componentModel = "spring", uses = {Formatador.class, EnderecoMapper.class, EmailEmpresaMapper.class, TelefoneEmpresaMapper.class})
 public interface EmpresaMapper
 extends AuditoriaBaseMapper<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
+    @Mapping(source = "cnpj", target = "cnpj", qualifiedByName = "formatarCnpj")
     EmpresaResponseDTO toResponse(Empresa empresa);
 
     @Mapping(target = "status", ignore = true)
