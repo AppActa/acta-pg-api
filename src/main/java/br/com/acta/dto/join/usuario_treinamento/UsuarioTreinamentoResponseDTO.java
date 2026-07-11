@@ -8,6 +8,7 @@ public record UsuarioTreinamentoResponseDTO(
         Long idUsuario,
         Long idTreinamento,
         String nomeUsuario,
+        String tituloTreinamento,
         StatusTreinamento status,
         Boolean obrigatorio,
 
