@@ -20,6 +20,8 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    // todo handler para NumberParseException
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException manve){
         List<String> mensagens = manve.getBindingResult()
@@ -71,7 +73,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     public ResponseEntity<ErroResponse> handleHttpMedia(){
         return ResponseEntity.status(HttpStatus.UNSUPPORTED_MEDIA_TYPE)
-                .body(new ErroResponse(List.of("O tipo de conteúdo enviado é suportado"), 415));
+                .body(new ErroResponse(List.of("O tipo de conteúdo enviado não é suportado"), 415));
     }
 
     @ExceptionHandler(DataIntegrityViolationException.class)
