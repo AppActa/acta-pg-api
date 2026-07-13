@@ -58,6 +58,12 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(List.of("O número informado é inválido"), 400));
     }
 
+    @ExceptionHandler(UniqueViolationException.class)
+    public ResponseEntity<ErroResponse> handleUniqueViolation(UniqueViolationException uv){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(uv.getMessage()), 400));
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException manve){
         List<String> mensagens = manve.getBindingResult()
