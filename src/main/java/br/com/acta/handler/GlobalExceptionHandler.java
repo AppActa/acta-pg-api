@@ -1,5 +1,7 @@
 package br.com.acta.handler;
 
+import br.com.acta.handler.exception.*;
+import com.google.i18n.phonenumbers.NumberParseException;
 import org.hibernate.exception.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
@@ -20,7 +22,41 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
-    // todo handler para NumberParseException
+    @ExceptionHandler(ImmutableFieldException.class)
+    public ResponseEntity<ErroResponse> handleImmutableField(ImmutableFieldException ife){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(ife.getMessage()), 400));
+    }
+
+    @ExceptionHandler(ModelNotFoundException.class)
+    public ResponseEntity<ErroResponse> handleModelNotFound(ModelNotFoundException mnfe){
+        return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                .body(new ErroResponse(List.of(mnfe.getMessage()), 404));
+    }
+
+    @ExceptionHandler(RegexException.class)
+    public ResponseEntity<ErroResponse> handleRegex(RegexException re){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(re.getMessage()), 400));
+    }
+
+    @ExceptionHandler(InexistentFieldException.class)
+    public ResponseEntity<ErroResponse> handleInexistentField(InexistentFieldException ife){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(ife.getMessage()), 400));
+    }
+
+    @ExceptionHandler(ActiveEntityDeletionException.class)
+    public ResponseEntity<ErroResponse> handleActiveEntityDeletion(ActiveEntityDeletionException ad){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(ad.getMessage()), 400));
+    }
+
+    @ExceptionHandler(NumberParseException.class)
+    public ResponseEntity<ErroResponse> handleNumberParseException(){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of("O número informado é inválido"), 400));
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException manve){
