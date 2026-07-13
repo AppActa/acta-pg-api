@@ -17,7 +17,6 @@ extends SummaryBaseMapper<UsuarioRequestDTO, UsuarioResponseDTO, Usuario, Usuari
     @Override
     UsuarioResponseDTO toResponse(Usuario usuario);
 
-    @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "emailLogin", source = "email")
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "colaborador", ignore = true)
@@ -27,7 +26,6 @@ extends SummaryBaseMapper<UsuarioRequestDTO, UsuarioResponseDTO, Usuario, Usuari
     @Override
     Usuario toEntity(UsuarioRequestDTO dto);
 
-    @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "emailLogin", source = "email")
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "colaborador", ignore = true)
