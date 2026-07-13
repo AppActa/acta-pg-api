@@ -30,11 +30,15 @@ implements BaseCRUD<REQ, RESP> {
         return mapper.toResponse(ent);
     }
 
+    protected void verificarListaVazia(List<ENT> entList){
+        if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
+    }
+
     @Override
     public List<RESP> buscar() {
         List<ENT> entList = repo.findAll();
+        verificarListaVazia(entList);
 
-        if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
         return mapper.toResponseList(entList);
     }
 
