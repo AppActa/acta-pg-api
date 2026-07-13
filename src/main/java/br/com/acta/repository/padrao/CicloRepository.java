@@ -9,5 +9,7 @@ import java.util.List;
 public interface CicloRepository extends BaseRepository<Ciclo> {
     List<Ciclo> findByEmpresaId(Long idEmpresa);
     List<Ciclo> findByGestorId(Long idGestor);
-    List<Ciclo> findByStatus(StatusCiclo status);
+    List<Ciclo> findByEmpresaIdAndStatus(Long idEmpresa, StatusCiclo status);
+    List<Ciclo> findByGestorIdAndStatus(Long idGestor, StatusCiclo status);
+    List<Ciclo> findByEmpresaIdAndGestorIdAndStatus(Long idEmpresa, Long idGestor, StatusCiclo status);
 }
