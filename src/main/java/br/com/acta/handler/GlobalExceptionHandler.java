@@ -76,6 +76,12 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(mensagens, 400));
     }
 
+    @ExceptionHandler(IllegalStateException.class)
+    public ResponseEntity<ErroResponse> handleIllegalState(IllegalStateException ise){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(ise.getMessage()), 400));
+    }
+
     @ExceptionHandler(ConstraintViolationException.class)
     public ResponseEntity<ErroResponse> handleConstraint(){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)

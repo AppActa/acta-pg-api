@@ -34,3 +34,4 @@ build/
 
 *.todo
 src/main/resources/docs
+src/main/resources/http
