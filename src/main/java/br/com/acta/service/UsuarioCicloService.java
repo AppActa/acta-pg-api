@@ -23,14 +23,21 @@ public class UsuarioCicloService {
     private final UsuarioCicloMapper mapper;
     private final UsuarioCicloRepository repo;
 
-    protected UsuarioCiclo getEntity(UsuarioCicloId id){
+    protected UsuarioCiclo getEntity(Long idUsuario, Long idCiclo){
+        UsuarioCicloId id = new UsuarioCicloId(idUsuario, idCiclo);
+
         return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(id.getIdUsuario(), id.getIdCiclo())));
+    }
+
+    private void verificarListaVazia(List<UsuarioCiclo> usuarioCiclos){
+        if (usuarioCiclos.isEmpty()) throw new ModelNotFoundException("UsuarioCiclo");
     }
 
     public List<UsuarioCicloResponseDTO> buscar(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         List<UsuarioCiclo> usuarios = ciclo.getColaboradores().stream().toList();
 
+        verificarListaVazia(usuarios);
         return mapper.toResponseList(usuarios);
     }
 
@@ -51,9 +58,15 @@ public class UsuarioCicloService {
     }
 
     public UsuarioCicloResponseDTO patch(Long idUsuario, Long idCiclo, PapelCiclo papelCiclo){
-        UsuarioCiclo usuarioCiclo = getEntity(new UsuarioCicloId(idUsuario, idCiclo));
-        usuarioCiclo.setPapelCiclo(papelCiclo);
+        UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
+        List<UsuarioCiclo> responsaveis = repo.findByCicloIdAndPapelCiclo(idCiclo, PapelCiclo.RESPONSAVEL);
 
+        // se só tiver um responsável e quiser mudar o cargo dele, não deixar
+        if (responsaveis.size() == 1 && responsaveis.get(0).getId().getIdUsuario().equals(idUsuario) && !papelCiclo.equals(PapelCiclo.RESPONSAVEL)) {
+            throw new IllegalArgumentException("Não é possível mudar o cargo do único responsável do ciclo, substitua o responsável e tente novamente");
+        }
+
+        usuarioCiclo.setPapelCiclo(papelCiclo);
         UsuarioCiclo salvo = repo.save(usuarioCiclo);
         return mapper.toResponse(salvo);
     }
@@ -63,8 +76,8 @@ public class UsuarioCicloService {
             throw new IllegalArgumentException("O usuário antigo e o usuário novo são o mesmo");
         }
 
-        UsuarioCiclo gestorAntigo = getEntity(new UsuarioCicloId(idUsuarioAntigo, idCiclo));
-        UsuarioCiclo gestorNovo = getEntity(new UsuarioCicloId(idUsuarioNovo, idCiclo));
+        UsuarioCiclo gestorAntigo = getEntity(idUsuarioAntigo, idCiclo);
+        UsuarioCiclo gestorNovo = getEntity(idUsuarioNovo, idCiclo);
 
         if (!gestorAntigo.getPapelCiclo().equals(PapelCiclo.RESPONSAVEL)) {
             throw new IllegalArgumentException("O usuário antigo não é o responsável do ciclo");
@@ -78,7 +91,7 @@ public class UsuarioCicloService {
     }
 
     public void excluir(Long idUsuario, Long idCiclo){
-        UsuarioCiclo usuarioCiclo = getEntity(new UsuarioCicloId(idUsuario, idCiclo));
+        UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
 
         if (usuarioCiclo.getPapelCiclo().equals(PapelCiclo.RESPONSAVEL)) {
             throw new IllegalStateException("N" +

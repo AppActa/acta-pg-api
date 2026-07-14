@@ -30,7 +30,7 @@ implements BaseCRUD<REQ, RESP> {
         return mapper.toResponse(ent);
     }
 
-    protected void verificarListaVazia(List<ENT> entList){
+    public void verificarListaVazia(List<ENT> entList){
         if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
     }
 
@@ -54,7 +54,7 @@ implements BaseCRUD<REQ, RESP> {
     @Override
     abstract public RESP patch(Long id, Map<String, Object> campos);
 
-    protected void validarCampos(Map<String, Object> campos, PatchConfig patchConfig){
+    public static void validarCampos(Map<String, Object> campos, PatchConfig patchConfig){
         for (String campo : campos.keySet()) {
             if (!patchConfig.allCampos().contains(campo)){
                 throw new InexistentFieldException(campo);
