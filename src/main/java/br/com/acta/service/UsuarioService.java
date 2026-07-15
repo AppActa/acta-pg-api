@@ -22,7 +22,7 @@ public class UsuarioService
 extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
     private final EmpresaService empresaService;
     private final UsuarioRepository repo;
-    private final UsuarioMapper mapper;
+    protected final UsuarioMapper mapper;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("nome", "email", "senha", "tipo", "idEmpresa"),
             Set.of("nome", "email", "senha", "tipo")
