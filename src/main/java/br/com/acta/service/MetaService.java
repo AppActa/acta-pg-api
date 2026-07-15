@@ -11,6 +11,7 @@ import br.com.acta.mapper.pdca.MetaMapper;
 import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -39,7 +40,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
 
     @Override
     public MetaResponseDTO patch(Long id, Map<String, Object> campos) {
-        validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         Meta meta = getEntity(id);
 
         if(campos.containsKey("objetivo")) meta.setObjetivo((String) campos.get("objetivo"));

@@ -8,6 +8,7 @@ import br.com.acta.mapper.pdca.CicloMapper;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -33,7 +34,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
     @Override
     public CicloResponseDTO patch(Long id, Map<String, Object> campos) {
-        validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         Ciclo ciclo = getEntity(id);
 
         if (campos.containsKey("titulo")) ciclo.setTitulo((String) campos.get("titulo"));

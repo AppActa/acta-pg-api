@@ -13,6 +13,7 @@ import br.com.acta.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,7 +69,7 @@ public class PriorizacaoProblemaService {
     }
 
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
-        BaseService.validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
 
         if (campos.containsKey("posicao")) priorizacaoProblema.setPosicao((Integer) campos.get("posicao"));

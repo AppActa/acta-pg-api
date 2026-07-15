@@ -14,6 +14,7 @@ import br.com.acta.mapper.core.EmpresaMapper;
 import br.com.acta.repository.padrao.EmpresaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import br.com.caelum.stella.validation.CNPJValidator;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -42,7 +43,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Override
     @Transactional
     public EmpresaResponseDTO patch(Long id, Map<String, Object> campos) {
-        validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         Empresa empresa = getEntity(id);
 
         if (campos.containsKey("nome")) empresa.setNome((String) campos.get("nome"));

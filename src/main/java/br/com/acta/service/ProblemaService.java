@@ -9,7 +9,9 @@ import br.com.acta.mapper.pdca.ProblemaMapper;
 import br.com.acta.repository.padrao.ProblemaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -37,7 +39,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
 
     @Override
     public ProblemaResponseDTO patch(Long id, Map<String, Object> campos) {
-        validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         Problema problema = getEntity(id);
 
         if (campos.containsKey("titulo")) problema.setTitulo((String) campos.get("titulo"));
@@ -48,25 +50,32 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public ProblemaResponseDTO atualizarStatus(Long id, StatusProblema status){
         Problema problema = getEntity(id);
-        problema.setStatus(status);
 
-        Problema salvo = repo.save(problema);
-        return mapper.toResponse(salvo);
+        switch (status) {
+            case DESCARTADO, RESOLVIDO -> atualizarStatusRecursivo(problema, status);
+            default -> problema.setStatus(status);
+            // todo resolver EM_ANDAMENTO
+        }
+
+        return mapper.toResponse(problema);
     }
 
     @Override
+    @Transactional
     public void excluir(Long id) {
         Problema problema = getEntity(id);
+        atualizarStatusRecursivo(problema, StatusProblema.DESCARTADO);
+    }
 
-        problema.setStatus(StatusProblema.DESCARTADO);
-        problema.getSubProblemas().forEach(subProblema -> {
-            subProblema.setStatus(StatusProblema.DESCARTADO);
-            repo.save(subProblema);
-        });
+    private void atualizarStatusRecursivo(Problema problema, StatusProblema status){
+        problema.setStatus(status);
 
-        repo.save(problema);
+        for (Problema subProblema : problema.getSubProblemas()) {
+            atualizarStatusRecursivo(subProblema, status);
+        }
     }
 
     public ProblemaResponseDTO inserir(ProblemaRequestDTO dto, Long idCiclo) {
@@ -74,21 +83,15 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         Ciclo ciclo = cicloService.getEntity(idCiclo);
 
         problema.setCiclo(ciclo);
-        antesInserir(problema, dto);
+
+        if (dto.idProblemaPai() != null){
+            Problema problemaPai = getEntity(dto.idProblemaPai());
+            Validador.validarMesmoCiclo(problema.getCiclo(), problemaPai.getCiclo());
+            problema.setProblemaPai(problemaPai);
+        }
 
         Problema salvo = repo.save(problema);
         return mapper.toResponse(salvo);
-    }
-
-    @Override
-    protected void antesInserir(Problema problema, ProblemaRequestDTO dto) {
-        if (dto.idProblemaPai() != null){
-            Problema problemaPai = getEntity(dto.idProblemaPai());
-
-            if (!problemaPai.getCiclo().getId().equals(problema.getCiclo().getId())){
-                throw new IllegalArgumentException("O problema pai deve pertencer ao mesmo ciclo do problema.");
-            }
-        }
     }
 
     public List<ProblemaResponseDTO> buscar(Long idCiclo, StatusProblema status, Long idProblemaPai){
