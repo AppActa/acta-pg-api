@@ -66,7 +66,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     public void excluir(Long id) {
         Meta meta = getEntity(id);
 
-        // verificar se não tem dependentes ativos
+        // todo verificar se não tem dependentes ativos
         meta.setStatus(StatusMeta.CANCELADA);
         repo.save(meta);
     }
