@@ -1,11 +1,7 @@
 package br.com.acta.service.base;
-
-import br.com.acta.handler.exception.ImmutableFieldException;
-import br.com.acta.handler.exception.InexistentFieldException;
 import br.com.acta.handler.exception.ModelNotFoundException;
 import br.com.acta.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
-import br.com.acta.utils.PatchConfig;
 import lombok.RequiredArgsConstructor;
 
 import java.util.List;
@@ -53,18 +49,6 @@ implements BaseCRUD<REQ, RESP> {
 
     @Override
     abstract public RESP patch(Long id, Map<String, Object> campos);
-
-    public static void validarCampos(Map<String, Object> campos, PatchConfig patchConfig){
-        for (String campo : campos.keySet()) {
-            if (!patchConfig.allCampos().contains(campo)){
-                throw new InexistentFieldException(campo);
-            }
-
-            if (!patchConfig.patchableCampos().contains(campo)){
-                throw new ImmutableFieldException(campo);
-            }
-        }
-    }
 
     @Override
     public void excluir(Long id) {

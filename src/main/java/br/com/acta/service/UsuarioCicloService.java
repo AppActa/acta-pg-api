@@ -7,6 +7,7 @@ import br.com.acta.entity.enums.PapelCiclo;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.join.id.UsuarioCicloId;
 import br.com.acta.entity.pdca.Ciclo;
+import br.com.acta.handler.exception.BusinessRuleException;
 import br.com.acta.handler.exception.ModelNotFoundException;
 import br.com.acta.handler.exception.UniqueViolationException;
 import br.com.acta.mapper.join.UsuarioCicloMapper;
@@ -14,12 +15,13 @@ import br.com.acta.repository.composto.UsuarioCicloRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import java.util.List;
+import java.util.Set;
 
 @Service
 @RequiredArgsConstructor
 public class UsuarioCicloService {
     private final CicloService cicloService;
-    private final UsuarioService usuarioService;
+    protected final UsuarioService usuarioService;
     private final UsuarioCicloMapper mapper;
     private final UsuarioCicloRepository repo;
 
@@ -100,5 +102,12 @@ public class UsuarioCicloService {
 
         repo.delete(usuarioCiclo);
     }
-}
 
+    protected void validarMesmoCiclo(Ciclo ciclo, Set<UsuarioCiclo> ciclos){
+        for (UsuarioCiclo usuarioCiclo : ciclos) {
+            if (ciclo.getId().equals(usuarioCiclo.getId().getIdCiclo())) return;
+        }
+
+        throw new BusinessRuleException("As entidades devem pertencer ao mesmo ciclo");
+    }
+}

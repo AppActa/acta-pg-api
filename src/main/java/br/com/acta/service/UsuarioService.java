@@ -10,6 +10,7 @@ import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.Hash;
 import br.com.acta.utils.PatchConfig;
+import br.com.acta.utils.Validador;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +39,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
     @Override
     @Transactional
     public UsuarioResponseDTO patch(Long id, Map<String, Object> campos) {
-        validarCampos(campos, patchConfig);
+        Validador.validarCampos(campos, patchConfig);
         Usuario usuario = getEntity(id);
 
         // todo verificar se e-mail já  (nas três tabelas)
