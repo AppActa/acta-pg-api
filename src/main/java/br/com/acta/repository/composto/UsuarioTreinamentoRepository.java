@@ -11,4 +11,5 @@ extends JpaRepository<UsuarioTreinamento, UsuarioTreinamentoId> {
     boolean existsByUsuarioIdAndTreinamentoId(Long idUsuario, Long idTreinamento);
     List<UsuarioTreinamento> findByTreinamentoId(Long idTreinamento);
     List<UsuarioTreinamento> findByUsuarioId(Long idUsuario);
+    UsuarioTreinamento findByUsuarioIdAndTreinamentoId(Long usuarioId, Long treinamentoId);
 }

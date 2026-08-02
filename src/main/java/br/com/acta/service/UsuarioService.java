@@ -42,7 +42,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         Validador.validarCampos(campos, patchConfig);
         Usuario usuario = getEntity(id);
 
-        // todo verificar se e-mail já  (nas três tabelas)
+        // todo verificar se e-mail já foi inserido antes (nas três tabelas)
         if (campos.containsKey("nome")) usuario.setNome((String) campos.get("nome"));
         if (campos.containsKey("email")) usuario.setEmailLogin((String) campos.get("email"));
         if (campos.containsKey("senha")) usuario.setSenhaHash((String) campos.get("senha"));
