@@ -2,6 +2,7 @@ package br.com.acta.mapper.pdca;
 
 import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
+import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.mapper.base.SummaryBaseMapper;
@@ -41,4 +42,14 @@ extends SummaryBaseMapper<TarefaRequestDTO, TarefaResponseDTO, Tarefa, TarefaSum
     @Mapping(target = "dependentes", ignore = true)
     @Override
     void updateEntity(TarefaRequestDTO dto, @MappingTarget Tarefa tarefa);
+
+    @Mapping(target = "titulo", ignore = true)
+    @Mapping(target = "descricao", ignore = true)
+    @Mapping(target = "prioridade", ignore = true)
+    @Mapping(target = "dataFimPrevista", ignore = true)
+    @Mapping(target = "planoAcao", ignore = true)
+    @Mapping(target = "responsavel", ignore = true)
+    @Mapping(target = "dependencias", ignore = true)
+    @Mapping(target = "dependentes", ignore = true)
+    void updateStatus(TarefaStatusUpdateDTO dto, @MappingTarget Tarefa tarefa);
 }

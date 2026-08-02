@@ -11,7 +11,6 @@ import br.com.acta.handler.exception.ModelNotFoundException;
 import br.com.acta.handler.exception.UniqueViolationException;
 import br.com.acta.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
-import br.com.acta.service.base.BaseService;
 import br.com.acta.utils.PatchConfig;
 import br.com.acta.utils.Validador;
 import lombok.RequiredArgsConstructor;
@@ -34,11 +33,6 @@ public class PriorizacaoProblemaService {
             Set.of("idUsuario", "posicao", "pesoCalculado", "idProblema"),
             Set.of("posicao", "pesoCalculado")
     );
-
-    // esse service vai servir como o relacionamento entre o usuário e o problema
-    // especificamente o os colaboradores (não gestores)
-    // que vão priorizar os problemas previamente levantados
-    // qual eles acham mais urgente até o menos no contexto de cada um
 
     private void verificarListaVazia(List<PriorizacaoProblema> priorizacoes){
         if (priorizacoes.isEmpty()) throw new ModelNotFoundException("PriorizacaoProblema");

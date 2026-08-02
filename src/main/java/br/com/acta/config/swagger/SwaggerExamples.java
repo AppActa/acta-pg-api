@@ -93,6 +93,9 @@ public class SwaggerExamples {
     public static final String DESCRICAO_TAREFA = "Documento com passos e frequência de verificação";
     public static final String DATA_FIM_PREVISTA = "2026-06-20";
     public static final String ID_TAREFA_DEPENDENCIA = "1";
+    public static final String STATUS_TAREFA = "PENDENTE";
+    public static final String DATA_INICIO_REAL = "2026-06-15";
+    public static final String DATA_FIM_REAL = "2026-06-20";
 
     // Treinamento
     public static final String TITULO_TREINAMENTO = "Treinamento de calibração de máquinas";
