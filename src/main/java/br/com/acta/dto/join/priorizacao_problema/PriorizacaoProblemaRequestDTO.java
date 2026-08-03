@@ -1,6 +1,6 @@
 package br.com.acta.dto.join.priorizacao_problema;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;
@@ -9,10 +9,10 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public record PriorizacaoProblemaRequestDTO(
-        @Schema(description = "ID do problema", example = SwaggerExamples.ID_PROBLEMA)
-        @NotNull(message = "{validation.idProblema.notnull}")
-        @Positive(message = "{validation.idProblema.positive}")
-        Long idProblema,
+        @Schema(description = "ID do usuário", example = SwaggerExamples.ID_USUARIO)
+        @NotNull(message = "{validation.idUsuario.notnull}")
+        @Positive(message = "{validation.idUsuario.positive}")
+        Long idUsuario,
 
         @Schema(description = "Posição da priorização", example = SwaggerExamples.POSICAO)
         @NotNull(message = "{validation.priorizacao.posicao.notnull}")

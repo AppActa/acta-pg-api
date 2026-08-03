@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.plano_acao;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import br.com.acta.entity.enums.OrigemRegistro;
 import br.com.acta.entity.enums.Prioridade;
 import io.swagger.v3.oas.annotations.media.Schema;

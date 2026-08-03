@@ -13,6 +13,7 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
+// todo ligar com tarefa ou plano de ação
 @Entity
 @Table(name = "meta", schema = "pdca")
 @Getter

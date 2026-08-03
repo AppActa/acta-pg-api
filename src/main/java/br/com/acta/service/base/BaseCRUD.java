@@ -7,6 +7,6 @@ public interface BaseCRUD<REQ, RESP> {
     RESP buscar(Long id);
     List<RESP> buscar();
     RESP inserir(REQ dto);
-    RESP patch(REQ dto, Map<String, Object> campos);
+    RESP patch(Long id, Map<String, Object> campos);
     void excluir(Long id);
 }

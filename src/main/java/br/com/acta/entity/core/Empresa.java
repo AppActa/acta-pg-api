@@ -5,12 +5,11 @@ import br.com.acta.entity.core.contato.EmailEmpresa;
 import br.com.acta.entity.core.contato.TelefoneEmpresa;
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TamanhoEmpresa;
+import br.com.acta.entity.pdca.Ciclo;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -44,11 +43,14 @@ public class Empresa extends AuditoriaBase {
     private List<Usuario> usuarios;
 
     @OneToMany(mappedBy = "empresa")
-    private Set<Colaborador> colaboradores = new LinkedHashSet<>();
+    private Set<Colaborador> colaboradores;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<EmailEmpresa> emails;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
     private Set<TelefoneEmpresa> telefones;
+
+    @OneToMany(mappedBy = "empresa")
+    private Set<Ciclo> ciclos;
 }

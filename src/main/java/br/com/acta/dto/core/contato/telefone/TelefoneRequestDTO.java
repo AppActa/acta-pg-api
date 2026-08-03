@@ -1,6 +1,6 @@
 package br.com.acta.dto.core.contato.telefone;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -11,7 +11,7 @@ public record TelefoneRequestDTO(
         @Schema(description = "Número do telefone", example = SwaggerExamples.TELEFONE)
         @NotBlank(message = "{validation.telefone.numero.notblank}")
         @Size(min = 9, max = 11, message = "{validation.telefone.numero.size}")
-        @Pattern(regexp = "^\\(\\d{2}\\) \\d{4,5}-\\d{4}$", message = "{validation.telefone.numero.pattern}")
+        @Pattern(regexp = "^\\d{9,11}$", message = "{validation.telefone.numero.pattern}")
         String numero,
 
         @Schema(description = "Indica se o telefone é principal", example = SwaggerExamples.PRINCIPAL)

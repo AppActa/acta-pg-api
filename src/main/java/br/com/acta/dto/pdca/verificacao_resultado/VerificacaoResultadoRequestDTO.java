@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.verificacao_resultado;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import br.com.acta.entity.enums.StatusVerificacao;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

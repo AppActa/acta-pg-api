@@ -1,7 +1,6 @@
 package br.com.acta.service.base;
-
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.base.BaseMapper;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import lombok.RequiredArgsConstructor;
 
@@ -27,11 +26,15 @@ implements BaseCRUD<REQ, RESP> {
         return mapper.toResponse(ent);
     }
 
+    public void verificarListaVazia(List<ENT> entList){
+        if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
+    }
+
     @Override
     public List<RESP> buscar() {
         List<ENT> entList = repo.findAll();
+        verificarListaVazia(entList);
 
-        if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
         return mapper.toResponseList(entList);
     }
 
@@ -45,7 +48,7 @@ implements BaseCRUD<REQ, RESP> {
     }
 
     @Override
-    abstract public RESP patch(REQ dto, Map<String, Object> campos);
+    abstract public RESP patch(Long id, Map<String, Object> campos);
 
     @Override
     public void excluir(Long id) {
