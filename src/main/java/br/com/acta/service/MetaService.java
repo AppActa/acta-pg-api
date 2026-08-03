@@ -7,11 +7,11 @@ import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusMeta;
 import br.com.acta.entity.pdca.Meta;
-import br.com.acta.mapper.pdca.MetaMapper;
+import br.com.acta.dto.mapper.pdca.MetaMapper;
 import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

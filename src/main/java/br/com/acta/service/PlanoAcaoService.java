@@ -6,13 +6,13 @@ import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.handler.exception.BusinessRuleException;
-import br.com.acta.handler.exception.StatusUpdateException;
-import br.com.acta.mapper.pdca.PlanoAcaoMapper;
+import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.dto.mapper.pdca.PlanoAcaoMapper;
 import br.com.acta.repository.padrao.PlanoAcaoRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

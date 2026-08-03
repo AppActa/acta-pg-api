@@ -4,11 +4,11 @@ import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.pdca.Ciclo;
-import br.com.acta.mapper.pdca.CicloMapper;
+import br.com.acta.dto.mapper.pdca.CicloMapper;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;

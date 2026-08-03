@@ -4,11 +4,11 @@ import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioRequestDTO;
 import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioResponseDTO;
 import br.com.acta.entity.pdca.EfeitoSecundario;
 import br.com.acta.entity.pdca.VerificacaoResultado;
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.pdca.EfeitoSecundarioMapper;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.dto.mapper.pdca.EfeitoSecundarioMapper;
 import br.com.acta.repository.padrao.EfeitoSecundarioRepository;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

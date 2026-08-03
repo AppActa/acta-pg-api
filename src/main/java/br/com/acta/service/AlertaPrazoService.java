@@ -4,11 +4,11 @@ import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.pdca.AlertaPrazo;
 import br.com.acta.entity.pdca.Tarefa;
-import br.com.acta.handler.exception.BusinessRuleException;
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.pdca.AlertaPrazoMapper;
+import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.dto.mapper.pdca.AlertaPrazoMapper;
 import br.com.acta.repository.padrao.AlertaPrazoRepository;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

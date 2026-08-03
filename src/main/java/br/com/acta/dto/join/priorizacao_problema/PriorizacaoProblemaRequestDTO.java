@@ -1,6 +1,6 @@
 package br.com.acta.dto.join.priorizacao_problema;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.NotNull;

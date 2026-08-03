@@ -6,12 +6,12 @@ import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.enums.StatusVerificacao;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.VerificacaoResultado;
-import br.com.acta.handler.exception.BusinessRuleException;
-import br.com.acta.mapper.pdca.VerificacaoResultadoMapper;
+import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.dto.mapper.pdca.VerificacaoResultadoMapper;
 import br.com.acta.repository.padrao.VerificacaoResultadoRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

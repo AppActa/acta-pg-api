@@ -1,6 +1,6 @@
 package br.com.acta.dto.core.empresa.endereco;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import br.com.acta.entity.enums.UF;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotBlank;

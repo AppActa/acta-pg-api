@@ -5,11 +5,11 @@ import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusProblema;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.Problema;
-import br.com.acta.mapper.pdca.ProblemaMapper;
+import br.com.acta.dto.mapper.pdca.ProblemaMapper;
 import br.com.acta.repository.padrao.ProblemaRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 

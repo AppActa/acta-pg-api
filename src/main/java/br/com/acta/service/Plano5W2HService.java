@@ -6,13 +6,13 @@ import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.pdca.Plano5W2H;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.handler.exception.BusinessRuleException;
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.pdca.Plano5W2HMapper;
+import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
 import br.com.acta.repository.padrao.Plano5W2HRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;

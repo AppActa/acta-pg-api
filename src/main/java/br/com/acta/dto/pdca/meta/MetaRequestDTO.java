@@ -1,6 +1,6 @@
 package br.com.acta.dto.pdca.meta;
 
-import br.com.acta.config.swagger.SwaggerExamples;
+import br.com.acta.common.config.swagger.SwaggerExamples;
 import br.com.acta.entity.enums.Prioridade;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;

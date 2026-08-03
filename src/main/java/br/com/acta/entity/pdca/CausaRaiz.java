@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @Setter
 @NoArgsConstructor
 public class CausaRaiz extends AuditoriaBase {
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
     @Column(name = "origem", nullable = false)

@@ -7,12 +7,12 @@ import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.join.PriorizacaoProblema;
 import br.com.acta.entity.join.id.PriorizacaoProblemaId;
 import br.com.acta.entity.pdca.Problema;
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.handler.exception.UniqueViolationException;
-import br.com.acta.mapper.join.PriorizacaoProblemaMapper;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

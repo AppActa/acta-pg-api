@@ -5,11 +5,11 @@ import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.entity.pdca.Treinamento;
-import br.com.acta.handler.exception.BusinessRuleException;
-import br.com.acta.handler.exception.ModelNotFoundException;
-import br.com.acta.mapper.join.UsuarioTreinamentoMapper;
+import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.dto.mapper.join.UsuarioTreinamentoMapper;
 import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 

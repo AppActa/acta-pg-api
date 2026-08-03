@@ -5,12 +5,12 @@ import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TipoUsuario;
-import br.com.acta.mapper.core.UsuarioMapper;
+import br.com.acta.dto.mapper.core.UsuarioMapper;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.utils.Hash;
-import br.com.acta.utils.PatchConfig;
-import br.com.acta.utils.Validador;
+import br.com.acta.common.utils.Hash;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
