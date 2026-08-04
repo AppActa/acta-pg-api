@@ -3,7 +3,6 @@ package br.com.acta.service;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoRequestDTO;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
-import br.com.acta.entity.enums.StatusVerificacao;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.VerificacaoResultado;
 import br.com.acta.common.handler.exception.BusinessRuleException;
@@ -58,13 +57,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         VerificacaoResultado resultado = mapper.toEntity(dto);
 
-        if (Set.of(StatusVerificacao.PARCIAL, StatusVerificacao.REPROVADO).contains(dto.status())
-                && dto.observacao() == null) {
-            throw new BusinessRuleException("Observação é obrigatória para status PARCIAL ou REPROVADO");
-        }
-
         resultado.setCiclo(ciclo);
-
         VerificacaoResultado salvo = repo.save(resultado);
         return mapper.toResponse(salvo);
     }
@@ -74,7 +67,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         VerificacaoResultado resultado = getEntity(id);
 
         // todo validar todos os outros que não podem ser
-        if (resultado.getCiclo().getStatus() == StatusCiclo.VERIFICACAO) {
+        if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {
             throw new BusinessRuleException("Não é possível excluir a verificação do resultado de um ciclo que já avançou de etapa");
         }
 

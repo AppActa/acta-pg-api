@@ -7,10 +7,12 @@ import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusTarefa;
+import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.common.handler.exception.BusinessRuleException;
 import br.com.acta.dto.mapper.pdca.TarefaMapper;
+import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
@@ -27,6 +29,7 @@ public class TarefaService
 extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     private final TarefaRepository repo;
     private final TarefaMapper mapper;
+    private final UsuarioTreinamentoRepository usuarioTreinamentoRepo;
     private final PlanoAcaoService planoAcaoService;
     private final UsuarioService usuarioService;
     private final PatchConfig patchConfigConfig = new PatchConfig(
@@ -34,12 +37,13 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             Set.of("titulo", "descricao", "prioridade", "dataFimPrevista")
     );
 
-    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService) {
+    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, UsuarioTreinamentoRepository usuarioTreinamentoRepo) {
         super(repo, mapper, Tarefa.class);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
         this.usuarioService = usuarioService;
+        this.usuarioTreinamentoRepo = usuarioTreinamentoRepo;
     }
 
     @Override
@@ -74,8 +78,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
-    // todo não permitir iniciar tarefa caso não tenha iniciado o treinamento
-    public TarefaResponseDTO atualizarStatus(Long id, TarefaStatusUpdateDTO dto){
+    public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         Tarefa tarefa = getEntity(id);
 
         switch (dto.status()) {
@@ -85,6 +88,14 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             }
 
             case EM_ANDAMENTO -> {
+                Long idResponsavel = tarefa.getResponsavel().getId();
+                Long idCiclo = tarefa.getPlanoAcao().getCiclo().getId();
+                boolean treinamentoPendente = usuarioTreinamentoRepo.existsByUsuarioIdAndTreinamentoCicloIdAndObrigatorioTrueAndStatus(idResponsavel, idCiclo, StatusTreinamento.PENDENTE);
+
+                if (treinamentoPendente) {
+                    throw new BusinessRuleException("O responsável possui treinamento obrigatório do ciclo ainda não iniciado");
+                }
+
                 LocalDate dataInicio = capturarData(dto.dataInicioReal());
                 tarefa.setDataInicioReal(dataInicio);
             }
@@ -106,7 +117,6 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Tarefa tarefa = getEntity(idTarefa);
         Usuario responsavel = usuarioService.getEntity(idResponsavel);
 
-        // todo validar se o ciclo ainda está aberto
         Validador.validarMesmoCiclo(tarefa.getPlanoAcao().getCiclo(), responsavel.getCiclos());
 
         tarefa.setResponsavel(responsavel);

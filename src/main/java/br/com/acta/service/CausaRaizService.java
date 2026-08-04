@@ -31,7 +31,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
 
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("descricao", "origem", "principal", "idProblema", "idCiclo", "idPlanoAcao", "id5PorquesMongo"),
-            Set.of("descricao", "principal")
+            Set.of("descricao", "principal", "id5PorquesMongo")
     );
 
     public CausaRaizService(CausaRaizRepository repo, CausaRaizMapper mapper, CicloService cicloService, PlanoAcaoService planoAcaoService, UsuarioService usuarioService) {
@@ -50,6 +50,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
 
         if (campos.containsKey("descricao")) causaRaiz.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("principal")) causaRaiz.setPrincipal((Boolean) campos.get("principal"));
+        if (campos.containsKey("id5PorquêsMongo")) causaRaiz.setId5PorquesMongo((String) campos.get("id5PorquêsMongo"));
 
         CausaRaiz salvo = repo.save(causaRaiz);
         return mapper.toResponse(salvo);

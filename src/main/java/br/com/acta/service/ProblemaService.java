@@ -1,5 +1,6 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusProblema;
@@ -50,17 +51,20 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
-    @Transactional
-    public ProblemaResponseDTO atualizarStatus(Long id, StatusProblema status){
+    public ProblemaResponseDTO patchStatus(Long id, StatusProblema status){
         Problema problema = getEntity(id);
+
+        if (!problema.getStatus().podeAtualizarStatus(status)) {
+            throw new StatusUpdateException(problema.getStatus().toString(), status.toString());
+        }
 
         switch (status) {
             case DESCARTADO, RESOLVIDO -> atualizarStatusRecursivo(problema, status);
             default -> problema.setStatus(status);
-            // todo resolver EM_ANDAMENTO
         }
 
-        return mapper.toResponse(problema);
+        Problema salvo = repo.save(problema);
+        return mapper.toResponse(salvo);
     }
 
     @Override

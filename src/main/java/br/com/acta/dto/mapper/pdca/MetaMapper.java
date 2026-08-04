@@ -13,16 +13,19 @@ import org.mapstruct.MappingTarget;
 public interface MetaMapper
 extends AuditoriaBaseMapper<MetaRequestDTO, MetaResponseDTO, Meta> {
     @Mapping(source = "ciclo.id", target = "idCiclo")
+    @Mapping(source = "planoAcao.id", target = "idPlanoAcao")
     @Override
     MetaResponseDTO toResponse(Meta meta);
 
     @Mapping(target = "ciclo", ignore = true)
+    @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "responsaveis", ignore = true)
     @Override
     Meta toEntity(MetaRequestDTO dto);
 
     @Mapping(target = "ciclo", ignore = true)
+    @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "responsaveis", ignore = true)
     @Override

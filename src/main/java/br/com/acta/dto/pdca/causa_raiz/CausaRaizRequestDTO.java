@@ -25,6 +25,9 @@ public record CausaRaizRequestDTO(
         @Schema(description = "ID do problema", example = SwaggerExamples.ID_PROBLEMA)
         @NotNull(message = "{validation.idProblema.notnull}")
         @Positive(message = "{validation.idProblema.positive}")
-        Long idProblema
+        Long idProblema,
+
+        @Schema(description = "ID do registro correspondente na ferramenta dos 5 porquês (mongo), quando aplicável", example = SwaggerExamples.ID_5_PORQUES)
+        String id5PorquêsMongo
 ) {
 }

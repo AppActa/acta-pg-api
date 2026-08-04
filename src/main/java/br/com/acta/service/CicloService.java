@@ -1,5 +1,6 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
@@ -44,11 +45,15 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         return mapper.toResponse(ciclo);
     }
 
-    public CicloResponseDTO atualizarStatus(Long id, StatusCiclo status){
+    public CicloResponseDTO patchStatus(Long id, StatusCiclo status){
         Ciclo ciclo = getEntity(id);
+
+        if (!ciclo.getStatus().podeAtualizarStatus(status)) {
+            throw new StatusUpdateException(ciclo.getStatus().toString(), status.toString());
+        }
+
         ciclo.setStatus(status);
 
-        //todo validar quando pode mudar o status do ciclo
         if (ciclo.getStatus().equals(StatusCiclo.CONCLUIDO)) {
             ciclo.setDataFimReal(LocalDate.now());
         }

@@ -25,6 +25,7 @@ public record MetaResponseDTO(
         String area,
         String categoria,
         Long idCiclo,
+        Long idPlanoAcao,
         List<UsuarioSummaryResponseDTO> responsaveis,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")

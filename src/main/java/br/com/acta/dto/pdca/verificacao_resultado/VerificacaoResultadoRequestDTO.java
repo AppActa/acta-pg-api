@@ -2,7 +2,9 @@ package br.com.acta.dto.pdca.verificacao_resultado;
 
 import br.com.acta.common.config.swagger.SwaggerExamples;
 import br.com.acta.entity.enums.StatusVerificacao;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.AssertTrue;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -21,4 +23,9 @@ public record VerificacaoResultadoRequestDTO(
         @Size(max = 1000, message = "{validation.verificacaoResultado.observacao.size}")
         String observacao
 ) {
+        @AssertTrue(message = "{validation.verificacaoResultado.observacao.notblank}")
+        @JsonIgnore
+        boolean isObservacaoValida() {
+            return status == StatusVerificacao.APROVADO || (observacao != null && !observacao.isBlank());
+        }
 }
