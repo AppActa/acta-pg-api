@@ -37,6 +37,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     public CicloResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
         Ciclo ciclo = getEntity(id);
+        Validador.validarCicloAberto(ciclo);
 
         if (campos.containsKey("titulo")) ciclo.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) ciclo.setDescricao((String) campos.get("descricao"));
@@ -65,10 +66,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     public void excluir(Long id) {
         Ciclo ciclo = getEntity(id);
 
-        if (ciclo.getStatus().equals(StatusCiclo.CONCLUIDO)) {
-            throw new IllegalStateException("Não é possível excluir um ciclo concluído.");
-        }
-
+        Validador.validarCicloAberto(ciclo);
         ciclo.setStatus(StatusCiclo.CANCELADO);
 
         repo.save(ciclo);
