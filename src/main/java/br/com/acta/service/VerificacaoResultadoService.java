@@ -39,6 +39,10 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         Validador.validarCampos(campos, patchConfig);
         VerificacaoResultado resultado = getEntity(id);
 
+        if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {
+            throw new BusinessRuleException("Não é possível atualizar a verificação de resultado para um ciclo que não está em verificação");
+        }
+
         if (campos.containsKey("resumo")) resultado.setResumo((String) campos.get("resumo"));
         if (campos.containsKey("observacao")) resultado.setObservacao((String) campos.get("observacao"));
 
@@ -55,6 +59,12 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
 
     public VerificacaoResultadoResponseDTO inserir(Long idCiclo, VerificacaoResultadoRequestDTO dto){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
+        Validador.validarCicloAberto(ciclo);
+
+        if (ciclo.getStatus() != StatusCiclo.VERIFICACAO) {
+            throw new BusinessRuleException("Não é possível inserir verificação de resultado para um ciclo que não está em verificação");
+        }
+
         VerificacaoResultado resultado = mapper.toEntity(dto);
 
         resultado.setCiclo(ciclo);
@@ -66,7 +76,6 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     public void excluir(Long id) {
         VerificacaoResultado resultado = getEntity(id);
 
-        // todo validar todos os outros que não podem ser
         if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {
             throw new BusinessRuleException("Não é possível excluir a verificação do resultado de um ciclo que já avançou de etapa");
         }

@@ -40,7 +40,10 @@ public class AlertaPrazoService {
     public AlertaPrazoResponseDTO inserir(Long idTarefa) {
         Tarefa tarefa = tarefaService.getEntity(idTarefa);
         Usuario usuarioDestino = usuarioService.getEntity(tarefa.getResponsavel().getId());
+        Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
+
         String mensagem = gerarAlerta(tarefa, usuarioDestino);
+
 
         AlertaPrazo alertaPrazo = new AlertaPrazo();
         alertaPrazo.setTarefa(tarefa);

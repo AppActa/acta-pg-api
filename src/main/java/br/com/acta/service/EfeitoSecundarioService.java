@@ -37,6 +37,8 @@ public class EfeitoSecundarioService {
 
     public EfeitoSecundarioResponseDTO inserir(Long idResultado, EfeitoSecundarioRequestDTO dto){
         VerificacaoResultado resultado = resultadoService.getEntity(idResultado);
+        Validador.validarCicloAberto(resultado.getCiclo());
+
         EfeitoSecundario efeitoSecundario = mapper.toEntity(dto);
 
         efeitoSecundario.setVerificacaoResultado(resultado);
