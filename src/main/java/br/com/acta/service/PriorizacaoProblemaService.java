@@ -14,6 +14,7 @@ import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
@@ -34,10 +35,6 @@ public class PriorizacaoProblemaService {
             Set.of("posicao", "pesoCalculado")
     );
 
-    private void verificarListaVazia(List<PriorizacaoProblema> priorizacoes){
-        if (priorizacoes.isEmpty()) throw new ModelNotFoundException("PriorizacaoProblema");
-    }
-
     protected PriorizacaoProblema getEntity(Long idProblema, Long idUsuario){
         PriorizacaoProblemaId id = new PriorizacaoProblemaId(idProblema, idUsuario);
 
@@ -49,6 +46,8 @@ public class PriorizacaoProblemaService {
         Problema problema = problemaService.getEntity(idProblema);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
 
+        Validador.validarMesmoCiclo(problema.getCiclo(), usuario.getCiclos());
+
         List<PriorizacaoProblema> respostasUsuario = repo.findByProblemaAndUsuario(problema, usuario);
         if (!respostasUsuario.isEmpty()) {
             throw new UniqueViolationException("Problema", "Usuário");
@@ -58,8 +57,13 @@ public class PriorizacaoProblemaService {
         priorizacaoProblema.setProblema(problema);
         priorizacaoProblema.setUsuario(usuario);
 
-        PriorizacaoProblema salvo = repo.save(priorizacaoProblema);
-        return mapper.toResponse(salvo);
+        // proteção contra race condition
+        try {
+            PriorizacaoProblema salvo = repo.saveAndFlush(priorizacaoProblema);
+            return mapper.toResponse(salvo);
+        } catch (DataIntegrityViolationException dive){
+            throw new UniqueViolationException("Problema", "Usuário");
+        }
     }
 
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
@@ -75,13 +79,13 @@ public class PriorizacaoProblemaService {
 
     public List<PriorizacaoProblemaResponseDTO> buscar(Long idProblema, Long idUsuario){
         List<PriorizacaoProblema> priorizacoes;
-
         Problema problema = problemaService.getEntity(idProblema);
 
         if (idUsuario == null ) {
             priorizacoes = repo.findByProblema(problema);
         } else {
             Usuario usuario = usuarioService.getEntity(idUsuario);
+            Validador.validarMesmoCiclo(problema.getCiclo(), usuario.getCiclos());
             priorizacoes = repo.findByProblemaAndUsuario(problema, usuario);
         }
 
@@ -100,9 +104,12 @@ public class PriorizacaoProblemaService {
         }
         BigDecimal peso = soma.divide(new BigDecimal(priorizacoes.size()), 2, RoundingMode.HALF_UP);
 
-
         problema.setPeso(peso);
         Problema salvo = problemaService.repo.save(problema);
         return problemaService.mapper.toResponse(salvo);
+    }
+
+    private void verificarListaVazia(List<PriorizacaoProblema> priorizacoes){
+        if (priorizacoes.isEmpty()) throw new ModelNotFoundException("PriorizacaoProblema");
     }
 }

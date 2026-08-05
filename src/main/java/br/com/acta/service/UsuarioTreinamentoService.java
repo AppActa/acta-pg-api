@@ -1,5 +1,7 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.enums.StatusTreinamento;
@@ -11,6 +13,7 @@ import br.com.acta.dto.mapper.join.UsuarioTreinamentoMapper;
 import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -25,6 +28,8 @@ public class UsuarioTreinamentoService {
 
     public List<UsuarioTreinamentoResponseDTO> buscar(Long idTreinamento){
         List<UsuarioTreinamento> usuarios = repo.findByTreinamentoId(idTreinamento);
+
+        verificarListaVazia(usuarios);
         return mapper.toResponseList(usuarios);
     }
 
@@ -38,8 +43,14 @@ public class UsuarioTreinamentoService {
         }
 
         usuarioTreinamento.setTreinamento(treinamento);
-        UsuarioTreinamento salvo = repo.save(usuarioTreinamento);
-        return mapper.toResponse(salvo);
+
+        // proteção contra race condition
+        try {
+            UsuarioTreinamento salvo = repo.saveAndFlush(usuarioTreinamento);
+            return mapper.toResponse(salvo);
+        } catch (DataIntegrityViolationException dive){
+            throw new UniqueViolationException("Usuário", "Treinamento");
+        }
     }
 
     public UsuarioTreinamentoResponseDTO patchStatus(Long idTreinamento, Long idUsuario, StatusTreinamento status){
@@ -48,6 +59,10 @@ public class UsuarioTreinamentoService {
         }
 
         UsuarioTreinamento usuarioTreinamento = repo.findByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento);
+
+        if ( !status.podeAtualizarStatus(status) ) {
+            throw new StatusUpdateException(status.toString(), usuarioTreinamento.getStatus().toString());
+        }
 
         if (status == StatusTreinamento.CONCLUIDO) {
             usuarioTreinamento.setTerminadoEm(OffsetDateTime.now());
@@ -64,6 +79,17 @@ public class UsuarioTreinamentoService {
         }
 
         UsuarioTreinamento usuarioTreinamento = repo.findByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento);
+
+        if (usuarioTreinamento.getStatus() == StatusTreinamento.CONCLUIDO) {
+            throw new BusinessRuleException("Não é possível excluir um treinamento já concluído");
+        }
+
         repo.delete(usuarioTreinamento);
+    }
+
+    private void verificarListaVazia(List<UsuarioTreinamento> lista) {
+        if (lista.isEmpty()) {
+            throw new ModelNotFoundException("Usuário e treinamento");
+        }
     }
 }
