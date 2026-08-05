@@ -60,7 +60,7 @@ public class UsuarioTreinamentoService {
 
         UsuarioTreinamento usuarioTreinamento = repo.findByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento);
 
-        if ( !status.podeAtualizarStatus(status) ) {
+        if (!usuarioTreinamento.getStatus().podeAtualizarStatus(status)) {
             throw new StatusUpdateException(status.toString(), usuarioTreinamento.getStatus().toString());
         }
 

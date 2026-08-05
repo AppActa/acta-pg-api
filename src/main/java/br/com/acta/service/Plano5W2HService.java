@@ -79,10 +79,9 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         }
 
         Usuario usuario = usuarioCicloService.usuarioService.getEntity(dto.idWhoResponsavel());
+        Validador.validarMesmoCiclo(planoAcao.getCiclo(), usuario.getCiclos());
 
-        Validador.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), usuario.getCiclos());
         plano5W2H.setPlanoAcao(planoAcao);
-
         Plano5W2H salvo = repo.save(plano5W2H);
         return mapper.toResponse(salvo);
     }
