@@ -46,6 +46,10 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         Validador.validarCampos(campos, patchConfig);
         PlanoAcao planoAcao = getEntity(id);
 
+        if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
+            throw new BusinessRuleException("Apenas planos de ação em rascunho podem ser atualizados");
+        }
+
         if (campos.containsKey("nome")) planoAcao.setNome((String) campos.get("nome"));
         if (campos.containsKey("objetivo")) planoAcao.setObjetivo((String) campos.get("objetivo"));
         if (campos.containsKey("prioridade")) planoAcao.setPrioridade((Prioridade) campos.get("prioridade"));
@@ -54,8 +58,10 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
-    public PlanoAcaoResponseDTO atualizarStatus(Long id, StatusPlanoAcao status) {
+    public PlanoAcaoResponseDTO patchStatus(Long id, StatusPlanoAcao status) {
         PlanoAcao planoAcao = getEntity(id);
+
+        Validador.validarCicloAberto(planoAcao.getCiclo());
 
         if (!planoAcao.getStatus().podeAtualizarStatus(status)) {
             throw new StatusUpdateException(planoAcao.getStatus().toString(), status.toString());
@@ -101,13 +107,17 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
             planosAcao = repo.findByCicloIdAndStatusAndPrioridade(id, status, prioridade);
         }
 
+        verificarListaVazia(planosAcao);
         return mapper.toResponseList(planosAcao);
     }
 
     public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo, Long idCriadoPor) {
         PlanoAcao planoAcao = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
+        Validador.validarCicloAberto(ciclo);
+
         Usuario criadoPor = usuarioService.getEntity(idCriadoPor);
+        Validador.validarMesmoCiclo(ciclo, criadoPor.getCiclos());
 
         planoAcao.setCiclo(ciclo);
         planoAcao.setCriadoPor(criadoPor);
