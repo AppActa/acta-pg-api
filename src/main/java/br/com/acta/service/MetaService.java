@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
 import br.com.acta.dto.pdca.meta.MetaRequestDTO;
 import br.com.acta.dto.pdca.meta.MetaResponseDTO;
@@ -65,6 +66,8 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     public MetaResponseDTO inserir(Long idPlanoAcao, MetaRequestDTO dto) {
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Ciclo ciclo = planoAcao.getCiclo();
+        Validador.validarCicloAberto(ciclo);
+
         Meta meta = mapper.toEntity(dto);
 
         meta.setCiclo(ciclo);
@@ -82,7 +85,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
-    public MetaResponseDTO atualizarStatus(Long id, StatusMeta status){
+    public MetaResponseDTO patchStatus(Long id, StatusMeta status){
         Meta meta = getEntity(id);
 
         meta.setStatus(status);
@@ -128,6 +131,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         Meta meta = getEntity(id);
         Set<Usuario> responsaveis = meta.getResponsaveis();
 
+        verificarListaVazia(responsaveis);
         return usuarioService.mapper.toSummaryList(responsaveis);
     }
 
@@ -144,6 +148,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
             }
 
             Usuario usuario = usuarioService.getEntity(idResponsavel);
+            Validador.validarMesmoCiclo(meta.getCiclo(), usuario.getCiclos());
             responsaveisAtuais.add(usuario);
         }
 
@@ -155,10 +160,18 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         Meta meta = getEntity(idMeta);
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
 
+        if (responsaveisAtuais.size() == 1) {
+            throw new BusinessRuleException("Uma meta deve ter pelo menos um responsável");
+        }
+
         for (Long idResponsavel : idResponsaveis) {
             responsaveisAtuais.removeIf(usuario -> usuario.getId().equals(idResponsavel));
         }
 
         repo.save(meta);
+    }
+
+    private void verificarListaVazia(Set<Usuario> usuarios){
+        if (usuarios.isEmpty()) throw new ModelNotFoundException("Usuário");
     }
 }
