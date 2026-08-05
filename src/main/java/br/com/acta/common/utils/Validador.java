@@ -1,14 +1,19 @@
 package br.com.acta.common.utils;
 
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusCiclo;
+import br.com.acta.entity.enums.StatusProblema;
+import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.enums.TipoUsuario;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.common.handler.exception.BusinessRuleException;
 import br.com.acta.common.handler.exception.ImmutableFieldException;
 import br.com.acta.common.handler.exception.InexistentFieldException;
+import br.com.acta.entity.pdca.Problema;
+import br.com.acta.entity.pdca.Tarefa;
 
 import java.util.Map;
 import java.util.Objects;
@@ -27,6 +32,28 @@ public final class Validador {
     public static void validarCicloAberto(Ciclo ciclo) {
         if (ciclo.getStatus() == StatusCiclo.CONCLUIDO || ciclo.getStatus() == StatusCiclo.CANCELADO) {
             throw new BusinessRuleException("Não é possível realizar esta operação em um ciclo que não está aberto");
+        }
+    }
+
+    public static void validarProblemaAberto(Problema problema) {
+        if (problema.getStatus() == StatusProblema.RESOLVIDO || problema.getStatus() == StatusProblema.DESCARTADO) {
+            throw new BusinessRuleException("Não é possível realizar esta operação em um problema que não está aberto");
+        }
+
+        validarCicloAberto(problema.getCiclo());
+    }
+
+    public static void validarTarefaAberta(Tarefa tarefa){
+        if (tarefa.getStatus() == StatusTarefa.CONCLUIDA || tarefa.getStatus() == StatusTarefa.CANCELADA) {
+            throw new BusinessRuleException("Não é possível realizar esta operação em uma tarefa que não está aberta");
+        }
+
+        validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
+    }
+
+    public static void validarMesmaEmpresa(Empresa a, Empresa b){
+        if (!a.equals(b)) {
+            throw new BusinessRuleException("As entidades devem pertencer à mesma empresa");
         }
     }
 
