@@ -44,6 +44,11 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     public Plano5W2HResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
         Plano5W2H plano5W2H = getEntity(id);
+        PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
+
+        if (planoAcao != null && !Set.of(StatusPlanoAcao.RASCUNHO, StatusPlanoAcao.APROVADO).contains(planoAcao.getStatus())) {
+            throw new BusinessRuleException("O 5W2H só pode ser atualizado em planos de ação em rascunho ou aprovados");
+        }
 
         if (campos.containsKey("whatAcao")) plano5W2H.setWhatAcao((String) campos.get("whatAcao"));
         if (campos.containsKey("whyJustificativa")) plano5W2H.setWhyJustificativa((String) campos.get("whyJustificativa"));
@@ -56,7 +61,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
             Long idWhoResponsavel = (Long) campos.get("idWhoResponsavel");
             Usuario responsavel = usuarioCicloService.usuarioService.getEntity(idWhoResponsavel);
 
-            usuarioCicloService.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), responsavel.getCiclos());
+            Validador.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), responsavel.getCiclos());
 
             plano5W2H.setWhoResponsavel(responsavel);
         }
@@ -68,18 +73,21 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     public Plano5W2HResponseDTO inserir(Plano5W2HRequestDTO dto, Long idPlanoAcao) {
         Plano5W2H plano5W2H = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
+
+        if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
+            throw new BusinessRuleException("O 5W2H só pode ser inserido em planos de ação em rascunho");
+        }
+
         Usuario usuario = usuarioCicloService.usuarioService.getEntity(dto.idWhoResponsavel());
+        Validador.validarMesmoCiclo(planoAcao.getCiclo(), usuario.getCiclos());
 
-        usuarioCicloService.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), usuario.getCiclos());
         plano5W2H.setPlanoAcao(planoAcao);
-
         Plano5W2H salvo = repo.save(plano5W2H);
         return mapper.toResponse(salvo);
     }
 
     public Plano5W2HResponseDTO buscarPorPlanoAcao(Long idPlanoAcao){
         Plano5W2H plano5W2H = repo.findByPlanoAcaoId(idPlanoAcao).orElseThrow(() -> new ModelNotFoundException("5W2H"));
-
         return mapper.toResponse(plano5W2H);
     }
 

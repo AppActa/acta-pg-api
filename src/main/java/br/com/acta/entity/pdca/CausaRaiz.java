@@ -45,7 +45,7 @@ public class CausaRaiz extends AuditoriaBase {
     private PlanoAcao planoAcao;
 
     @Column(name = "id_5_porques_mongo")
-    private Integer id5PorquesMongo;
+    private String id5PorquesMongo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "validada_por")

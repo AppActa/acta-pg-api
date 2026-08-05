@@ -1,16 +1,21 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.Prioridade;
+import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusTarefa;
+import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.common.handler.exception.BusinessRuleException;
 import br.com.acta.dto.mapper.pdca.TarefaMapper;
+import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
@@ -27,6 +32,7 @@ public class TarefaService
 extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     private final TarefaRepository repo;
     private final TarefaMapper mapper;
+    private final UsuarioTreinamentoRepository usuarioTreinamentoRepo;
     private final PlanoAcaoService planoAcaoService;
     private final UsuarioService usuarioService;
     private final PatchConfig patchConfigConfig = new PatchConfig(
@@ -34,18 +40,20 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             Set.of("titulo", "descricao", "prioridade", "dataFimPrevista")
     );
 
-    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService) {
+    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, UsuarioTreinamentoRepository usuarioTreinamentoRepo) {
         super(repo, mapper, Tarefa.class);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
         this.usuarioService = usuarioService;
+        this.usuarioTreinamentoRepo = usuarioTreinamentoRepo;
     }
 
     @Override
     public TarefaResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfigConfig);
         Tarefa tarefa = getEntity(id);
+        Validador.validarTarefaAberta(tarefa);
 
         if (campos.containsKey("titulo")) tarefa.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) tarefa.setDescricao((String) campos.get("descricao"));
@@ -59,14 +67,19 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     public List<TarefaResponseDTO> buscar(Long idPlanoAcao, StatusTarefa status, Long idResponsavel, Prioridade prioridade){
         planoAcaoService.getEntity(idPlanoAcao);
         List<Tarefa> tarefas = repo.buscar(idPlanoAcao, status, idResponsavel, prioridade);
-        verificarListaVazia(tarefas);
 
+        verificarListaVazia(tarefas);
        return mapper.toResponseList(tarefas);
     }
 
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {
         Tarefa tarefa = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
+        Validador.validarCicloAberto(planoAcao.getCiclo());
+
+        if (!Set.of(StatusPlanoAcao.APROVADO, StatusPlanoAcao.EM_EXECUCAO).contains(planoAcao.getStatus())){
+            throw new BusinessRuleException("Não é possível criar uma tarefa para um plano de ação que não está aprovado ou em execução");
+        }
 
         tarefa.setPlanoAcao(planoAcao);
 
@@ -74,9 +87,12 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
-    // todo não permitir iniciar tarefa caso não tenha iniciado o treinamento
-    public TarefaResponseDTO atualizarStatus(Long id, TarefaStatusUpdateDTO dto){
+    public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         Tarefa tarefa = getEntity(id);
+        Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
+        if (!tarefa.getStatus().podeAtualizarStatus(dto.status())) {
+            throw new BusinessRuleException("Não é possível atualizar o status da tarefa para o valor informado");
+        }
 
         switch (dto.status()) {
             case PENDENTE -> {
@@ -85,6 +101,14 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             }
 
             case EM_ANDAMENTO -> {
+                Long idResponsavel = tarefa.getResponsavel().getId();
+                Long idCiclo = tarefa.getPlanoAcao().getCiclo().getId();
+                boolean treinamentoPendente = usuarioTreinamentoRepo.existsByUsuarioIdAndTreinamentoCicloIdAndObrigatorioTrueAndStatus(idResponsavel, idCiclo, StatusTreinamento.PENDENTE);
+
+                if (treinamentoPendente) {
+                    throw new BusinessRuleException("O responsável possui treinamento obrigatório do ciclo ainda não iniciado");
+                }
+
                 LocalDate dataInicio = capturarData(dto.dataInicioReal());
                 tarefa.setDataInicioReal(dataInicio);
             }
@@ -106,8 +130,8 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Tarefa tarefa = getEntity(idTarefa);
         Usuario responsavel = usuarioService.getEntity(idResponsavel);
 
-        // todo validar se o ciclo ainda está aberto
         Validador.validarMesmoCiclo(tarefa.getPlanoAcao().getCiclo(), responsavel.getCiclos());
+        Validador.validarTarefaAberta(tarefa);
 
         tarefa.setResponsavel(responsavel);
         Tarefa salvo = repo.save(tarefa);
@@ -116,8 +140,10 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
         Tarefa tarefa = getEntity(idTarefa);
-
-        if (tarefa.getStatus() != StatusTarefa.CONCLUIDA) throw new BusinessRuleException("A tarefa não pode ser reaberta, já que ainda não foi concluída");
+        Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
+        if (tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA) {
+            throw new BusinessRuleException("A tarefa não pode ser reaberta, já que ainda não foi fechada");
+        }
 
         tarefa.setStatus(StatusTarefa.EM_ANDAMENTO);
         tarefa.setDataFimReal(null);
@@ -130,8 +156,8 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Override
     public void excluir(Long id) {
         Tarefa tarefa = getEntity(id);
-
-        if ( tarefa.getDependentes() != null)
+        Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
+        if (!tarefa.getDependentes().isEmpty())
             throw new BusinessRuleException("A tarefa possui dependentes e não pode ser excluída");
 
         tarefa.setStatus(StatusTarefa.CANCELADA);
@@ -142,6 +168,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Tarefa tarefa = getEntity(id);
         Set<Tarefa> dependentes = tarefa.getDependentes();
 
+        verificarListaVazia(dependentes);
         return mapper.toSummaryList(dependentes);
     }
 
@@ -152,7 +179,11 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Validador.validarMesmoId(id, idDependente, false);
         Validador.validarMesmoCiclo(tarefa.getPlanoAcao().getCiclo(), dependenteNovo.getPlanoAcao().getCiclo());
 
-        if (tarefa.getDependentes().contains(dependenteNovo)) throw new BusinessRuleException("Essa dependencia já foi cadastrada");
+        if (tarefa.getDependentes().contains(dependenteNovo))
+            throw new UniqueViolationException("Dependência de tarefa");
+
+        if (criaDependenciaCircular(tarefa, dependenteNovo))
+            throw new BusinessRuleException("Essa dependência criaria uma dependência circular entre as tarefas");
 
         tarefa.getDependentes().add(dependenteNovo);
         dependenteNovo.getDependencias().add(tarefa);
@@ -166,6 +197,11 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Tarefa tarefa = getEntity(id);
         Tarefa dependente = getEntity(idDependente);
 
+        Validador.validarMesmoCiclo(tarefa.getPlanoAcao().getCiclo(), dependente.getPlanoAcao().getCiclo());
+        if ( !tarefa.getDependentes().contains(dependente) ) {
+            throw new BusinessRuleException("A tarefa não possui essa dependência");
+        }
+
         tarefa.getDependentes().remove(dependente);
         dependente.getDependencias().remove(tarefa);
 
@@ -175,5 +211,21 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
     private LocalDate capturarData(LocalDate data){
         return data != null ? data : LocalDate.now();
+    }
+
+    private void verificarListaVazia(Set<Tarefa> tarefas) {
+        if (tarefas.isEmpty()) {
+            throw new ModelNotFoundException("Tarefa");
+        }
+    }
+
+    private boolean criaDependenciaCircular(Tarefa tarefa, Tarefa dependente) {
+        if (tarefa.getId().equals(dependente.getId())) return true;
+
+        for (Tarefa dep : tarefa.getDependentes()) {
+            if (criaDependenciaCircular(dep, dependente)) return true;
+        }
+
+        return false;
     }
 }

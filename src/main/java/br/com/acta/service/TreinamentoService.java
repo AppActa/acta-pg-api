@@ -43,7 +43,12 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
 
         if (campos.containsKey("titulo")) treinamento.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) treinamento.setDescricao((String) campos.get("descricao"));
-        if (campos.containsKey("dataTreinamento")) treinamento.setDataTreinamento((LocalDate) campos.get("dataTreinamento"));
+        if (campos.containsKey("dataTreinamento")) {
+            LocalDate dataTreinamento = (LocalDate) campos.get("dataTreinamento");
+            if (dataTreinamento.isBefore(LocalDate.now()))
+                throw new BusinessRuleException("A data do treinamento não pode ser anterior à data atual");
+            treinamento.setDataTreinamento(dataTreinamento);
+        }
         if (campos.containsKey("obrigatorio")) treinamento.setObrigatorio((Boolean) campos.get("obrigatorio"));
 
         Treinamento salvo = repo.save(treinamento);
@@ -54,11 +59,14 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         List<Treinamento> treinamentos = repo.findByCiclo(ciclo);
 
+        verificarListaVazia(treinamentos);
         return mapper.toResponseList(treinamentos);
     }
 
     public TreinamentoResponseDTO inserir(Long idCiclo, TreinamentoRequestDTO dto) {
         Ciclo ciclo = cicloService.getEntity(idCiclo);
+        Validador.validarCicloAberto(ciclo);
+
         Treinamento treinamento = mapper.toEntity(dto);
 
         treinamento.setCiclo(ciclo);
@@ -69,14 +77,15 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     @Override
     public void excluir(Long id) {
         Treinamento treinamento = getEntity(id);
+        Validador.validarCicloAberto(treinamento.getCiclo());
 
         if (treinamento.getDataTreinamento().isBefore(LocalDate.now())) {
-            throw new BusinessRuleException("Não é possível excluir treinamentos que já foram iniciados");
+            throw new BusinessRuleException("Não é possível excluir treinamentos que já foram terminados");
         }
 
         treinamento.getParticipantes().forEach(participante -> {
             if (participante.getStatus() == StatusTreinamento.CONCLUIDO){
-                throw new BusinessRuleException("Não é possível excluir treinamentos que já foram iniciados");
+                throw new BusinessRuleException("Não é possível excluir treinamentos que já foram terminados");
             }
         });
 

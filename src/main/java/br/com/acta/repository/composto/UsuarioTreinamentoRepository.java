@@ -1,5 +1,6 @@
 package br.com.acta.repository.composto;
 
+import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.entity.join.id.UsuarioTreinamentoId;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -12,4 +13,5 @@ extends JpaRepository<UsuarioTreinamento, UsuarioTreinamentoId> {
     List<UsuarioTreinamento> findByTreinamentoId(Long idTreinamento);
     List<UsuarioTreinamento> findByUsuarioId(Long idUsuario);
     UsuarioTreinamento findByUsuarioIdAndTreinamentoId(Long usuarioId, Long treinamentoId);
+    boolean existsByUsuarioIdAndTreinamentoCicloIdAndObrigatorioTrueAndStatus(Long usuarioId, Long treinamentoCicloId, StatusTreinamento status);
 }

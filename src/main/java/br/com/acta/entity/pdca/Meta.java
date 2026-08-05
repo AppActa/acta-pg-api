@@ -13,7 +13,6 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.util.Set;
 
-// todo ligar com tarefa ou plano de ação
 @Entity
 @Table(name = "meta", schema = "pdca")
 @Getter
@@ -52,6 +51,10 @@ public class Meta extends AuditoriaBase {
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "id_ciclo", nullable = false)
     private Ciclo ciclo;
+
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_plano_acao", nullable = false)
+    private PlanoAcao planoAcao;
 
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "meta_responsavel", schema = "pdca",
