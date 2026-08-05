@@ -16,7 +16,7 @@ import java.time.OffsetDateTime;
 @Setter
 @NoArgsConstructor
 public class CausaRaiz extends AuditoriaBase {
-    @Column(name = "descricao", nullable = false)
+    @Column(name = "descricao", nullable = false, columnDefinition = "TEXT")
     private String descricao;
 
     @Column(name = "origem", nullable = false)
@@ -45,7 +45,7 @@ public class CausaRaiz extends AuditoriaBase {
     private PlanoAcao planoAcao;
 
     @Column(name = "id_5_porques_mongo")
-    private Integer id5PorquesMongo;
+    private String id5PorquesMongo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "validada_por")
