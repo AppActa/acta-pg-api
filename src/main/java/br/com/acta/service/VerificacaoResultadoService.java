@@ -1,16 +1,16 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.InvalidResourceStatusException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.VerificacaoResultadoMapper;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoRequestDTO;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.VerificacaoResultado;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.dto.mapper.pdca.VerificacaoResultadoMapper;
 import br.com.acta.repository.padrao.VerificacaoResultadoRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -40,7 +40,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         VerificacaoResultado resultado = getEntity(id);
 
         if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {
-            throw new BusinessRuleException("Não é possível atualizar a verificação de resultado para um ciclo que não está em verificação");
+            throw new InvalidResourceStatusException("atualizar", "Verificação de Resultado", StatusCiclo.VERIFICACAO.toString());
         }
 
         if (campos.containsKey("resumo")) resultado.setResumo((String) campos.get("resumo"));
@@ -62,7 +62,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         Validador.validarCicloAberto(ciclo);
 
         if (ciclo.getStatus() != StatusCiclo.VERIFICACAO) {
-            throw new BusinessRuleException("Não é possível inserir verificação de resultado para um ciclo que não está em verificação");
+            throw new InvalidResourceStatusException("inserir", "Verificação de Resultado", StatusCiclo.VERIFICACAO.toString());
         }
 
         VerificacaoResultado resultado = mapper.toEntity(dto);
@@ -77,7 +77,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         VerificacaoResultado resultado = getEntity(id);
 
         if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {
-            throw new BusinessRuleException("Não é possível excluir a verificação do resultado de um ciclo que já avançou de etapa");
+            throw new InvalidResourceStatusException("excluir", "Verificação de Resultado", StatusCiclo.VERIFICACAO.toString());
         }
 
         repo.delete(resultado);

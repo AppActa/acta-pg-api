@@ -1,5 +1,6 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.*;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoRequestDTO;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -8,8 +9,6 @@ import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.dto.mapper.pdca.PlanoAcaoMapper;
 import br.com.acta.repository.padrao.PlanoAcaoRepository;
 import br.com.acta.service.base.BaseService;
@@ -47,7 +46,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         PlanoAcao planoAcao = getEntity(id);
 
         if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
-            throw new BusinessRuleException("Apenas planos de ação em rascunho podem ser atualizados");
+            throw new InvalidResourceStatusException("atualizar", "Plano de Ação", StatusPlanoAcao.RASCUNHO.toString());
         }
 
         if (campos.containsKey("nome")) planoAcao.setNome((String) campos.get("nome"));
@@ -68,7 +67,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         }
 
         if (planoAcao.getPlano5W2H() == null && status == StatusPlanoAcao.APROVADO){
-            throw new BusinessRuleException("Um plano de ação não pode ser aprovado sem o 5W2H");
+            throw new PrerequisiteNotMetException("aprovar o plano de ação", "ter 5W2H");
         }
 
         planoAcao.setStatus(status);
@@ -83,11 +82,11 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
 
         if (temTarefasAtivas) {
-            throw new BusinessRuleException("Não é possível excluir um plano de ação que possui tarefas ativas");
+            throw new ActiveEntityDeletionException("Plano de ação");
         }
 
         if (planoAcao.getStatus() == StatusPlanoAcao.CONCLUIDO){
-            throw new BusinessRuleException("Não é possível excluir um plano de ação que já foi concluído");
+            throw new InvalidResourceStatusException("excluir", "Plano de Ação", StatusPlanoAcao.CONCLUIDO.toString());
         }
 
         planoAcao.setStatus(StatusPlanoAcao.CANCELADO);
@@ -107,7 +106,6 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
             planosAcao = repo.findByCicloIdAndStatusAndPrioridade(id, status, prioridade);
         }
 
-        verificarListaVazia(planosAcao);
         return mapper.toResponseList(planosAcao);
     }
 

@@ -1,22 +1,23 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.InvalidResourceStatusException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HRequestDTO;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.pdca.Plano5W2H;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
-import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
 import br.com.acta.repository.padrao.Plano5W2HRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -47,7 +48,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
 
         if (planoAcao != null && !Set.of(StatusPlanoAcao.RASCUNHO, StatusPlanoAcao.APROVADO).contains(planoAcao.getStatus())) {
-            throw new BusinessRuleException("O 5W2H só pode ser atualizado em planos de ação em rascunho ou aprovados");
+            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.RASCUNHO.toString(), StatusPlanoAcao.APROVADO.toString()));
         }
 
         if (campos.containsKey("whatAcao")) plano5W2H.setWhatAcao((String) campos.get("whatAcao"));
@@ -75,7 +76,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
 
         if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
-            throw new BusinessRuleException("O 5W2H só pode ser inserido em planos de ação em rascunho");
+            throw new InvalidResourceStatusException("inserir", "5W2H", StatusPlanoAcao.RASCUNHO.toString());
         }
 
         Usuario usuario = usuarioCicloService.usuarioService.getEntity(dto.idWhoResponsavel());
@@ -97,7 +98,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         if (Set.of(StatusPlanoAcao.CONCLUIDO, StatusPlanoAcao.EM_EXECUCAO)
                 .contains(plano5W2H.getPlanoAcao().getStatus())
         ){
-            throw new BusinessRuleException("O 5W2H já foi finalizado e não pode ser excluído");
+            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.RASCUNHO.toString(), StatusPlanoAcao.APROVADO.toString()));
         }
 
         repo.delete(plano5W2H);

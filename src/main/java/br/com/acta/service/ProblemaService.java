@@ -1,19 +1,19 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.ProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusProblema;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.Problema;
-import br.com.acta.dto.mapper.pdca.ProblemaMapper;
 import br.com.acta.repository.padrao.CausaRaizRepository;
 import br.com.acta.repository.padrao.ProblemaRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -115,7 +115,6 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
             problemas = repo.findByStatusAndProblemaPaiIdAndCicloId(status, idProblemaPai, idCiclo);
         }
 
-        verificarListaVazia(problemas);
         return mapper.toResponseList(problemas);
     }
 
@@ -123,7 +122,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         boolean temPlanoExecucao = causaRaizRepo.findByProblemaId(problema.getId()).stream()
                 .anyMatch(causaRaiz -> causaRaiz.getPlanoAcao() != null && causaRaiz.getPlanoAcao().getStatus() == StatusPlanoAcao.EM_EXECUCAO);
 
-        if (temPlanoExecucao) throw new BusinessRuleException("Não é possível excluir um problema se existe um plano de ação vinculado");
+        if (temPlanoExecucao) throw new ActiveEntityDeletionException("Problema");
         problema.getSubProblemas().forEach(this::validarSemPlanoExecucao);
     }
 

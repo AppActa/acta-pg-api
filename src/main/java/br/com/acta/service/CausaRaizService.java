@@ -1,6 +1,10 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.CausaRaizMapper;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizRequestDTO;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -8,12 +12,9 @@ import br.com.acta.entity.enums.TipoUsuario;
 import br.com.acta.entity.pdca.CausaRaiz;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.dto.mapper.pdca.CausaRaizMapper;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.padrao.CausaRaizRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.time.OffsetDateTime;
@@ -63,7 +64,6 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     public List<CausaRaizResponseDTO> buscar(Long idCiclo, Long idProblema, Boolean aceita, Boolean principal){
         List<CausaRaiz> causasRaiz = repo.buscar(idCiclo, idProblema, aceita, principal);
 
-        verificarListaVazia(causasRaiz);
         return mapper.toResponseList(causasRaiz);
     }
 
@@ -86,7 +86,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
 
         if (causaRaiz.getPlanoAcao() != null){
-            throw new BusinessRuleException("A causa raiz já está vinculada a um plano de ação");
+            throw new UniqueViolationException("Causa raiz", "Plano de ação");
         }
 
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
@@ -102,7 +102,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         Usuario usuario = usuarioService.getEntity(idUsuario);
 
         if (causaRaiz.getValidadaEm() != null){
-            throw new BusinessRuleException("A causa raiz já foi validada");
+            throw new InvalidRequestException("A causa raiz já foi validada");
         }
 
         Validador.validarTipoUsuario(usuario, TipoUsuario.ADMIN, TipoUsuario.GESTOR);
