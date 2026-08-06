@@ -1,15 +1,16 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.CicloMapper;
 import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.pdca.Ciclo;
-import br.com.acta.dto.mapper.pdca.CicloMapper;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -74,21 +75,19 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
     public List<CicloResponseDTO> buscarPorGestor(Long idGestor){
         List<Ciclo> ciclos = repo.findByGestorId(idGestor);
-        verificarListaVazia(ciclos);
 
         return mapper.toResponseList(ciclos);
     }
 
     public List<CicloResponseDTO> buscarPorEmpresa(Long idEmpresa){
         List<Ciclo> ciclos = repo.findByEmpresaId(idEmpresa);
-        verificarListaVazia(ciclos);
 
         return mapper.toResponseList(ciclos);
     }
 
     public List<CicloResponseDTO> buscarPorStatus(Long idEmpresa, Long idGestor, StatusCiclo status){
         if (idEmpresa == null && idGestor == null) {
-            throw new IllegalArgumentException("É necessário informar pelo menos o id da empresa ou do gestor.");
+            throw new InvalidRequestException("É necessário informar pelo menos o id da empresa ou do gestor");
         }
 
         List<Ciclo> ciclos;
@@ -101,7 +100,6 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
             ciclos = repo.findByGestorIdAndStatus(idGestor, status);
         }
 
-        verificarListaVazia(ciclos);
         return mapper.toResponseList(ciclos);
     }
 }

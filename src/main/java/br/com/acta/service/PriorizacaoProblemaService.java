@@ -89,14 +89,12 @@ public class PriorizacaoProblemaService {
             priorizacoes = repo.findByProblemaAndUsuario(problema, usuario);
         }
 
-        verificarListaVazia(priorizacoes);
         return mapper.toResponseList(priorizacoes);
     }
 
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
         Problema problema = problemaService.getEntity(idProblema);
         List<PriorizacaoProblema> priorizacoes = repo.findByProblema(problema);
-        verificarListaVazia(priorizacoes);
 
         BigDecimal soma = BigDecimal.ZERO;
         for (PriorizacaoProblema priorizacaoProblema : priorizacoes) {
@@ -107,9 +105,5 @@ public class PriorizacaoProblemaService {
         problema.setPeso(peso);
         Problema salvo = problemaService.repo.save(problema);
         return problemaService.mapper.toResponse(salvo);
-    }
-
-    private void verificarListaVazia(List<PriorizacaoProblema> priorizacoes){
-        if (priorizacoes.isEmpty()) throw new ModelNotFoundException("PriorizacaoProblema");
     }
 }

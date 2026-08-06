@@ -1,14 +1,14 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.PrerequisiteNotMetException;
+import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.mapper.pdca.AlertaPrazoMapper;
 import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.pdca.AlertaPrazo;
 import br.com.acta.entity.pdca.Tarefa;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
-import br.com.acta.dto.mapper.pdca.AlertaPrazoMapper;
 import br.com.acta.repository.padrao.AlertaPrazoRepository;
-import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -68,6 +68,6 @@ public class AlertaPrazoService {
         long diasAtrasado = ChronoUnit.DAYS.between(tarefa.getDataFimPrevista(), LocalDate.now());
 
         if (diasAtrasado > 0) return usuario.getNome() + ", a tarefa " + tarefa.getTitulo() + " está atrasada em " + diasAtrasado + " dias";
-        else throw new BusinessRuleException("A tarefa não está atrasada");
+        else throw new PrerequisiteNotMetException("lançar alerta", "tarefa estar atrasada");
     }
 }

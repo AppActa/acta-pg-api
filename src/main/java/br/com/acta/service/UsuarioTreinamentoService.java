@@ -1,14 +1,11 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.StatusUpdateException;
-import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.handler.exception.*;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.entity.pdca.Treinamento;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.dto.mapper.join.UsuarioTreinamentoMapper;
 import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.common.utils.Validador;
@@ -29,7 +26,6 @@ public class UsuarioTreinamentoService {
     public List<UsuarioTreinamentoResponseDTO> buscar(Long idTreinamento){
         List<UsuarioTreinamento> usuarios = repo.findByTreinamentoId(idTreinamento);
 
-        verificarListaVazia(usuarios);
         return mapper.toResponseList(usuarios);
     }
 
@@ -39,7 +35,7 @@ public class UsuarioTreinamentoService {
 
         Validador.validarMesmoCiclo(treinamento.getCiclo(), usuarioTreinamento.getUsuario().getCiclos());
         if (repo.existsByUsuarioIdAndTreinamentoId(dto.idUsuario(), idTreinamento)) {
-            throw new BusinessRuleException("Usuário já está inscrito neste treinamento");
+            throw new UniqueViolationException("Usuário", "Treinamento");
         }
 
         usuarioTreinamento.setTreinamento(treinamento);
@@ -81,15 +77,9 @@ public class UsuarioTreinamentoService {
         UsuarioTreinamento usuarioTreinamento = repo.findByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento);
 
         if (usuarioTreinamento.getStatus() == StatusTreinamento.CONCLUIDO) {
-            throw new BusinessRuleException("Não é possível excluir um treinamento já concluído");
+            throw new InvalidResourceStatusException("excluir", "Treinamento", StatusTreinamento.CONCLUIDO.toString());
         }
 
         repo.delete(usuarioTreinamento);
-    }
-
-    private void verificarListaVazia(List<UsuarioTreinamento> lista) {
-        if (lista.isEmpty()) {
-            throw new ModelNotFoundException("Usuário e treinamento");
-        }
     }
 }

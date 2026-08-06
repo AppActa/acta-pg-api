@@ -1,7 +1,6 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.*;
 import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
 import br.com.acta.dto.pdca.meta.MetaRequestDTO;
 import br.com.acta.dto.pdca.meta.MetaResponseDTO;
@@ -103,7 +102,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
 
         if (temTarefasAtivas) {
-            throw new BusinessRuleException("Não é possível excluir uma meta que possui tarefas ativas");
+            throw new ActiveEntityDeletionException("Meta");
         }
 
         meta.setStatus(StatusMeta.CANCELADA);
@@ -123,7 +122,6 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
             metas = repo.findByCicloIdAndStatusAndPrioridade(idCiclo, status, prioridade);
         }
 
-        verificarListaVazia(metas);
         return mapper.toResponseList(metas);
     }
 
@@ -131,7 +129,6 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         Meta meta = getEntity(id);
         Set<Usuario> responsaveis = meta.getResponsaveis();
 
-        verificarListaVazia(responsaveis);
         return usuarioService.mapper.toSummaryList(responsaveis);
     }
 
@@ -144,7 +141,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
 
         for (Long idResponsavel : idResponsaveis){
             if (usuariosJaResponsaveis.contains(idResponsavel)) {
-                throw new BusinessRuleException("Responsável com o id " + idResponsavel + " já está atribuído para essa meta");
+                throw new UniqueViolationException("Responsável", "Meta");
             }
 
             Usuario usuario = usuarioService.getEntity(idResponsavel);
@@ -161,7 +158,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
 
         if (responsaveisAtuais.size() == 1) {
-            throw new BusinessRuleException("Uma meta deve ter pelo menos um responsável");
+            throw new PrerequisiteNotMetException("excluir responsável", "pelo menos dois responsáveis");
         }
 
         for (Long idResponsavel : idResponsaveis) {
@@ -169,9 +166,5 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         }
 
         repo.save(meta);
-    }
-
-    private void verificarListaVazia(Set<Usuario> usuarios){
-        if (usuarios.isEmpty()) throw new ModelNotFoundException("Usuário");
     }
 }

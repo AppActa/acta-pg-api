@@ -1,18 +1,18 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.BusinessRuleException;
+import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.utils.Hash;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
+import br.com.acta.dto.mapper.core.UsuarioMapper;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.*;
-import br.com.acta.dto.mapper.core.UsuarioMapper;
 import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.Hash;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -58,14 +58,12 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
     public List<UsuarioResponseDTO> buscarTodos(Long idEmpresa) {
         List<Usuario> usuarios = repo.findByEmpresaIdAndStatus(idEmpresa, StatusGeral.ATIVO);
-        verificarListaVazia(usuarios);
 
         return mapper.toResponseList(usuarios);
     }
 
     public List<UsuarioResponseDTO> buscarTodos(Long idEmpresa, TipoUsuario tipo){
         List<Usuario> usuarios = repo.findByTipoAndStatusAndEmpresaId(tipo, StatusGeral.ATIVO, idEmpresa);
-        verificarListaVazia(usuarios);
 
         return mapper.toResponseList(usuarios);
     }
@@ -81,21 +79,21 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
                         );
 
         if (gestorCicloAtivo) {
-            throw new BusinessRuleException("Não é possível excluir usuário que é gestor de ciclos ativos");
+            throw new ActiveEntityDeletionException("Usuário");
         }
 
         boolean responsavelTarefaAtiva = tarefaRepo.findByResponsavelId(id).stream()
                         .anyMatch(t -> !Set.of(StatusTarefa.CANCELADA, StatusTarefa.CONCLUIDA).contains(t.getStatus()));
 
         if (responsavelTarefaAtiva) {
-            throw new BusinessRuleException("Não é possível excluir usuário que é responsável por tarefas ativas");
+            throw new ActiveEntityDeletionException("Usuário");
         }
 
         boolean unicoResponsavelMetaAtiva = metaRepo.findByResponsaveisId(id).stream()
                         .anyMatch(meta -> meta.getResponsaveis().size() == 1 && !Set.of(StatusMeta.ATINGIDA, StatusMeta.PARCIALMENTE_ATINGIDA, StatusMeta.NAO_ATINGIDA, StatusMeta.CANCELADA).contains(meta.getStatus()));
 
         if (unicoResponsavelMetaAtiva) {
-            throw new BusinessRuleException("Não é possível excluir usuário que é o único responsável por metas ativas");
+            throw new ActiveEntityDeletionException("Usuário");
         }
 
         usuario.setStatus(StatusGeral.INATIVO);
