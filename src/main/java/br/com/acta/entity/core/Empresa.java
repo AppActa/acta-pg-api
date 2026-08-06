@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -46,10 +48,10 @@ public class Empresa extends AuditoriaBase {
     private Set<Colaborador> colaboradores;
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EmailEmpresa> emails;
+    private Set<EmailEmpresa> emails = new HashSet<>();
 
     @OneToMany(mappedBy = "empresa", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TelefoneEmpresa> telefones;
+    private Set<TelefoneEmpresa> telefones = new HashSet<>();
 
     @OneToMany(mappedBy = "empresa")
     private Set<Ciclo> ciclos;
