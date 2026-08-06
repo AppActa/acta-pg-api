@@ -1,11 +1,11 @@
 package br.com.acta.common.handler.exception;
 
 public class UniqueViolationException extends RuntimeException {
-    public UniqueViolationException(String campo) {
-        super("Já existe um registro com o mesmo valor para o campo " + campo);
+    public UniqueViolationException(String recurso) {
+        super("Já existe um registro para " + recurso);
     }
 
-    public UniqueViolationException(String tabelaUm, String tabelaDois) {
-        super("O " + tabelaUm + " já está vinculado a este " + tabelaDois);
+    public UniqueViolationException(String primeiroRecurso, String segundoRecurso){
+        super("Já existe um vínculo entre " + primeiroRecurso + " e " + segundoRecurso);
     }
 }
