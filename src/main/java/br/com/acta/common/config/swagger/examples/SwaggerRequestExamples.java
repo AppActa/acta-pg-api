@@ -1,9 +1,9 @@
-package br.com.acta.common.config.swagger;
+package br.com.acta.common.config.swagger.examples;
 
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public class SwaggerExamples {
+public class SwaggerRequestExamples {
     // Compartilhados
     public static final String NOME = "Jones Prado";
     public static final String EMAIL = "jones.prado@acta.com.br";
@@ -58,6 +58,7 @@ public class SwaggerExamples {
     public static final String DATA_INICIO_CICLO = "2026-05-13";
     public static final String DATA_ESTIMADA_FIM = "2026-11-06";
     public static final String ID_GESTOR = "1";
+    public static final String STATUS_CICLO = "PENDENTE";
 
     // Usuario Ciclo
     public static final String PAPEL_CICLO = "RESPONSAVEL";
