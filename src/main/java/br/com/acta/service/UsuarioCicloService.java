@@ -15,6 +15,8 @@ import br.com.acta.repository.padrao.CicloRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.List;
 import java.util.Set;
 
@@ -38,6 +40,7 @@ public class UsuarioCicloService {
         return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(id.getIdUsuario(), id.getIdCiclo())));
     }
 
+    @Transactional(readOnly = true)
     public List<UsuarioCicloResponseDTO> buscar(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         List<UsuarioCiclo> usuarios = ciclo.getColaboradores().stream().toList();
@@ -45,6 +48,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(usuarios);
     }
 
+    @Transactional
     public UsuarioCicloResponseDTO inserir(UsuarioCicloRequestDTO dto, Long idCiclo){
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -68,6 +72,7 @@ public class UsuarioCicloService {
         }
     }
 
+    @Transactional
     public UsuarioCicloResponseDTO patch(Long idUsuario, Long idCiclo, PapelCiclo papelCiclo){
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
         List<UsuarioCiclo> responsaveis = repo.findByCicloIdAndPapelCiclo(idCiclo, PapelCiclo.RESPONSAVEL);
@@ -82,6 +87,7 @@ public class UsuarioCicloService {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public List<UsuarioCicloResponseDTO> substituirResponsavel(Long idCiclo, Long idUsuarioAntigo, Long idUsuarioNovo){
         Validador.validarMesmoId(idUsuarioAntigo, idUsuarioNovo, false);
 
@@ -106,6 +112,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(salvo);
     }
 
+    @Transactional
     public void excluir(Long idUsuario, Long idCiclo){
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
 
