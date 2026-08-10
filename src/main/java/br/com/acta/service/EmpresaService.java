@@ -145,7 +145,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
 
     @Transactional
     public void excluirEmail(Long idEmpresa, Long idEmail){
-        EmailEmpresa email = emailRepo.findByEmpresaIdAndId(idEmpresa, idEmail);
+        EmailEmpresa email = getEmail(idEmpresa, idEmail);
         emailRepo.delete(email);
     }
 
@@ -169,17 +169,8 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
 
     @Transactional
     public void excluirTelefone(Long idEmpresa, Long idTelefone){
-        Empresa empresa = getEntity(idEmpresa);
-        TelefoneEmpresa telefone = telefoneRepo.findByEmpresaIdAndId(empresa.getId(), idTelefone);
+        TelefoneEmpresa telefone = getTelefone(idEmpresa, idTelefone);
         telefoneRepo.delete(telefone);
-    }
-
-    @Transactional(readOnly = true)
-    public List<EnderecoResponseDTO> buscarEnderecos(Long idEmpresa) {
-        Empresa empresa = getEntity(idEmpresa);
-
-        List<Endereco> enderecos = enderecoRepo.findByEmpresa(empresa);
-        return enderecoMapper.toResponseList(enderecos);
     }
 
     @Transactional(readOnly = true)
@@ -214,5 +205,15 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     private Endereco getEndereco(Long idEmpresa, Long idEndereco){
         Empresa empresa = getEntity(idEmpresa);
         return enderecoRepo.findByEmpresaAndId(empresa, idEndereco).orElseThrow(() -> new ModelNotFoundException("Endereco", idEndereco));
+    }
+
+    private EmailEmpresa getEmail(Long idEmpresa, Long idEmail){
+        Empresa empresa = getEntity(idEmpresa);
+        return emailRepo.findByEmpresaIdAndId(empresa.getId(), idEmail).orElseThrow(() -> new ModelNotFoundException("Email", idEmail));
+    }
+
+    private TelefoneEmpresa getTelefone(Long idEmpresa, Long idTelefone){
+        Empresa empresa = getEntity(idEmpresa);
+        return telefoneRepo.findByEmpresaIdAndId(empresa.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
     }
 }
