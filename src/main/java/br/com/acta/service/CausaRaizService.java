@@ -91,13 +91,16 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
 
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Validador.validarMesmoCiclo(causaRaiz.getCiclo(), planoAcao.getCiclo());
+        if (causaRaiz.getAceita() == null || !causaRaiz.getAceita()) {
+            throw new InvalidRequestException("A causa raiz não está aceita para vinculação com plano de ação");
+        }
         causaRaiz.setPlanoAcao(planoAcao);
 
         CausaRaiz salvo = repo.save(causaRaiz);
         return mapper.toResponse(salvo);
     }
 
-    public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario){
+    public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario, Boolean aceita){
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
         Usuario usuario = usuarioService.getEntity(idUsuario);
 
@@ -108,6 +111,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         Validador.validarTipoUsuario(usuario, TipoUsuario.ADMIN, TipoUsuario.GESTOR);
         Validador.validarMesmoCiclo(causaRaiz.getCiclo(), usuario.getCiclos());
 
+        causaRaiz.setAceita(aceita);
         causaRaiz.setValidadaPor(usuario);
         causaRaiz.setValidadaEm(OffsetDateTime.now());
 
