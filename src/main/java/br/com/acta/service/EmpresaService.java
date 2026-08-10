@@ -12,10 +12,14 @@ import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.dto.core.empresa.EmpresaRequestDTO;
 import br.com.acta.dto.core.empresa.EmpresaResponseDTO;
+import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
+import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.dto.mapper.core.EmpresaMapper;
+import br.com.acta.dto.mapper.core.EnderecoMapper;
 import br.com.acta.dto.mapper.core.contato.EmailEmpresaMapper;
 import br.com.acta.dto.mapper.core.contato.TelefoneEmpresaMapper;
 import br.com.acta.entity.core.Empresa;
+import br.com.acta.entity.core.Endereco;
 import br.com.acta.entity.core.contato.EmailEmpresa;
 import br.com.acta.entity.core.contato.TelefoneEmpresa;
 import br.com.acta.entity.enums.StatusCiclo;
@@ -23,6 +27,7 @@ import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TamanhoEmpresa;
 import br.com.acta.repository.padrao.EmailEmpresaRepository;
 import br.com.acta.repository.padrao.EmpresaRepository;
+import br.com.acta.repository.padrao.EnderecoRepository;
 import br.com.acta.repository.padrao.TelefoneEmpresaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.caelum.stella.validation.CNPJValidator;
@@ -42,13 +47,15 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     private final EmailEmpresaRepository emailRepo;
     private final TelefoneEmpresaMapper telefoneMapper;
     private final TelefoneEmpresaRepository telefoneRepo;
+    private final EnderecoMapper enderecoMapper;
+    private final EnderecoRepository enderecoRepo;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("cnpj", "nome", "tamanho", "setor", "status"),
-            Set.of("nome", "tamanho", "setor", "status")
+            Set.of("nome", "tamanho", "setor")
     );
     private final CNPJValidator cnpjValidator = new CNPJValidator();
 
-    public EmpresaService(EmpresaRepository repo, EmpresaMapper mapper, EmailEmpresaMapper emailMapper, EmailEmpresaRepository emailRepo, TelefoneEmpresaMapper telefoneMapper, TelefoneEmpresaRepository telefoneRepo) {
+    public EmpresaService(EmpresaRepository repo, EmpresaMapper mapper, EmailEmpresaMapper emailMapper, EmailEmpresaRepository emailRepo, TelefoneEmpresaMapper telefoneMapper, TelefoneEmpresaRepository telefoneRepo, EnderecoMapper enderecoMapper, EnderecoRepository enderecoRepo) {
         super(repo, mapper, Empresa.class);
         this.repo = repo;
         this.mapper = mapper;
@@ -56,6 +63,8 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         this.emailRepo = emailRepo;
         this.telefoneMapper = telefoneMapper;
         this.telefoneRepo = telefoneRepo;
+        this.enderecoMapper = enderecoMapper;
+        this.enderecoRepo = enderecoRepo;
     }
 
     @Override
@@ -67,25 +76,22 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         if (campos.containsKey("nome")) empresa.setNome((String) campos.get("nome"));
         if (campos.containsKey("tamanho")) empresa.setTamanho((TamanhoEmpresa) campos.get("tamanho"));
         if (campos.containsKey("setor")) empresa.setSetor((String) campos.get("setor"));
-        if (campos.containsKey("status")) empresa.setStatus((StatusGeral) campos.get("status"));
 
         Empresa salvo = repo.save(empresa);
         return mapper.toResponse(salvo);
     }
 
-    @Override
-    public List<EmpresaResponseDTO> buscar() {
-        List<Empresa> empresas = repo.findAllByStatus(StatusGeral.ATIVO);
-
-        return mapper.toResponseList(empresas);
-    }
-
+    @Transactional(readOnly = true)
     public List<EmpresaResponseDTO> buscar(TamanhoEmpresa tamanho){
-        List<Empresa> empresas = repo.findByTamanhoAndStatus(tamanho, StatusGeral.ATIVO);
+        List<Empresa> empresas;
+
+        if (tamanho == null) empresas = repo.findAllByStatus(StatusGeral.ATIVO);
+        else empresas = repo.findByTamanhoAndStatus(tamanho, StatusGeral.ATIVO);
 
         return mapper.toResponseList(empresas);
     }
 
+    @Transactional(readOnly = true)
     @Override
     public EmpresaResponseDTO buscar(Long id) {
         Empresa empresa = getEntity(id);
@@ -94,6 +100,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponse(empresa);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         Empresa empresa = getEntity(id);
@@ -118,6 +125,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         if (repo.existsByCnpj(dto.cnpj())) throw new UniqueViolationException("CNPJ");
     }
 
+    @Transactional(readOnly = true)
     public List<EmailResponseDTO> buscarEmails(Long idEmpresa){
         Empresa empresa = getEntity(idEmpresa);
         List<EmailEmpresa> email = emailRepo.findByEmpresa_Id(empresa.getId());
@@ -125,6 +133,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponseList(email);
     }
 
+    @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
         EmailEmpresa email = emailMapper.toEntity(dto);
@@ -134,11 +143,13 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponse(salvo);
     }
 
+    @Transactional
     public void excluirEmail(Long idEmpresa, Long idEmail){
         EmailEmpresa email = emailRepo.findByEmpresaIdAndId(idEmpresa, idEmail);
         emailRepo.delete(email);
     }
 
+    @Transactional(readOnly = true)
     public List<TelefoneResponseDTO> buscarTelefones(Long idEmpresa){
         Empresa empresa = getEntity(idEmpresa);
         List<TelefoneEmpresa> telefone = telefoneRepo.findByEmpresa_Id(empresa.getId());
@@ -146,6 +157,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponseList(telefone);
     }
 
+    @Transactional
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
         TelefoneEmpresa telefone = telefoneMapper.toEntity(dto);
@@ -155,9 +167,52 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponse(salvo);
     }
 
+    @Transactional
     public void excluirTelefone(Long idEmpresa, Long idTelefone){
         Empresa empresa = getEntity(idEmpresa);
         TelefoneEmpresa telefone = telefoneRepo.findByEmpresaIdAndId(empresa.getId(), idTelefone);
         telefoneRepo.delete(telefone);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EnderecoResponseDTO> buscarEnderecos(Long idEmpresa) {
+        Empresa empresa = getEntity(idEmpresa);
+
+        List<Endereco> enderecos = enderecoRepo.findByEmpresa(empresa);
+        return enderecoMapper.toResponseList(enderecos);
+    }
+
+    @Transactional(readOnly = true)
+    public EnderecoResponseDTO buscarEndereco(Long idEmpresa, Long idEndereco) {
+        Endereco endereco = getEndereco(idEmpresa, idEndereco);
+        return enderecoMapper.toResponse(endereco);
+    }
+
+    @Transactional(readOnly = true)
+    public List<EnderecoResponseDTO> buscarEndereco(Long idEmpresa) {
+        Empresa empresa = getEntity(idEmpresa);
+        List<Endereco> enderecos = empresa.getEnderecos();
+        return enderecoMapper.toResponseList(enderecos);
+    }
+
+    @Transactional
+    public EnderecoResponseDTO inserirEndereco(Long idEmpresa, EnderecoRequestDTO dto) {
+        Empresa empresa = getEntity(idEmpresa);
+        Endereco endereco = enderecoMapper.toEntity(dto);
+
+        endereco.setEmpresa(empresa);
+        Endereco salvo = enderecoRepo.save(endereco);
+        return enderecoMapper.toResponse(salvo);
+    }
+
+    @Transactional
+    public void excluirEndereco(Long idEmpresa, Long idEndereco) {
+        Endereco endereco = getEndereco(idEmpresa, idEndereco);
+        enderecoRepo.delete(endereco);
+    }
+
+    private Endereco getEndereco(Long idEmpresa, Long idEndereco){
+        Empresa empresa = getEntity(idEmpresa);
+        return enderecoRepo.findByEmpresaAndId(empresa, idEndereco).orElseThrow(() -> new ModelNotFoundException("Endereco", idEndereco));
     }
 }
