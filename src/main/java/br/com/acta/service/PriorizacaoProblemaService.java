@@ -1,21 +1,22 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaResponseDTO;
+import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.join.PriorizacaoProblema;
 import br.com.acta.entity.join.id.PriorizacaoProblemaId;
 import br.com.acta.entity.pdca.Problema;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
-import br.com.acta.common.handler.exception.UniqueViolationException;
-import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -42,6 +43,7 @@ public class PriorizacaoProblemaService {
                 .orElseThrow(() -> new ModelNotFoundException("PriorizacaoProblema", List.of(idProblema, idUsuario)));
     }
 
+    @Transactional
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
         Problema problema = problemaService.getEntity(idProblema);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
@@ -66,6 +68,7 @@ public class PriorizacaoProblemaService {
         }
     }
 
+    @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
         Validador.validarCampos(campos, patchConfig);
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
@@ -77,6 +80,7 @@ public class PriorizacaoProblemaService {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<PriorizacaoProblemaResponseDTO> buscar(Long idProblema, Long idUsuario){
         List<PriorizacaoProblema> priorizacoes;
         Problema problema = problemaService.getEntity(idProblema);
@@ -92,9 +96,14 @@ public class PriorizacaoProblemaService {
         return mapper.toResponseList(priorizacoes);
     }
 
+    @Transactional
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
         Problema problema = problemaService.getEntity(idProblema);
         List<PriorizacaoProblema> priorizacoes = repo.findByProblema(problema);
+
+        if (priorizacoes.isEmpty()) {
+            throw new ModelNotFoundException("Priorização de problema");
+        }
 
         BigDecimal soma = BigDecimal.ZERO;
         for (PriorizacaoProblema priorizacaoProblema : priorizacoes) {
