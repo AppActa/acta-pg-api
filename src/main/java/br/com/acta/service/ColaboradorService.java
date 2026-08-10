@@ -163,7 +163,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     public void excluirEmail(Long idColaborador, Long idEmail){
-        EmailColaborador email = emailRepo.findByColaboradorIdAndId(idColaborador, idEmail);
+        EmailColaborador email = getEmail(idColaborador, idEmail);
         emailRepo.delete(email);
     }
 
@@ -184,7 +184,17 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     public void excluirTelefone(Long idColaborador, Long idTelefone){
-        TelefoneColaborador telefone = telefoneRepo.findByColaboradorIdAndId(idColaborador, idTelefone);
+        TelefoneColaborador telefone = getTelefone(idColaborador, idTelefone);
         telefoneRepo.delete(telefone);
+    }
+
+    private EmailColaborador getEmail(Long idColaborador, Long idEmail){
+        Colaborador colaborador = getEntity(idColaborador);
+        return emailRepo.findByColaboradorIdAndId(colaborador.getId(), idEmail).orElseThrow(() -> new ModelNotFoundException("Email", idEmail));
+    }
+
+    private TelefoneColaborador getTelefone(Long idColaborador, Long idTelefone){
+        Colaborador colaborador = getEntity(idColaborador);
+        return telefoneRepo.findByColaboradorIdAndId(colaborador.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
     }
 }
