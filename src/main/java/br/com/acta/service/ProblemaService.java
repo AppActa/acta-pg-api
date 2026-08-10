@@ -43,6 +43,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         this.causaRaizRepo = causaRaizRepo;
     }
 
+    @Transactional
     @Override
     public ProblemaResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
@@ -58,6 +59,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public ProblemaResponseDTO patchStatus(Long id, StatusProblema status){
         Problema problema = getEntity(id);
 
@@ -85,12 +87,16 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         atualizarStatusRecursivo(problema, StatusProblema.DESCARTADO);
     }
 
+    @Transactional
     public ProblemaResponseDTO inserir(ProblemaRequestDTO dto, Long idCiclo) {
         Problema problema = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
 
         Validador.validarCicloAberto(ciclo);
+
         problema.setCiclo(ciclo);
+        problema.setStatus(StatusProblema.ABERTO);
+        problema.setCriadoPor(ciclo.getGestor());
 
         if (dto.idProblemaPai() != null){
             Problema problemaPai = getEntity(dto.idProblemaPai());
@@ -102,6 +108,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<ProblemaResponseDTO> buscar(Long idCiclo, StatusProblema status, Long idProblemaPai){
         List<Problema> problemas;
 
