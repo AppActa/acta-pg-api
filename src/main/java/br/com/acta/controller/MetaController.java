@@ -37,9 +37,9 @@ public class MetaController {
         return ResponseEntity.ok(meta);
     }
 
-    @PostMapping("/ciclos/{idCiclo}/meta")
-    public ResponseEntity<MetaResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @Valid @RequestBody MetaRequestDTO dto) {
-        MetaResponseDTO meta = service.inserir(idCiclo, dto);
+    @PostMapping("/plano-acao/{idPlanoAcao}/meta")
+    public ResponseEntity<MetaResponseDTO> inserir(@PathVariable @Positive Long idPlanoAcao, @Valid @RequestBody MetaRequestDTO dto) {
+        MetaResponseDTO meta = service.inserir(idPlanoAcao, dto);
         return ResponseEntity.status(201).body(meta);
     }
 
