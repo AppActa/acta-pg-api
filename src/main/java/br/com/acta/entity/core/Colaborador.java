@@ -10,6 +10,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.Set;
 
 @Entity
@@ -50,8 +51,8 @@ public class Colaborador extends AuditoriaBase {
     private Usuario usuario;
 
     @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<EmailColaborador> emails;
+    private Set<EmailColaborador> emails = new HashSet<>();
 
     @OneToMany(mappedBy = "colaborador", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<TelefoneColaborador> telefones;
+    private Set<TelefoneColaborador> telefones = new HashSet<>();
 }

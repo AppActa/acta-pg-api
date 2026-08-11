@@ -52,6 +52,10 @@ public class Meta extends AuditoriaBase {
     @JoinColumn(name = "id_ciclo", nullable = false)
     private Ciclo ciclo;
 
+    @ManyToOne(fetch = FetchType.LAZY, optional = false)
+    @JoinColumn(name = "id_plano_acao", nullable = false)
+    private PlanoAcao planoAcao;
+
     @ManyToMany(fetch = FetchType.LAZY)
     @JoinTable(name = "meta_responsavel", schema = "pdca",
             joinColumns = @JoinColumn(name = "id_meta"),
