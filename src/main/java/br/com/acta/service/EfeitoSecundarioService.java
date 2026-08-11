@@ -11,6 +11,7 @@ import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -28,6 +29,7 @@ public class EfeitoSecundarioService {
             Set.of("descricao", "peso", "impactoEstimado")
     );
 
+    @Transactional(readOnly = true)
     public List<EfeitoSecundarioResponseDTO> buscar(Long idVerificacaoResultado){
         VerificacaoResultado resultado = resultadoService.getEntity(idVerificacaoResultado);
         List<EfeitoSecundario> efeitoSecundarios = repo.findByVerificacaoResultado(resultado);
@@ -35,6 +37,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponseList(efeitoSecundarios);
     }
 
+    @Transactional
     public EfeitoSecundarioResponseDTO inserir(Long idResultado, EfeitoSecundarioRequestDTO dto){
         VerificacaoResultado resultado = resultadoService.getEntity(idResultado);
         Validador.validarCicloAberto(resultado.getCiclo());
@@ -46,6 +49,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public EfeitoSecundarioResponseDTO patch(Long idResultado, Long idEfeitoSecundario, Map<String, Object> campos){
         Validador.validarCampos(campos, patchConfig);
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
@@ -61,6 +65,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public void excluir(Long idResultado, Long idEfeitoSecundario) {
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
         EfeitoSecundario efeitoSecundario = getEntity(idEfeitoSecundario);

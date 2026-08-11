@@ -19,6 +19,7 @@ import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -47,6 +48,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         this.usuarioTreinamentoRepo = usuarioTreinamentoRepo;
     }
 
+    @Transactional
     @Override
     public TarefaResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfigConfig);
@@ -62,6 +64,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<TarefaResponseDTO> buscar(Long idPlanoAcao, StatusTarefa status, Long idResponsavel, Prioridade prioridade){
         planoAcaoService.getEntity(idPlanoAcao);
         List<Tarefa> tarefas = repo.buscar(idPlanoAcao, status, idResponsavel, prioridade);
@@ -69,21 +72,26 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
        return mapper.toResponseList(tarefas);
     }
 
+    @Transactional
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {
         Tarefa tarefa = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
+        Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
         Validador.validarCicloAberto(planoAcao.getCiclo());
 
         if (!Set.of(StatusPlanoAcao.APROVADO, StatusPlanoAcao.EM_EXECUCAO).contains(planoAcao.getStatus())){
             throw new InvalidResourceStatusException("Plano de Ação", List.of(StatusPlanoAcao.APROVADO.toString(), StatusPlanoAcao.EM_EXECUCAO.toString()));
         }
 
+        tarefa.setResponsavel(usuario);
         tarefa.setPlanoAcao(planoAcao);
+        tarefa.setStatus(StatusTarefa.PENDENTE);
 
         Tarefa salvo = repo.save(tarefa);
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         Tarefa tarefa = getEntity(id);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
@@ -123,6 +131,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salva);
     }
 
+    @Transactional
     public TarefaResponseDTO reatribuir(Long idTarefa, Long idResponsavel){
         Tarefa tarefa = getEntity(idTarefa);
         Usuario responsavel = usuarioService.getEntity(idResponsavel);
@@ -135,6 +144,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
         Tarefa tarefa = getEntity(idTarefa);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
@@ -142,7 +152,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             throw new InvalidResourceStatusException("Tarefa", List.of(StatusTarefa.CONCLUIDA.toString(), StatusTarefa.CANCELADA.toString()));
         }
 
-        tarefa.setStatus(StatusTarefa.EM_ANDAMENTO);
+        tarefa.setStatus(StatusTarefa.PENDENTE);
         tarefa.setDataFimReal(null);
         tarefa.setDataFimPrevista(novoPrazo);
 
@@ -150,6 +160,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         Tarefa tarefa = getEntity(id);
@@ -161,6 +172,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         repo.save(tarefa);
     }
 
+    @Transactional(readOnly = true)
     public List<TarefaSummaryResponseDTO> buscarDependentes(Long id){
         Tarefa tarefa = getEntity(id);
         Set<Tarefa> dependentes = tarefa.getDependentes();
@@ -168,6 +180,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toSummaryList(dependentes);
     }
 
+    @Transactional
     public TarefaResponseDTO adicionarDependencia(Long id, Long idDependente){
         Tarefa tarefa = getEntity(id);
         Tarefa dependenteNovo = getEntity(idDependente);
@@ -189,6 +202,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public void removerDependencia(Long id, Long idDependente){
         Tarefa tarefa = getEntity(id);
         Tarefa dependente = getEntity(idDependente);

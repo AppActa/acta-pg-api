@@ -10,6 +10,7 @@ extends AuditoriaBaseMapper<REQ, RESP, ENT> {
     SUM toSummary(ENT ent);
 
     default List<SUM> toSummaryList(Collection<ENT> entList) {
+        if (entList == null) return List.of();
         return entList.stream().map(this::toSummary).toList();
     }
 }

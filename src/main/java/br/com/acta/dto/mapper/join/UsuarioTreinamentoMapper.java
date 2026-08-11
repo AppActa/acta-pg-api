@@ -13,8 +13,6 @@ public interface UsuarioTreinamentoMapper
 extends BaseMapper<UsuarioTreinamentoRequestDTO, UsuarioTreinamentoResponseDTO, UsuarioTreinamento> {
     @Mapping(source = "usuario.id", target = "idUsuario")
     @Mapping(source = "usuario.nome", target = "nomeUsuario")
-    @Mapping(source = "treinamento.id", target = "idTreinamento")
-    @Mapping(source = "treinamento.titulo", target = "tituloTreinamento")
     @Override
     UsuarioTreinamentoResponseDTO toResponse(UsuarioTreinamento usuarioTreinamento);
 

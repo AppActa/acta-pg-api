@@ -5,7 +5,7 @@ public enum StatusTreinamento {
 
     public boolean podeAtualizarStatus(StatusTreinamento novoStatus) {
         return switch (this) {
-            case PENDENTE -> novoStatus == CONFIRMADO || novoStatus == DISPENSADO || novoStatus == CANCELADO;
+            case PENDENTE -> true;
             case CONFIRMADO -> novoStatus == CONCLUIDO || novoStatus == CANCELADO;
             case CONCLUIDO, DISPENSADO, CANCELADO -> false;
         };

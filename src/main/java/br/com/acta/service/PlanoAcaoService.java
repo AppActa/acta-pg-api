@@ -15,6 +15,7 @@ import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -40,14 +41,11 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         this.usuarioService = usuarioService;
     }
 
+    @Transactional
     @Override
     public PlanoAcaoResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
         PlanoAcao planoAcao = getEntity(id);
-
-        if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
-            throw new InvalidResourceStatusException("atualizar", "Plano de Ação", StatusPlanoAcao.RASCUNHO.toString());
-        }
 
         if (campos.containsKey("nome")) planoAcao.setNome((String) campos.get("nome"));
         if (campos.containsKey("objetivo")) planoAcao.setObjetivo((String) campos.get("objetivo"));
@@ -57,6 +55,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public PlanoAcaoResponseDTO patchStatus(Long id, StatusPlanoAcao status) {
         PlanoAcao planoAcao = getEntity(id);
 
@@ -75,6 +74,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         PlanoAcao planoAcao = getEntity(id);
@@ -93,6 +93,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         repo.save(planoAcao);
     }
 
+    @Transactional(readOnly = true)
     public List<PlanoAcaoResponseDTO> buscar(Long id, StatusPlanoAcao status, Prioridade prioridade){
         List<PlanoAcao> planosAcao;
 
@@ -109,6 +110,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponseList(planosAcao);
     }
 
+    @Transactional
     public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo, Long idCriadoPor) {
         PlanoAcao planoAcao = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);

@@ -14,6 +14,7 @@ import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.repository.padrao.Plano5W2HRepository;
 import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -27,28 +28,29 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     private final Plano5W2HRepository repo;
     private final Plano5W2HMapper mapper;
     private final PlanoAcaoService planoAcaoService;
-    private final UsuarioCicloService usuarioCicloService;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("whatAcao", "whyJustificativa", "whereLocal", "whenInicio", "whenFim", "howModoExecucao", "howMuchCusto", "idWhoResponsavel", "idPlanoAcao"),
             Set.of("whatAcao", "whyJustificativa", "whereLocal", "whenInicio", "whenFim", "howModoExecucao", "howMuchCusto", "idWhoResponsavel")
     );
+    private final UsuarioService usuarioService;
 
-    public Plano5W2HService(Plano5W2HRepository repo, Plano5W2HMapper mapper, PlanoAcaoService planoAcaoService, UsuarioCicloService usuarioCicloService) {
+    public Plano5W2HService(Plano5W2HRepository repo, Plano5W2HMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService) {
         super(repo, mapper, Plano5W2H.class);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
-        this.usuarioCicloService = usuarioCicloService;
+        this.usuarioService = usuarioService;
     }
 
+    @Transactional
     @Override
     public Plano5W2HResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
         Plano5W2H plano5W2H = getEntity(id);
         PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
 
-        if (planoAcao != null && !Set.of(StatusPlanoAcao.RASCUNHO, StatusPlanoAcao.APROVADO).contains(planoAcao.getStatus())) {
-            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.RASCUNHO.toString(), StatusPlanoAcao.APROVADO.toString()));
+        if (planoAcao != null && Set.of(StatusPlanoAcao.CANCELADO, StatusPlanoAcao.CONCLUIDO).contains(planoAcao.getStatus())) {
+            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.CANCELADO.toString(), StatusPlanoAcao.CONCLUIDO.toString()));
         }
 
         if (campos.containsKey("whatAcao")) plano5W2H.setWhatAcao((String) campos.get("whatAcao"));
@@ -60,7 +62,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         if (campos.containsKey("howMuchCusto")) plano5W2H.setHowMuchCusto((BigDecimal) campos.get("howMuchCusto"));
         if (campos.containsKey("idWhoResponsavel")){
             Long idWhoResponsavel = (Long) campos.get("idWhoResponsavel");
-            Usuario responsavel = usuarioCicloService.usuarioService.getEntity(idWhoResponsavel);
+            Usuario responsavel = usuarioService.getEntity(idWhoResponsavel);
 
             Validador.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), responsavel.getCiclos());
 
@@ -71,36 +73,41 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public Plano5W2HResponseDTO inserir(Plano5W2HRequestDTO dto, Long idPlanoAcao) {
         Plano5W2H plano5W2H = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
 
-        if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
-            throw new InvalidResourceStatusException("inserir", "5W2H", StatusPlanoAcao.RASCUNHO.toString());
+        if (planoAcao != null && Set.of(StatusPlanoAcao.CANCELADO, StatusPlanoAcao.CONCLUIDO).contains(planoAcao.getStatus())) {
+            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.CANCELADO.toString(), StatusPlanoAcao.CONCLUIDO.toString()));
         }
 
-        Usuario usuario = usuarioCicloService.usuarioService.getEntity(dto.idWhoResponsavel());
+        Usuario usuario = usuarioService.getEntity(dto.idWhoResponsavel());
         Validador.validarMesmoCiclo(planoAcao.getCiclo(), usuario.getCiclos());
 
+        plano5W2H.setWhoResponsavel(usuario);
         plano5W2H.setPlanoAcao(planoAcao);
         Plano5W2H salvo = repo.save(plano5W2H);
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public Plano5W2HResponseDTO buscarPorPlanoAcao(Long idPlanoAcao){
         Plano5W2H plano5W2H = repo.findByPlanoAcaoId(idPlanoAcao).orElseThrow(() -> new ModelNotFoundException("5W2H"));
         return mapper.toResponse(plano5W2H);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         Plano5W2H plano5W2H = getEntity(id);
-        if (Set.of(StatusPlanoAcao.CONCLUIDO, StatusPlanoAcao.EM_EXECUCAO)
-                .contains(plano5W2H.getPlanoAcao().getStatus())
-        ){
-            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.RASCUNHO.toString(), StatusPlanoAcao.APROVADO.toString()));
+        PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
+
+        if (Set.of(StatusPlanoAcao.CONCLUIDO, StatusPlanoAcao.CANCELADO).contains(plano5W2H.getPlanoAcao().getStatus())){
+            throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.CANCELADO.toString(), StatusPlanoAcao.CONCLUIDO.toString()));
         }
 
+        planoAcao.setPlano5W2H(null);
         repo.delete(plano5W2H);
     }
 }

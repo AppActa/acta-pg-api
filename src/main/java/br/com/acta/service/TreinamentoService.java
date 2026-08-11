@@ -7,12 +7,14 @@ import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.TreinamentoMapper;
 import br.com.acta.dto.pdca.treinamento.TreinamentoRequestDTO;
 import br.com.acta.dto.pdca.treinamento.TreinamentoResponseDTO;
+import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.Treinamento;
 import br.com.acta.repository.padrao.TreinamentoRepository;
 import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -25,18 +27,21 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     private final TreinamentoRepository repo;
     private final TreinamentoMapper mapper;
     private final CicloService cicloService;
+    private final UsuarioService usuarioService;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio", "idAnexoMongo", "idCiclo", "idResponsavel"),
             Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio")
     );
 
-    public TreinamentoService(TreinamentoRepository repo, TreinamentoMapper mapper, CicloService cicloService){
+    public TreinamentoService(TreinamentoRepository repo, TreinamentoMapper mapper, CicloService cicloService, UsuarioService usuarioService){
         super(repo, mapper, Treinamento.class);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;
+        this.usuarioService = usuarioService;
     }
 
+    @Transactional
     @Override
     public TreinamentoResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
@@ -56,6 +61,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<TreinamentoResponseDTO> buscarTreinamentos(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         List<Treinamento> treinamentos = repo.findByCiclo(ciclo);
@@ -63,17 +69,22 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         return mapper.toResponseList(treinamentos);
     }
 
+    @Transactional
     public TreinamentoResponseDTO inserir(Long idCiclo, TreinamentoRequestDTO dto) {
         Ciclo ciclo = cicloService.getEntity(idCiclo);
-        Validador.validarCicloAberto(ciclo);
+        Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
+        Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
 
         Treinamento treinamento = mapper.toEntity(dto);
 
         treinamento.setCiclo(ciclo);
+        treinamento.setResponsavel(usuario);
+
         Treinamento salvo = repo.save(treinamento);
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         Treinamento treinamento = getEntity(id);
