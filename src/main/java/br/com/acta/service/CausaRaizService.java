@@ -16,6 +16,7 @@ import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.padrao.CausaRaizRepository;
 import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.time.OffsetDateTime;
 import java.util.List;
@@ -48,6 +49,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         this.problemaService = problemaService;
     }
 
+    @Transactional
     @Override
     public CausaRaizResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
@@ -61,12 +63,14 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<CausaRaizResponseDTO> buscar(Long idCiclo, Long idProblema, Boolean aceita, Boolean principal){
         List<CausaRaiz> causasRaiz = repo.buscar(idCiclo, idProblema, aceita, principal);
 
         return mapper.toResponseList(causasRaiz);
     }
 
+    @Transactional
     public CausaRaizResponseDTO inserir(CausaRaizRequestDTO dto, Long idCiclo) {
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Validador.validarCicloAberto(ciclo);
@@ -77,11 +81,13 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         CausaRaiz causaRaiz = mapper.toEntity(dto);
         causaRaiz.setCiclo(ciclo);
         causaRaiz.setProblema(problema);
+        causaRaiz.setAceita(false);
 
         CausaRaiz salvo = repo.save(causaRaiz);
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public CausaRaizResponseDTO vincularPlanoAcao(Long idCausaRaiz, Long idPlanoAcao) {
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
 
@@ -100,6 +106,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario, Boolean aceita){
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
         Usuario usuario = usuarioService.getEntity(idUsuario);
