@@ -40,7 +40,7 @@ public record Plano5W2HRequestDTO(
         @Schema(description = "Quanto custará", example = SwaggerRequestExamples.HOW_MUCH_CUSTO)
         @NotNull(message = "{validation.plano5w2h.howMuchCusto.notnull}")
         @PositiveOrZero(message = "{validation.plano5w2h.howMuchCusto.positiveorzero}")
-        @Digits(integer = 3, fraction = 2, message = "{validation.plano5w2h.howMuchCusto.digits}")
+        @Digits(integer = 10, fraction = 2, message = "{validation.plano5w2h.howMuchCusto.digits}")
         BigDecimal howMuchCusto,
 
         @Schema(description = "ID do responsável", example = SwaggerRequestExamples.ID_RESPONSAVEL)
