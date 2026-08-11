@@ -1,8 +1,13 @@
 package br.com.acta.service;
 
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.PrerequisiteNotMetException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
+import br.com.acta.dto.mapper.core.UsuarioMapper;
+import br.com.acta.dto.mapper.pdca.MetaMapper;
 import br.com.acta.dto.pdca.meta.MetaRequestDTO;
 import br.com.acta.dto.pdca.meta.MetaResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -11,17 +16,16 @@ import br.com.acta.entity.enums.StatusMeta;
 import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.Meta;
-import br.com.acta.dto.mapper.pdca.MetaMapper;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.service.base.BaseService;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -38,15 +42,18 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
             Set.of("objetivo", "responsaveis", "status", "prioridade", "valorBase", "valorAlvo", "unidadeMedida", "prazo", "area", "categoria"),
             Set.of("objetivo", "valorAlvo", "prazo", "prioridade", "area", "categoria")
     );
+    private final UsuarioMapper usuarioMapper;
 
-    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService) {
+    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper) {
         super(repo, mapper, Meta.class);
         this.repo = repo;
         this.mapper = mapper;
         this.usuarioService = usuarioService;
         this.planoAcaoService = planoAcaoService;
+        this.usuarioMapper = usuarioMapper;
     }
 
+    @Transactional
     @Override
     public MetaResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
@@ -63,12 +70,14 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public MetaResponseDTO inserir(Long idPlanoAcao, MetaRequestDTO dto) {
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Ciclo ciclo = planoAcao.getCiclo();
         Validador.validarCicloAberto(ciclo);
 
         Meta meta = mapper.toEntity(dto);
+        Set<Usuario> responsaveis = new HashSet<>();
 
         meta.setCiclo(ciclo);
         meta.setPlanoAcao(planoAcao);
@@ -78,13 +87,16 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
             Usuario usuario = usuarioService.getEntity(idResponsavel);
             Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
 
-            meta.getResponsaveis().add(usuario);
+            responsaveis.add(usuario);
         });
+
+        meta.setResponsaveis(responsaveis);
 
         Meta salvo = repo.save(meta);
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public MetaResponseDTO patchStatus(Long id, StatusMeta status){
         Meta meta = getEntity(id);
 
@@ -94,6 +106,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         Meta meta = getEntity(id);
@@ -103,13 +116,14 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
 
         if (temTarefasAtivas) {
-            throw new BusinessRuleException("Não é possível excluir uma meta que possui tarefas ativas");
+            throw new ActiveEntityDeletionException("Meta");
         }
 
         meta.setStatus(StatusMeta.CANCELADA);
         repo.save(meta);
     }
 
+    @Transactional
     public List<MetaResponseDTO> buscar(Long idCiclo, StatusMeta status, Prioridade prioridade) {
         List<Meta> metas;
 
@@ -123,18 +137,18 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
             metas = repo.findByCicloIdAndStatusAndPrioridade(idCiclo, status, prioridade);
         }
 
-        verificarListaVazia(metas);
         return mapper.toResponseList(metas);
     }
 
+    @Transactional(readOnly = true)
     public List<UsuarioSummaryResponseDTO> buscarResponsaveis(Long id){
         Meta meta = getEntity(id);
         Set<Usuario> responsaveis = meta.getResponsaveis();
 
-        verificarListaVazia(responsaveis);
-        return usuarioService.mapper.toSummaryList(responsaveis);
+        return usuarioMapper.toSummaryList(responsaveis);
     }
 
+    @Transactional
     public List<UsuarioSummaryResponseDTO> inserirResponsaveis(Long idMeta, List<Long> idResponsaveis){
         Meta meta = getEntity(idMeta);
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
@@ -144,7 +158,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
 
         for (Long idResponsavel : idResponsaveis){
             if (usuariosJaResponsaveis.contains(idResponsavel)) {
-                throw new BusinessRuleException("Responsável com o id " + idResponsavel + " já está atribuído para essa meta");
+                throw new UniqueViolationException("Responsável", "Meta");
             }
 
             Usuario usuario = usuarioService.getEntity(idResponsavel);
@@ -153,15 +167,16 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         }
 
         repo.save(meta);
-        return usuarioService.mapper.toSummaryList(responsaveisAtuais);
+        return usuarioMapper.toSummaryList(responsaveisAtuais);
     }
 
+    @Transactional
     public void excluirResponsaveis(Long idMeta, List<Long> idResponsaveis){
         Meta meta = getEntity(idMeta);
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
 
         if (responsaveisAtuais.size() == 1) {
-            throw new BusinessRuleException("Uma meta deve ter pelo menos um responsável");
+            throw new PrerequisiteNotMetException("excluir responsável", "pelo menos dois responsáveis");
         }
 
         for (Long idResponsavel : idResponsaveis) {
@@ -169,9 +184,5 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         }
 
         repo.save(meta);
-    }
-
-    private void verificarListaVazia(Set<Usuario> usuarios){
-        if (usuarios.isEmpty()) throw new ModelNotFoundException("Usuário");
     }
 }

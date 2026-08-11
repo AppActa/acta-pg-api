@@ -1,6 +1,6 @@
 package br.com.acta.common.utils;
 
-import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.handler.exception.*;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusCiclo;
@@ -9,12 +9,10 @@ import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.enums.TipoUsuario;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.pdca.Ciclo;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.ImmutableFieldException;
-import br.com.acta.common.handler.exception.InexistentFieldException;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.entity.pdca.Tarefa;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
@@ -26,18 +24,18 @@ public final class Validador {
                 return;
             }
         }
-        throw new BusinessRuleException("Usuário não tem permissão para realizar esta operação");
+        throw new ForbiddenOperationException();
     }
 
     public static void validarCicloAberto(Ciclo ciclo) {
         if (ciclo.getStatus() == StatusCiclo.CONCLUIDO || ciclo.getStatus() == StatusCiclo.CANCELADO) {
-            throw new BusinessRuleException("Não é possível realizar esta operação em um ciclo que não está aberto");
+            throw new InvalidResourceStatusException("ciclo", List.of(StatusCiclo.CONCLUIDO.toString(), StatusCiclo.CANCELADO.toString()));
         }
     }
 
     public static void validarProblemaAberto(Problema problema) {
         if (problema.getStatus() == StatusProblema.RESOLVIDO || problema.getStatus() == StatusProblema.DESCARTADO) {
-            throw new BusinessRuleException("Não é possível realizar esta operação em um problema que não está aberto");
+            throw new InvalidResourceStatusException("problema", List.of(StatusProblema.RESOLVIDO.toString(), StatusProblema.DESCARTADO.toString()));
         }
 
         validarCicloAberto(problema.getCiclo());
@@ -45,7 +43,7 @@ public final class Validador {
 
     public static void validarTarefaAberta(Tarefa tarefa){
         if (tarefa.getStatus() == StatusTarefa.CONCLUIDA || tarefa.getStatus() == StatusTarefa.CANCELADA) {
-            throw new BusinessRuleException("Não é possível realizar esta operação em uma tarefa que não está aberta");
+            throw new InvalidResourceStatusException("tarefa", List.of(StatusTarefa.CONCLUIDA.toString(), StatusTarefa.CANCELADA.toString()));
         }
 
         validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
@@ -53,13 +51,13 @@ public final class Validador {
 
     public static void validarMesmaEmpresa(Empresa a, Empresa b){
         if (!a.equals(b)) {
-            throw new BusinessRuleException("As entidades devem pertencer à mesma empresa");
+            throw new InvalidRelationshipException("pertencer à mesma empresa");
         }
     }
 
     public static void validarMesmoCiclo(Ciclo a, Ciclo b) {
         if (!a.equals(b)) {
-            throw new BusinessRuleException("As entidades devem pertencer ao mesmo ciclo");
+            throw new InvalidRelationshipException("pertencer ao mesmo ciclo");
         }
 
         validarCicloAberto(a);
@@ -72,17 +70,17 @@ public final class Validador {
                 .anyMatch(ciclo -> Objects.equals(ciclo.getId(), a.getId()));
 
         if (!participaCiclo) {
-            throw new BusinessRuleException("O usuário não participa deste ciclo");
+            throw new InvalidRelationshipException("participar do mesmo ciclo");
         }
     }
 
     public static void validarMesmoId(Long id1, Long id2, boolean deveSerIgual) {
         if (deveSerIgual && !id1.equals(id2)) {
-            throw new BusinessRuleException("Os IDs das entidades devem ser iguais");
+            throw new InvalidRelationshipException("ter os IDs iguais");
         }
 
         if (!deveSerIgual && id1.equals(id2)) {
-            throw new BusinessRuleException("Os IDs das entidades não devem ser iguais");
+            throw new InvalidRelationshipException("ter os IDs diferentes");
         }
     }
 

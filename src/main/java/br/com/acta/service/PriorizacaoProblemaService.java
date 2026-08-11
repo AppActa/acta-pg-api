@@ -1,21 +1,24 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.PatchConfig;
+import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaResponseDTO;
+import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
+import br.com.acta.dto.mapper.pdca.ProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.join.PriorizacaoProblema;
 import br.com.acta.entity.join.id.PriorizacaoProblemaId;
 import br.com.acta.entity.pdca.Problema;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
-import br.com.acta.common.handler.exception.UniqueViolationException;
-import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
-import br.com.acta.common.utils.PatchConfig;
-import br.com.acta.common.utils.Validador;
+import br.com.acta.repository.padrao.ProblemaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -34,6 +37,8 @@ public class PriorizacaoProblemaService {
             Set.of("idUsuario", "posicao", "pesoCalculado", "idProblema"),
             Set.of("posicao", "pesoCalculado")
     );
+    private final ProblemaRepository problemaRepo;
+    private final ProblemaMapper problemaMapper;
 
     protected PriorizacaoProblema getEntity(Long idProblema, Long idUsuario){
         PriorizacaoProblemaId id = new PriorizacaoProblemaId(idProblema, idUsuario);
@@ -42,6 +47,7 @@ public class PriorizacaoProblemaService {
                 .orElseThrow(() -> new ModelNotFoundException("PriorizacaoProblema", List.of(idProblema, idUsuario)));
     }
 
+    @Transactional
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
         Problema problema = problemaService.getEntity(idProblema);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
@@ -66,6 +72,7 @@ public class PriorizacaoProblemaService {
         }
     }
 
+    @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
         Validador.validarCampos(campos, patchConfig);
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
@@ -77,6 +84,7 @@ public class PriorizacaoProblemaService {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional(readOnly = true)
     public List<PriorizacaoProblemaResponseDTO> buscar(Long idProblema, Long idUsuario){
         List<PriorizacaoProblema> priorizacoes;
         Problema problema = problemaService.getEntity(idProblema);
@@ -89,14 +97,17 @@ public class PriorizacaoProblemaService {
             priorizacoes = repo.findByProblemaAndUsuario(problema, usuario);
         }
 
-        verificarListaVazia(priorizacoes);
         return mapper.toResponseList(priorizacoes);
     }
 
+    @Transactional
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
         Problema problema = problemaService.getEntity(idProblema);
         List<PriorizacaoProblema> priorizacoes = repo.findByProblema(problema);
-        verificarListaVazia(priorizacoes);
+
+        if (priorizacoes.isEmpty()) {
+            throw new ModelNotFoundException("Priorização de problema");
+        }
 
         BigDecimal soma = BigDecimal.ZERO;
         for (PriorizacaoProblema priorizacaoProblema : priorizacoes) {
@@ -105,11 +116,7 @@ public class PriorizacaoProblemaService {
         BigDecimal peso = soma.divide(new BigDecimal(priorizacoes.size()), 2, RoundingMode.HALF_UP);
 
         problema.setPeso(peso);
-        Problema salvo = problemaService.repo.save(problema);
-        return problemaService.mapper.toResponse(salvo);
-    }
-
-    private void verificarListaVazia(List<PriorizacaoProblema> priorizacoes){
-        if (priorizacoes.isEmpty()) throw new ModelNotFoundException("PriorizacaoProblema");
+        Problema salvo = problemaRepo.save(problema);
+        return problemaMapper.toResponse(salvo);
     }
 }

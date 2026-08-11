@@ -1,5 +1,6 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.*;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoRequestDTO;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -8,14 +9,13 @@ import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.common.handler.exception.BusinessRuleException;
-import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.dto.mapper.pdca.PlanoAcaoMapper;
 import br.com.acta.repository.padrao.PlanoAcaoRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -41,14 +41,11 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         this.usuarioService = usuarioService;
     }
 
+    @Transactional
     @Override
     public PlanoAcaoResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
         PlanoAcao planoAcao = getEntity(id);
-
-        if (planoAcao.getStatus() != StatusPlanoAcao.RASCUNHO) {
-            throw new BusinessRuleException("Apenas planos de ação em rascunho podem ser atualizados");
-        }
 
         if (campos.containsKey("nome")) planoAcao.setNome((String) campos.get("nome"));
         if (campos.containsKey("objetivo")) planoAcao.setObjetivo((String) campos.get("objetivo"));
@@ -58,6 +55,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     public PlanoAcaoResponseDTO patchStatus(Long id, StatusPlanoAcao status) {
         PlanoAcao planoAcao = getEntity(id);
 
@@ -68,7 +66,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         }
 
         if (planoAcao.getPlano5W2H() == null && status == StatusPlanoAcao.APROVADO){
-            throw new BusinessRuleException("Um plano de ação não pode ser aprovado sem o 5W2H");
+            throw new PrerequisiteNotMetException("aprovar o plano de ação", "ter 5W2H");
         }
 
         planoAcao.setStatus(status);
@@ -76,6 +74,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         PlanoAcao planoAcao = getEntity(id);
@@ -83,17 +82,18 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
 
         if (temTarefasAtivas) {
-            throw new BusinessRuleException("Não é possível excluir um plano de ação que possui tarefas ativas");
+            throw new ActiveEntityDeletionException("Plano de ação");
         }
 
         if (planoAcao.getStatus() == StatusPlanoAcao.CONCLUIDO){
-            throw new BusinessRuleException("Não é possível excluir um plano de ação que já foi concluído");
+            throw new InvalidResourceStatusException("excluir", "Plano de Ação", StatusPlanoAcao.CONCLUIDO.toString());
         }
 
         planoAcao.setStatus(StatusPlanoAcao.CANCELADO);
         repo.save(planoAcao);
     }
 
+    @Transactional(readOnly = true)
     public List<PlanoAcaoResponseDTO> buscar(Long id, StatusPlanoAcao status, Prioridade prioridade){
         List<PlanoAcao> planosAcao;
 
@@ -107,10 +107,10 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
             planosAcao = repo.findByCicloIdAndStatusAndPrioridade(id, status, prioridade);
         }
 
-        verificarListaVazia(planosAcao);
         return mapper.toResponseList(planosAcao);
     }
 
+    @Transactional
     public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo, Long idCriadoPor) {
         PlanoAcao planoAcao = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);

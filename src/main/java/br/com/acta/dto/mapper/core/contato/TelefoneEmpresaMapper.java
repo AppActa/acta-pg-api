@@ -16,10 +16,12 @@ extends TelefoneBaseMapper<TelefoneEmpresa> {
     @Override
     TelefoneResponseDTO toResponse(TelefoneEmpresa telefoneEmpresa);
 
+    @Mapping(source = "numero", target = "contato")
     @Mapping(target = "empresa", ignore = true)
     @Override
     TelefoneEmpresa toEntity(TelefoneRequestDTO dto);
 
+    @Mapping(source = "numero", target = "contato")
     @Mapping(target = "empresa", ignore = true)
     @Override
     void updateEntity(TelefoneRequestDTO dto, @MappingTarget TelefoneEmpresa telefoneEmpresa);

@@ -22,6 +22,48 @@ import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(CircularDependencyException.class)
+    public ResponseEntity<ErroResponse> handleCircularDependency(CircularDependencyException cde){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                .body(new ErroResponse(List.of(cde.getMessage()), 422));
+    }
+
+    @ExceptionHandler(ForbiddenOperationException.class)
+    public ResponseEntity<ErroResponse> handleForbiddenOperation(ForbiddenOperationException foe){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErroResponse(List.of(foe.getMessage()), 403));
+    }
+
+    @ExceptionHandler(InvalidRelationshipException.class)
+    public ResponseEntity<ErroResponse> handleInvalidRelationship(InvalidRelationshipException ire){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                .body(new ErroResponse(List.of(ire.getMessage()), 422));
+    }
+
+    @ExceptionHandler(InvalidRequestException.class)
+    public ResponseEntity<ErroResponse> handleInvalidRequest(InvalidRequestException ire){
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(List.of(ire.getMessage()), 400));
+    }
+
+    @ExceptionHandler(InvalidResourceStatusException.class)
+    public ResponseEntity<ErroResponse> handleInvalidResourceStatus(InvalidResourceStatusException irse){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                .body(new ErroResponse(List.of(irse.getMessage()), 422));
+    }
+
+    @ExceptionHandler(PrerequisiteNotMetException.class)
+    public ResponseEntity<ErroResponse> handlePrerequisiteNotMet(PrerequisiteNotMetException pnme){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                .body(new ErroResponse(List.of(pnme.getMessage()), 422));
+    }
+
+    @ExceptionHandler(ResourceInUseException.class)
+    public ResponseEntity<ErroResponse> handleResourceInUse(ResourceInUseException riue){
+        return ResponseEntity.status(HttpStatus.CONFLICT)
+                .body(new ErroResponse(List.of(riue.getMessage()), 409));
+    }
+
     @ExceptionHandler(ImmutableFieldException.class)
     public ResponseEntity<ErroResponse> handleImmutableField(ImmutableFieldException ife){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -64,16 +106,16 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(List.of(uv.getMessage()), 400));
     }
 
-    @ExceptionHandler(BusinessRuleException.class)
-    public ResponseEntity<ErroResponse> handleBusinessRule(BusinessRuleException bre){
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
-                .body(new ErroResponse(List.of(bre.getMessage()), 422));
-    }
-
     @ExceptionHandler(StatusUpdateException.class)
     public ResponseEntity<ErroResponse> handleStatusUpdate(StatusUpdateException sue){
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_ENTITY)
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
                 .body(new ErroResponse(List.of(sue.getMessage()), 422));
+    }
+
+    @ExceptionHandler(BusinessRuleException.class)
+    public ResponseEntity<ErroResponse> handleBusinessRule(BusinessRuleException bre){
+        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
+                .body(new ErroResponse(List.of(bre.getMessage()), 422));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

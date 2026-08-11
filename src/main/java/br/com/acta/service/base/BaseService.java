@@ -3,6 +3,7 @@ import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Map;
@@ -20,24 +21,22 @@ implements BaseCRUD<REQ, RESP> {
         return repo.findById(id).orElseThrow(() -> new ModelNotFoundException(classeENT.getSimpleName(), id));
     }
 
+    @Transactional(readOnly = true)
     @Override
     public RESP buscar(Long id) {
         ENT ent = getEntity(id);
         return mapper.toResponse(ent);
     }
 
-    public void verificarListaVazia(List<ENT> entList){
-        if (entList.isEmpty()) throw new ModelNotFoundException(classeENT.getSimpleName());
-    }
-
+    @Transactional(readOnly = true)
     @Override
     public List<RESP> buscar() {
         List<ENT> entList = repo.findAll();
-        verificarListaVazia(entList);
 
         return mapper.toResponseList(entList);
     }
 
+    @Transactional
     @Override
     public RESP inserir(REQ dto) {
         ENT ent = mapper.toEntity(dto);
@@ -47,9 +46,11 @@ implements BaseCRUD<REQ, RESP> {
         return mapper.toResponse(salvo);
     }
 
+    @Transactional
     @Override
     abstract public RESP patch(Long id, Map<String, Object> campos);
 
+    @Transactional
     @Override
     public void excluir(Long id) {
         ENT ent = getEntity(id);
