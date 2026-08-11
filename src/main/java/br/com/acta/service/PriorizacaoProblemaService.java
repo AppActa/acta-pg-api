@@ -7,12 +7,14 @@ import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaResponseDTO;
 import br.com.acta.dto.mapper.join.PriorizacaoProblemaMapper;
+import br.com.acta.dto.mapper.pdca.ProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.join.PriorizacaoProblema;
 import br.com.acta.entity.join.id.PriorizacaoProblemaId;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
+import br.com.acta.repository.padrao.ProblemaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -35,6 +37,8 @@ public class PriorizacaoProblemaService {
             Set.of("idUsuario", "posicao", "pesoCalculado", "idProblema"),
             Set.of("posicao", "pesoCalculado")
     );
+    private final ProblemaRepository problemaRepo;
+    private final ProblemaMapper problemaMapper;
 
     protected PriorizacaoProblema getEntity(Long idProblema, Long idUsuario){
         PriorizacaoProblemaId id = new PriorizacaoProblemaId(idProblema, idUsuario);
@@ -112,7 +116,7 @@ public class PriorizacaoProblemaService {
         BigDecimal peso = soma.divide(new BigDecimal(priorizacoes.size()), 2, RoundingMode.HALF_UP);
 
         problema.setPeso(peso);
-        Problema salvo = problemaService.repo.save(problema);
-        return problemaService.mapper.toResponse(salvo);
+        Problema salvo = problemaRepo.save(problema);
+        return problemaMapper.toResponse(salvo);
     }
 }
