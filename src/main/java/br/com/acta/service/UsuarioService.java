@@ -50,7 +50,12 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         Usuario usuario = getEntity(id);
 
         if (campos.containsKey("nome")) usuario.setNome((String) campos.get("nome"));
-        if (campos.containsKey("email")) usuario.setEmailLogin((String) campos.get("email"));
+        if (campos.containsKey("email")) {
+            String email = (String) campos.get("email");
+
+            if (repo.existsByEmailLoginIgnoreCase(email)) throw new UniqueViolationException("E-mail");
+            usuario.setEmailLogin(email);
+        }
         if (campos.containsKey("senha")) usuario.setSenhaHash(Hash.gerarHash((String) campos.get("senha")));
 
         repo.save(usuario);

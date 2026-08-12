@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.InvalidResourceStatusException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
@@ -78,7 +79,11 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         Plano5W2H plano5W2H = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
 
-        if (planoAcao != null && Set.of(StatusPlanoAcao.CANCELADO, StatusPlanoAcao.CONCLUIDO).contains(planoAcao.getStatus())) {
+        if (planoAcao.getPlano5W2H() != null) {
+            throw new UniqueViolationException("Plano de Ação", "5W2H");
+        }
+
+        if (Set.of(StatusPlanoAcao.CANCELADO, StatusPlanoAcao.CONCLUIDO).contains(planoAcao.getStatus())) {
             throw new InvalidResourceStatusException("5W2H", List.of(StatusPlanoAcao.CANCELADO.toString(), StatusPlanoAcao.CONCLUIDO.toString()));
         }
 

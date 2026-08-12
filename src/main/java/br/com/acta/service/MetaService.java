@@ -157,9 +157,8 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
                 .collect(Collectors.toSet());
 
         for (Long idResponsavel : idResponsaveis){
-            if (usuariosJaResponsaveis.contains(idResponsavel)) {
-                throw new UniqueViolationException("Responsável", "Meta");
-            }
+            // valida usuários já cadastrados e repetidos na lista de entrada
+            if (!usuariosJaResponsaveis.add(idResponsavel)) throw new UniqueViolationException("Responsável", "Meta");
 
             Usuario usuario = usuarioService.getEntity(idResponsavel);
             Validador.validarMesmoCiclo(meta.getCiclo(), usuario.getCiclos());
