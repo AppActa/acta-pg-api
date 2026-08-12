@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface EmailEmpresaRepository extends ContatoRepository<EmailEmpresa> {
     Optional<EmailEmpresa> findByEmpresaIdAndId(Long idEmpresa, Long idEmail);
     List<EmailEmpresa> findByEmpresa_Id(Long id);
+    boolean existsByEmpresaIdAndContatoIgnoreCase(Long empresaId, String contato);
 }

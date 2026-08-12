@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TelefoneColaboradorRepository extends ContatoRepository<TelefoneColaborador> {
     List<TelefoneColaborador> findByColaborador_Id(Long id);
     Optional<TelefoneColaborador> findByColaboradorIdAndId(Long colaboradorId, Long id);
+    boolean existsByColaboradorIdAndContato(Long colaboradorId, String contato);
 }

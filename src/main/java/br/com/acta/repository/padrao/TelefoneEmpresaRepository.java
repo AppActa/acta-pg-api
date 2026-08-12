@@ -9,4 +9,5 @@ import java.util.Optional;
 public interface TelefoneEmpresaRepository extends ContatoRepository<TelefoneEmpresa> {
     List<TelefoneEmpresa> findByEmpresa_Id(Long id);
     Optional<TelefoneEmpresa> findByEmpresaIdAndId(Long id, Long idTelefone);
+    boolean existsByEmpresaIdAndContato(Long empresaId, String contato);
 }
