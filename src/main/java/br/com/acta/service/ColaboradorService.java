@@ -84,7 +84,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     @Override
     protected void antesInserir(Colaborador colaborador, ColaboradorRequestDTO dto) {
         if (!CPFValidator.isEligible(dto.cpf())) throw new RegexException("CPF");
-        if (repo.findByCpf(dto.cpf()).isPresent()) throw new UniqueViolationException("CPF");
+        if (repo.existsByCpf(dto.cpf())) throw new UniqueViolationException("CPF");
         Validador.validarMesmoId(dto.idEmpresa(), dto.usuario().idEmpresa(), true);
     }
 

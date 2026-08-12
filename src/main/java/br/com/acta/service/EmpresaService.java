@@ -136,6 +136,9 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
+
+        if (emailRepo.existsByContatoIgnoreCase(dto.email())) throw new UniqueViolationException("E-mail");
+
         EmailEmpresa email = emailMapper.toEntity(dto);
         email.setEmpresa(empresa);
 
@@ -161,6 +164,9 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
         TelefoneEmpresa telefone = telefoneMapper.toEntity(dto);
+
+        if (telefoneRepo.existsByContatoIgnoreCase(dto.numero())) throw new UniqueViolationException("Telefone");
+
         telefone.setEmpresa(empresa);
 
         TelefoneEmpresa salvo = telefoneRepo.save(telefone);
