@@ -84,7 +84,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     @Override
     protected void antesInserir(Colaborador colaborador, ColaboradorRequestDTO dto) {
         if (!CPFValidator.isEligible(dto.cpf())) throw new RegexException("CPF");
-        if (repo.findByCpf(dto.cpf()).isPresent()) throw new UniqueViolationException("CPF");
+        if (repo.existsByCpf(dto.cpf())) throw new UniqueViolationException("CPF");
         Validador.validarMesmoId(dto.idEmpresa(), dto.usuario().idEmpresa(), true);
     }
 
@@ -104,12 +104,16 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         colaborador.setStatus(StatusGeral.ATIVO);
 
         dto.emails().forEach(email -> {
+            if (emailRepo.existsByContatoIgnoreCase(email.email())) throw new UniqueViolationException("E-mail");
+
             EmailColaborador emailColaborador = emailMapper.toEntity(email);
             emailColaborador.setColaborador(colaborador);
             colaborador.getEmails().add(emailColaborador);
         });
 
         dto.telefones().forEach(telefone -> {
+            if (telefoneRepo.existsByContatoIgnoreCase(telefone.numero())) throw new UniqueViolationException("Telefone");
+
             TelefoneColaborador telefoneColaborador = telefoneMapper.toEntity(telefone);
             telefoneColaborador.setColaborador(colaborador);
             colaborador.getTelefones().add(telefoneColaborador);
@@ -155,6 +159,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
 
     public EmailResponseDTO inserirEmail(Long idColaborador, EmailRequestDTO dto){
         Colaborador colaborador = getEntity(idColaborador);
+
+        if (emailRepo.existsByColaboradorIdAndContatoIgnoreCase(idColaborador, dto.email())) throw new UniqueViolationException("E-mail");
+
         EmailColaborador email = emailMapper.toEntity(dto);
         email.setColaborador(colaborador);
 
@@ -176,6 +183,8 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
 
     public TelefoneResponseDTO inserirTelefone(Long idColaborador, TelefoneRequestDTO dto){
         Colaborador colaborador = getEntity(idColaborador);
+        if (telefoneRepo.existsByColaboradorIdAndContato(idColaborador, dto.numero())) throw new UniqueViolationException("Telefone");
+
         TelefoneColaborador telefone = telefoneMapper.toEntity(dto);
         telefone.setColaborador(colaborador);
 

@@ -123,6 +123,14 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         // validando cnpj
         if (!cnpjValidator.isEligible(dto.cnpj())) throw new RegexException("CNPJ");
         if (repo.existsByCnpj(dto.cnpj())) throw new UniqueViolationException("CNPJ");
+
+        for (EmailRequestDTO email : dto.emails()) {
+            if (emailRepo.existsByContatoIgnoreCase(email.email())) throw new UniqueViolationException("E-mail");
+        }
+
+        for (TelefoneRequestDTO telefone : dto.telefones()) {
+            if (telefoneRepo.existsByContatoIgnoreCase(telefone.numero())) throw new UniqueViolationException("Telefone");
+        }
     }
 
     @Transactional(readOnly = true)
@@ -136,6 +144,9 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
+
+        if (emailRepo.existsByEmpresaIdAndContatoIgnoreCase(idEmpresa, dto.email())) throw new UniqueViolationException("E-mail");
+
         EmailEmpresa email = emailMapper.toEntity(dto);
         email.setEmpresa(empresa);
 
@@ -161,6 +172,9 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
         TelefoneEmpresa telefone = telefoneMapper.toEntity(dto);
+
+        if (telefoneRepo.existsByEmpresaIdAndContato(idEmpresa, dto.numero())) throw new UniqueViolationException("Telefone");
+
         telefone.setEmpresa(empresa);
 
         TelefoneEmpresa salvo = telefoneRepo.save(telefone);

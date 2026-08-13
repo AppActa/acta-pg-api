@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.Hash;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
@@ -49,7 +50,12 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         Usuario usuario = getEntity(id);
 
         if (campos.containsKey("nome")) usuario.setNome((String) campos.get("nome"));
-        if (campos.containsKey("email")) usuario.setEmailLogin((String) campos.get("email"));
+        if (campos.containsKey("email")) {
+            String email = (String) campos.get("email");
+
+            if (repo.existsByEmailLoginIgnoreCase(email)) throw new UniqueViolationException("E-mail");
+            usuario.setEmailLogin(email);
+        }
         if (campos.containsKey("senha")) usuario.setSenhaHash(Hash.gerarHash((String) campos.get("senha")));
 
         repo.save(usuario);
@@ -99,6 +105,8 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
     @Override
     protected void antesInserir(Usuario usuario, UsuarioRequestDTO dto) {
+        if (repo.existsByEmailLoginIgnoreCase(dto.email())) throw new UniqueViolationException("E-mail");
+
         usuario.setStatus(StatusGeral.ATIVO);
         usuario.setEmpresa(empresaService.getEntity(dto.idEmpresa()));
         usuario.setSenhaHash(Hash.gerarHash(dto.senha()));
