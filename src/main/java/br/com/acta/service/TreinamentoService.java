@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.TreinamentoMapper;
@@ -50,9 +51,12 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         if (campos.containsKey("titulo")) treinamento.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) treinamento.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("dataTreinamento")) {
-            LocalDate dataTreinamento = (LocalDate) campos.get("dataTreinamento");
+            Object dataTreinamentoObject = campos.get("dataTreinamento");
+            LocalDate dataTreinamento = ConversorObject.toLocalDate(dataTreinamentoObject);
+
             if (dataTreinamento.isBefore(LocalDate.now()))
                 throw new InvalidRequestException("A data do treinamento não pode ser anterior à data atual");
+
             treinamento.setDataTreinamento(dataTreinamento);
         }
         if (campos.containsKey("obrigatorio")) treinamento.setObrigatorio((Boolean) campos.get("obrigatorio"));

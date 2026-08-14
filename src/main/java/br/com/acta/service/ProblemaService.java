@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.ProblemaMapper;
@@ -17,7 +18,6 @@ import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -53,7 +53,10 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
 
         if (campos.containsKey("titulo")) problema.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) problema.setDescricao((String) campos.get("descricao"));
-        if (campos.containsKey("peso")) problema.setPeso((BigDecimal) campos.get("peso"));
+        if (campos.containsKey("peso")) {
+            Object pesoObject = campos.get("peso");
+            problema.setPeso(ConversorObject.toBigDecimal(pesoObject));
+        }
 
         Problema salvo = repo.save(problema);
         return mapper.toResponse(salvo);

@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
@@ -78,7 +79,10 @@ public class PriorizacaoProblemaService {
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
 
         if (campos.containsKey("posicao")) priorizacaoProblema.setPosicao((Integer) campos.get("posicao"));
-        if (campos.containsKey("pesoCalculado")) priorizacaoProblema.setPesoCalculado((BigDecimal) campos.get("pesoCalculado"));
+        if (campos.containsKey("pesoCalculado")) {
+            Object pesoCalculadoObject = campos.get("pesoCalculado");
+            priorizacaoProblema.setPesoCalculado(ConversorObject.toBigDecimal(pesoCalculadoObject));
+        }
 
         PriorizacaoProblema salvo = repo.save(priorizacaoProblema);
         return mapper.toResponse(salvo);

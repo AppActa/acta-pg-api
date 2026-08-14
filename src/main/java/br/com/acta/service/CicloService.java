@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.CicloMapper;
@@ -50,7 +51,10 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
         if (campos.containsKey("titulo")) ciclo.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) ciclo.setDescricao((String) campos.get("descricao"));
-        if (campos.containsKey("dataEstimadaFim")) ciclo.setDataEstimadaFim((LocalDate) campos.get("dataEstimadaFim"));
+        if (campos.containsKey("dataEstimadaFim")) {
+            Object dataObject = campos.get("dataEstimadaFim");
+            ciclo.setDataEstimadaFim(ConversorObject.toLocalDate(dataObject));
+        }
 
         Ciclo salvo = repo.save(ciclo);
         return mapper.toResponse(salvo);

@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.*;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoRequestDTO;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -49,7 +50,10 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
 
         if (campos.containsKey("nome")) planoAcao.setNome((String) campos.get("nome"));
         if (campos.containsKey("objetivo")) planoAcao.setObjetivo((String) campos.get("objetivo"));
-        if (campos.containsKey("prioridade")) planoAcao.setPrioridade((Prioridade) campos.get("prioridade"));
+        if (campos.containsKey("prioridade")) {
+            Object prioridadeObject = campos.get("prioridade");
+            planoAcao.setPrioridade(ConversorObject.toEnum(prioridadeObject, Prioridade.class));
+        }
 
         PlanoAcao salvo = repo.save(planoAcao);
         return mapper.toResponse(salvo);
