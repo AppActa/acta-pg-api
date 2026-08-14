@@ -2,6 +2,7 @@ package br.com.acta.dto.pdca.meta;
 
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
 import br.com.acta.entity.enums.Prioridade;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
@@ -30,7 +31,8 @@ public record MetaRequestDTO(
         @Size(max = 30, message = "{validation.meta.unidadeMedida.size}")
         String unidadeMedida,
 
-        @Schema(description = "Prazo da meta", example = SwaggerRequestExamples.PRAZO_META)
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Schema(description = "Prazo da meta", example = SwaggerRequestExamples.PRAZO_META, pattern = "yyyy-MM-dd")
         @NotNull(message = "{validation.meta.prazo.notnull}")
         @Future(message = "{validation.meta.prazo.future}")
         LocalDate prazo,

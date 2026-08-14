@@ -2,6 +2,7 @@ package br.com.acta.dto.pdca.tarefa;
 
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
 import br.com.acta.entity.enums.Prioridade;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -22,7 +23,8 @@ public record TarefaRequestDTO(
         @NotNull(message = "{validation.prioridade.notnull}")
         Prioridade prioridade,
 
-        @Schema(description = "Data de término prevista", example = SwaggerRequestExamples.DATA_FIM_PREVISTA)
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Schema(description = "Data de término prevista", example = SwaggerRequestExamples.DATA_FIM_PREVISTA, pattern = "yyyy-MM-dd")
         @NotNull(message = "{validation.tarefa.dataFimPrevista.notnull}")
         @Future(message = "{validation.tarefa.dataFimPrevista.future}")
         LocalDate dataFimPrevista,

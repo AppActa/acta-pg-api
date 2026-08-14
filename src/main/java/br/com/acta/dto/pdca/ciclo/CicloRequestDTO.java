@@ -1,6 +1,7 @@
 package br.com.acta.dto.pdca.ciclo;
 
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -17,12 +18,14 @@ public record CicloRequestDTO(
         @Size(max = 1000, message = "{validation.descricao.size}")
         String descricao,
 
-        @Schema(description = "Data de início do ciclo", example = SwaggerRequestExamples.DATA_INICIO_CICLO)
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Schema(description = "Data de início do ciclo", example = SwaggerRequestExamples.DATA_INICIO_CICLO, format = "yyyy-MM-dd")
         @NotNull(message = "{validation.ciclo.dataInicio.notnull}")
         @FutureOrPresent(message = "{validation.ciclo.dataInicio.futureorpresent}")
         LocalDate dataInicio,
 
-        @Schema(description = "Data estimada de fim do ciclo", example = SwaggerRequestExamples.DATA_ESTIMADA_FIM)
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Schema(description = "Data estimada de fim do ciclo", example = SwaggerRequestExamples.DATA_ESTIMADA_FIM, format = "yyyy-MM-dd")
         @NotNull(message = "{validation.ciclo.dataEstimadaFim.notnull}")
         @FutureOrPresent(message = "{validation.ciclo.dataEstimadaFim.future}")
         LocalDate dataEstimadaFim,
