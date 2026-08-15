@@ -69,7 +69,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
 
         if (campos.containsKey("prazo")) {
             Object dataObject = campos.get("prazo");
-            meta.setPrazo(ConversorObject.toLocalDate(dataObject));
+            meta.setPrazo(ConversorObject.toLocalDate(dataObject, false));
         }
 
         if (campos.containsKey("prioridade")) {

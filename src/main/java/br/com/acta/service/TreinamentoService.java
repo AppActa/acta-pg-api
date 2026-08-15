@@ -52,7 +52,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         if (campos.containsKey("descricao")) treinamento.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("dataTreinamento")) {
             Object dataTreinamentoObject = campos.get("dataTreinamento");
-            LocalDate dataTreinamento = ConversorObject.toLocalDate(dataTreinamentoObject);
+            LocalDate dataTreinamento = ConversorObject.toLocalDate(dataTreinamentoObject, false);
 
             if (dataTreinamento.isBefore(LocalDate.now()))
                 throw new InvalidRequestException("A data do treinamento não pode ser anterior à data atual");

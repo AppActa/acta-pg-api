@@ -66,7 +66,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
         if (campos.containsKey("dataFimPrevista")) {
             Object dataFimPrevistaObject = campos.get("dataFimPrevista");
-            tarefa.setDataFimPrevista(ConversorObject.toLocalDate(dataFimPrevistaObject));
+            tarefa.setDataFimPrevista(ConversorObject.toLocalDate(dataFimPrevistaObject, false));
         }
 
         Tarefa salvo = repo.save(tarefa);

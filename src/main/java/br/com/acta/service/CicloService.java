@@ -53,7 +53,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         if (campos.containsKey("descricao")) ciclo.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("dataEstimadaFim")) {
             Object dataObject = campos.get("dataEstimadaFim");
-            ciclo.setDataEstimadaFim(ConversorObject.toLocalDate(dataObject));
+            ciclo.setDataEstimadaFim(ConversorObject.toLocalDate(dataObject, false));
         }
 
         Ciclo salvo = repo.save(ciclo);

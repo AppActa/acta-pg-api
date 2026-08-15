@@ -64,7 +64,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
 
         if (campos.containsKey("whenFim")) {
             Object whenFimObject = campos.get("whenFim");
-            plano5W2H.setWhenFim(ConversorObject.toLocalDate(whenFimObject));
+            plano5W2H.setWhenFim(ConversorObject.toLocalDate(whenFimObject, false));
         }
 
         if (campos.containsKey("howMuchCusto")) {
