@@ -81,6 +81,13 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(colaborador);
     }
 
+    public List<ColaboradorResponseDTO> buscarPorEmpresa(Long idEmpresa){
+        Empresa empresa = empresaService.getEntity(idEmpresa);
+        Set<Colaborador> colaboradores = empresa.getColaboradores();
+
+        return mapper.toResponseList(colaboradores);
+    }
+
     @Override
     protected void antesInserir(Colaborador colaborador, ColaboradorRequestDTO dto) {
         if (!CPFValidator.isEligible(dto.cpf())) throw new RegexException("CPF");

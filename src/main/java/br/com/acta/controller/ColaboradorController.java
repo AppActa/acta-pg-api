@@ -14,12 +14,19 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 import java.util.Map;
 
+
 @Validated
 @RestController
 @RequestMapping(value = "/colaborador", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ColaboradorController {
     private final ColaboradorService service;
+
+    @GetMapping("/{idEmpresa}")
+    public ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa(@PathVariable @Positive Long idEmpresa){
+        List<ColaboradorResponseDTO> colaboradores = service.buscarPorEmpresa(idEmpresa);
+        return ResponseEntity.ok(colaboradores);
+    }
 
     @GetMapping
     public ResponseEntity<List<ColaboradorResponseDTO>> buscar() {
