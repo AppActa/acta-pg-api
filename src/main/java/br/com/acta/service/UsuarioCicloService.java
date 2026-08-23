@@ -41,11 +41,19 @@ public class UsuarioCicloService {
     }
 
     @Transactional(readOnly = true)
-    public List<UsuarioCicloResponseDTO> buscar(Long idCiclo){
+    public List<UsuarioCicloResponseDTO> buscarPorCiclo(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         List<UsuarioCiclo> usuarios = ciclo.getColaboradores().stream().toList();
 
         return mapper.toResponseList(usuarios);
+    }
+
+    @Transactional(readOnly = true)
+    public List<UsuarioCicloResponseDTO> buscarPorUsuario(Long idUsuario){
+        Usuario usuario = usuarioService.getEntity(idUsuario);
+        Set<UsuarioCiclo> ciclos = usuario.getCiclos();
+
+        return mapper.toResponseList(ciclos);
     }
 
     @Transactional

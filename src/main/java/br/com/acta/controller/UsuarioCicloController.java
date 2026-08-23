@@ -22,7 +22,7 @@ public class UsuarioCicloController {
 
     @GetMapping
     public ResponseEntity<List<UsuarioCicloResponseDTO>> buscar(@PathVariable @Positive Long idCiclo){
-        List<UsuarioCicloResponseDTO> usuario = service.buscar(idCiclo);
+        List<UsuarioCicloResponseDTO> usuario = service.buscarPorCiclo(idCiclo);
         return ResponseEntity.ok(usuario);
     }
 
