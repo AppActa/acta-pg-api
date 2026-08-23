@@ -4,6 +4,7 @@ import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
@@ -35,11 +36,13 @@ public record ColaboradorRequestDTO(
         @Size(max = 100, message = "{validation.area.size}")
         String area,
 
+        @JsonFormat(pattern = "yyyy-MM-dd")
         @Schema(description = "Data de nascimento do colaborador", example = SwaggerRequestExamples.DATA_NASCIMENTO, format = "yyyy-MM-dd", type = "string")
         @NotNull(message = "{validation.colaborador.dataNascimento.notnull}")
         @Past(message = "{validation.colaborador.dataNascimento.past}")
         LocalDate dataNascimento,
 
+        @JsonFormat(pattern = "yyyy-MM-dd")
         @Schema(description = "Data de contratação do colaborador", example = SwaggerRequestExamples.DATA_CONTRATACAO, format = "yyyy-MM-dd", type = "string")
         @NotNull(message = "{validation.colaborador.dataContratacao.notnull}")
         @PastOrPresent(message = "{validation.colaborador.dataContratacao.pastorpresent}")

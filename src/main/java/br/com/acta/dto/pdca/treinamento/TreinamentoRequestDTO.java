@@ -1,6 +1,7 @@
 package br.com.acta.dto.pdca.treinamento;
 
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.*;
 
@@ -17,7 +18,8 @@ public record TreinamentoRequestDTO(
         @Size(max = 1000, message = "{validation.descricao.size}")
         String descricao,
 
-        @Schema(description = "Data do treinamento", example = SwaggerRequestExamples.DATA_TREINAMENTO)
+        @JsonFormat(pattern = "yyyy-MM-dd")
+        @Schema(description = "Data do treinamento", example = SwaggerRequestExamples.DATA_TREINAMENTO, pattern = "yyyy-MM-dd")
         @NotNull(message = "{validation.treinamento.dataTreinamento.notnull}")
         @FutureOrPresent(message = "{validation.treinamento.dataTreinamento.futureorpresent}")
         LocalDate dataTreinamento,

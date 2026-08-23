@@ -3,6 +3,7 @@ package br.com.acta.service;
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.PrerequisiteNotMetException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
@@ -23,8 +24,6 @@ import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
@@ -60,11 +59,23 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         Meta meta = getEntity(id);
 
         if(campos.containsKey("objetivo")) meta.setObjetivo((String) campos.get("objetivo"));
-        if(campos.containsKey("valorAlvo")) meta.setValorAlvo((BigDecimal) campos.get("valorAlvo"));
-        if(campos.containsKey("prazo")) meta.setPrazo((LocalDate) campos.get("prazo"));
-        if(campos.containsKey("prioridade")) meta.setPrioridade((Prioridade) campos.get("prioridade"));
         if(campos.containsKey("area")) meta.setArea((String) campos.get("area"));
         if(campos.containsKey("categoria")) meta.setCategoria((String) campos.get("categoria"));
+
+        if ( campos.containsKey("valorAlvo")) {
+            Object valorAlvoObject = campos.get("valorAlvo");
+            meta.setValorAlvo(ConversorObject.toBigDecimal(valorAlvoObject));
+        }
+
+        if (campos.containsKey("prazo")) {
+            Object dataObject = campos.get("prazo");
+            meta.setPrazo(ConversorObject.toLocalDate(dataObject, false));
+        }
+
+        if (campos.containsKey("prioridade")) {
+            Object prioridadeObject = campos.get("prioridade");
+            meta.setPrioridade(ConversorObject.toEnum(prioridadeObject, Prioridade.class));
+        }
 
         Meta salvo = repo.save(meta);
         return mapper.toResponse(salvo);

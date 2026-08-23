@@ -1,10 +1,10 @@
 package br.com.acta.dto.mapper.core;
 
+import br.com.acta.common.utils.Formatador;
 import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.entity.core.Endereco;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.common.utils.Formatador;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

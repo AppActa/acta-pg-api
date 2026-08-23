@@ -1,12 +1,12 @@
 package br.com.acta.dto.mapper.core;
 
+import br.com.acta.common.utils.Formatador;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
 import br.com.acta.entity.core.Colaborador;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
 import br.com.acta.dto.mapper.core.contato.EmailColaboradorMapper;
 import br.com.acta.dto.mapper.core.contato.TelefoneColaboradorMapper;
-import br.com.acta.common.utils.Formatador;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

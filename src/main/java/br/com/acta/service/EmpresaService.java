@@ -4,6 +4,7 @@ import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.RegexException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
@@ -74,8 +75,12 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         Empresa empresa = getEntity(id);
 
         if (campos.containsKey("nome")) empresa.setNome((String) campos.get("nome"));
-        if (campos.containsKey("tamanho")) empresa.setTamanho((TamanhoEmpresa) campos.get("tamanho"));
         if (campos.containsKey("setor")) empresa.setSetor((String) campos.get("setor"));
+        if (campos.containsKey("tamanho")) {
+            Object tamanhoObject = campos.get("tamanho");
+            empresa.setTamanho(ConversorObject.toEnum(tamanhoObject, TamanhoEmpresa.class));
+        }
+
 
         Empresa salvo = repo.save(empresa);
         return mapper.toResponse(salvo);

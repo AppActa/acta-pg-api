@@ -3,6 +3,7 @@ package br.com.acta.service;
 import br.com.acta.common.handler.exception.InvalidResourceStatusException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
@@ -16,9 +17,6 @@ import br.com.acta.repository.padrao.Plano5W2HRepository;
 import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.math.BigDecimal;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -57,16 +55,28 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         if (campos.containsKey("whatAcao")) plano5W2H.setWhatAcao((String) campos.get("whatAcao"));
         if (campos.containsKey("whyJustificativa")) plano5W2H.setWhyJustificativa((String) campos.get("whyJustificativa"));
         if (campos.containsKey("whereLocal")) plano5W2H.setWhereLocal((String) campos.get("whereLocal"));
-        if (campos.containsKey("whenInicio")) plano5W2H.setWhenInicio((LocalDate) campos.get("whenInicio"));
-        if (campos.containsKey("whenFim")) plano5W2H.setWhenFim((LocalDate) campos.get("whenFim"));
         if (campos.containsKey("howModoExecucao")) plano5W2H.setHowModoExecucao((String) campos.get("howModoExecucao"));
-        if (campos.containsKey("howMuchCusto")) plano5W2H.setHowMuchCusto((BigDecimal) campos.get("howMuchCusto"));
+
+        if (campos.containsKey("whenInicio")) {
+            Object whenInicioObject = campos.get("whenInicio");
+            plano5W2H.setWhenInicio(ConversorObject.toLocalDate(whenInicioObject));
+        }
+
+        if (campos.containsKey("whenFim")) {
+            Object whenFimObject = campos.get("whenFim");
+            plano5W2H.setWhenFim(ConversorObject.toLocalDate(whenFimObject, false));
+        }
+
+        if (campos.containsKey("howMuchCusto")) {
+            Object howMuchCustoObject = campos.get("howMuchCusto");
+            plano5W2H.setHowMuchCusto(ConversorObject.toBigDecimal(howMuchCustoObject));
+        }
+
         if (campos.containsKey("idWhoResponsavel")){
             Long idWhoResponsavel = (Long) campos.get("idWhoResponsavel");
             Usuario responsavel = usuarioService.getEntity(idWhoResponsavel);
 
             Validador.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), responsavel.getCiclos());
-
             plano5W2H.setWhoResponsavel(responsavel);
         }
 

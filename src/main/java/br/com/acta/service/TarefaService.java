@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.*;
+import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
@@ -57,8 +58,16 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
         if (campos.containsKey("titulo")) tarefa.setTitulo((String) campos.get("titulo"));
         if (campos.containsKey("descricao")) tarefa.setDescricao((String) campos.get("descricao"));
-        if (campos.containsKey("prioridade")) tarefa.setPrioridade((Prioridade) campos.get("prioridade"));
-        if (campos.containsKey("dataFimPrevista")) tarefa.setDataFimPrevista((LocalDate) campos.get("dataFimPrevista"));
+
+        if (campos.containsKey("prioridade")) {
+            Object prioridadeObject = campos.get("prioridade");
+            tarefa.setPrioridade(ConversorObject.toEnum(prioridadeObject, Prioridade.class));
+        }
+
+        if (campos.containsKey("dataFimPrevista")) {
+            Object dataFimPrevistaObject = campos.get("dataFimPrevista");
+            tarefa.setDataFimPrevista(ConversorObject.toLocalDate(dataFimPrevistaObject, false));
+        }
 
         Tarefa salvo = repo.save(tarefa);
         return mapper.toResponse(salvo);

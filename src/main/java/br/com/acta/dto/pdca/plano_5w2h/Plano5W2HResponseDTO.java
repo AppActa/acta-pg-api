@@ -12,9 +12,9 @@ public record Plano5W2HResponseDTO(
         String whyJustificativa,
         String whereLocal,
 
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         LocalDate whenInicio,
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MMyyyy")
         LocalDate whenFim,
 
         String howModoExecucao,
