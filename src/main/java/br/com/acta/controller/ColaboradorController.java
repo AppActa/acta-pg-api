@@ -22,7 +22,7 @@ import java.util.Map;
 public class ColaboradorController {
     private final ColaboradorService service;
 
-    @GetMapping("/{idEmpresa}")
+    @GetMapping("empresa/{idEmpresa}")
     public ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa(@PathVariable @Positive Long idEmpresa){
         List<ColaboradorResponseDTO> colaboradores = service.buscarPorEmpresa(idEmpresa);
         return ResponseEntity.ok(colaboradores);
