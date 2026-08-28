@@ -24,8 +24,8 @@ public class Usuario extends AuditoriaBase {
     @Column(name = "email_login", length = 254, nullable = false, unique = true)
     private String emailLogin;
 
-    @Column(name = "senha_hash", nullable = false)
-    private String senhaHash;
+    @Column(name = "firebase_uid", nullable = false, length = 128, unique = true)
+    private String firebaseUid;
 
     @Column(name = "tipo_usuario", nullable = false)
     @Enumerated(EnumType.STRING)

@@ -17,10 +17,10 @@ public record UsuarioRequestDTO(
         @Email(message = "{validation.usuario.emailLogin.invalid}")
         String email,
 
-        @Schema(description = "Senha do usuário", example = SwaggerRequestExamples.SENHA)
-        @NotBlank(message = "{validation.senha.notblank}")
-        @Size(min = 8, max = 128, message = "{validation.senha.size}")
-        String senha,
+        @Schema(description = "ID Token do Firebase referente a conta do usuário", example = SwaggerRequestExamples.FIREBASE_UID)
+        @NotBlank(message = "{validation.usuario.firebaseUid.notblank}")
+        @Size(max = 180, message = "{validation.usuario.firebaseUid.size}")
+        String firebaseUid,
 
         @Schema(description = "Tipo do usuário", example = SwaggerRequestExamples.TIPO_USUARIO, implementation = TipoUsuario.class)
         @NotNull(message = "{validation.usuario.tipo.notnull}")
