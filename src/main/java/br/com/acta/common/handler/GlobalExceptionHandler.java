@@ -8,6 +8,8 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
@@ -17,11 +19,28 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.nio.file.AccessDeniedException;
 import java.util.List;
 
 @ControllerAdvice
 public class GlobalExceptionHandler {
+    @ExceptionHandler(FirebaseIdTokenException.class)
+    public ResponseEntity<ErroResponse> handleFirebaseIdToken(FirebaseIdTokenException fite){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErroResponse(List.of(fite.getMessage()), 401));
+    }
+
+    @ExceptionHandler(FirebaseAccessRevokedException.class)
+    public ResponseEntity<ErroResponse> handleFirebaseAccessRevoked(FirebaseAccessRevokedException fare){
+        return ResponseEntity.status(HttpStatus.FORBIDDEN)
+                .body(new ErroResponse(List.of(fare.getMessage()), 403));
+    }
+
+    @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
+    public ResponseEntity<ErroResponse> handleAuthenticationCredentialsNotFound(AuthenticationCredentialsNotFoundException acnfe){
+        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
+                .body(new ErroResponse(List.of(acnfe.getMessage()), 401));
+    }
+
     @ExceptionHandler(CircularDependencyException.class)
     public ResponseEntity<ErroResponse> handleCircularDependency(CircularDependencyException cde){
         return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
@@ -197,9 +216,9 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErroResponse> handleRuntime(){
+    public ResponseEntity<ErroResponse> handleRuntime(RuntimeException re){
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErroResponse(List.of("Ocorreu um erro inesperado durante a execução"), 500));
+                .body(new ErroResponse(List.of(re.getMessage()), 500));
     }
 
     @ExceptionHandler(Exception.class)

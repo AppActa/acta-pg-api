@@ -36,7 +36,7 @@ public class Colaborador extends AuditoriaBase {
     private LocalDate dataContratacao;
 
     @Column(name = "permissao_gestor", nullable = false)
-    private Boolean permissaoGestor;
+    private boolean permissaoGestor;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)
