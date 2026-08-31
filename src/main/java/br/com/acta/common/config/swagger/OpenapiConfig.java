@@ -16,8 +16,8 @@ public class OpenapiConfig {
     public OpenAPI actaOpenAPI(){
         return new OpenAPI()
                 .info(apiInfo())
-                .addSecurityItem(new SecurityRequirement().addList("bearerAuth"))
-                .components(new Components().addSecuritySchemes("bearerAuth", bearerAuthScheme()));
+                .addSecurityItem(new SecurityRequirement().addList("firebaseBearer"))
+                .components(new Components().addSecuritySchemes("firebaseBearer", firebaseBearer()));
     }
 
     private Info apiInfo() {
@@ -29,13 +29,11 @@ public class OpenapiConfig {
                 .license(new License().name("MIT License").url("https://opensource.org/licenses/MIT"));
     }
 
-    private SecurityScheme bearerAuthScheme(){
+    private SecurityScheme firebaseBearer() {
         return new SecurityScheme()
-                .name("bearerAuth")
                 .type(SecurityScheme.Type.HTTP)
                 .scheme("bearer")
-                .bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER)
-                .description("Informe o token JWT obtido em POST /auth/login");
+                .bearerFormat("Firebase ID Token")
+                .description("ID Token obtido no Firebase Authentication. Não use refresh token nem senha nesta API.");
     }
 }
