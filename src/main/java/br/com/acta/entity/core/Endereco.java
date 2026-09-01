@@ -6,6 +6,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 @Entity
 @Table(name = "endereco_empresa", schema = "public")
@@ -14,10 +16,12 @@ import lombok.Setter;
 @NoArgsConstructor
 public class Endereco extends AuditoriaBase {
     @Column(name = "cep", length = 8, nullable = false, columnDefinition = "CHAR(8)")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private String cep;
 
     @Column(name = "uf", length = 2, nullable = false, columnDefinition = "CHAR(2)")
     @Enumerated(EnumType.STRING)
+    @JdbcTypeCode(SqlTypes.CHAR)
     private UF uf;
 
     @Column(name = "cidade", length = 100, nullable = false)

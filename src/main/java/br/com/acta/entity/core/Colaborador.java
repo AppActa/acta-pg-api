@@ -8,6 +8,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -18,6 +20,7 @@ import java.util.Set;
 @Getter @Setter @NoArgsConstructor
 public class Colaborador extends AuditoriaBase {
     @Column(name = "cpf", length = 11, updatable = false, nullable = false, unique = true, columnDefinition = "CHAR(11)")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private String cpf;
 
     @Column(name = "nome", length = 160, nullable = false)
@@ -36,7 +39,7 @@ public class Colaborador extends AuditoriaBase {
     private LocalDate dataContratacao;
 
     @Column(name = "permissao_gestor", nullable = false)
-    private Boolean permissaoGestor;
+    private boolean permissaoGestor;
 
     @Column(name = "status", nullable = false)
     @Enumerated(EnumType.STRING)

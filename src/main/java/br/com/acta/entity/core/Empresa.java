@@ -10,6 +10,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
 
 import java.util.HashSet;
 import java.util.List;
@@ -22,6 +24,7 @@ import java.util.Set;
 @NoArgsConstructor
 public class Empresa extends AuditoriaBase {
     @Column(name = "cnpj", nullable = false, length = 14, updatable = false, unique = true, columnDefinition = "CHAR(14)")
+    @JdbcTypeCode(SqlTypes.CHAR)
     private String cnpj;
 
     @Column(name = "nome", nullable = false, length = 160)
