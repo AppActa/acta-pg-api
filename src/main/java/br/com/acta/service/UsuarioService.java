@@ -2,7 +2,6 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
-import br.com.acta.common.utils.Hash;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
@@ -34,8 +33,8 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             Set.of("nome", "email", "senha")
     );
 
-    public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo){
-        super(repo, mapper, Usuario.class);
+    public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo, AuthService authService){
+        super(repo, mapper, Usuario.class, authService);
         this.empresaService = empresaService;
         this.repo = repo;
         this.mapper = mapper;
@@ -56,7 +55,6 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             if (repo.existsByEmailLoginIgnoreCase(email)) throw new UniqueViolationException("E-mail");
             usuario.setEmailLogin(email);
         }
-        if (campos.containsKey("senha")) usuario.setSenhaHash(Hash.gerarHash((String) campos.get("senha")));
 
         repo.save(usuario);
         return mapper.toResponse(usuario);
@@ -109,6 +107,5 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
         usuario.setStatus(StatusGeral.ATIVO);
         usuario.setEmpresa(empresaService.getEntity(dto.idEmpresa()));
-        usuario.setSenhaHash(Hash.gerarHash(dto.senha()));
     }
 }

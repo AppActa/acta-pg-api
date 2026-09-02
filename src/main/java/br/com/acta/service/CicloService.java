@@ -1,5 +1,6 @@
 package br.com.acta.service;
 
+import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
@@ -17,7 +18,6 @@ import br.com.acta.service.base.BaseService;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -34,8 +34,8 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     private final UsuarioService usuarioService;
     private final EmpresaService empresaService;
 
-    public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService) {
-        super(repo, mapper, Ciclo.class);
+    public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService) {
+        super(repo, mapper, Ciclo.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;
@@ -64,16 +64,17 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     public CicloResponseDTO patchStatus(Long id, StatusCiclo status){
         Ciclo ciclo = getEntity(id);
 
-        if (!ciclo.getStatus().podeAtualizarStatus(status)) {
-            throw new StatusUpdateException(ciclo.getStatus().toString(), status.toString());
+        if (status == StatusCiclo.CONCLUIDO) {
+            if (!repo.podeEncerrarCiclo(id)) throw new ActiveEntityDeletionException("ciclo");
+
+            repo.encerrarCiclo(id);
+            Ciclo cicloConcluido = getEntity(id);
+            return mapper.toResponse(cicloConcluido);
         }
+
+        if (!ciclo.getStatus().podeAtualizarStatus(status)) throw new StatusUpdateException(ciclo.getStatus().toString(), status.toString());
 
         ciclo.setStatus(status);
-
-        if (ciclo.getStatus().equals(StatusCiclo.CONCLUIDO)) {
-            ciclo.setDataFimReal(LocalDate.now());
-        }
-
         Ciclo salvo = repo.save(ciclo);
         return mapper.toResponse(salvo);
     }
@@ -97,6 +98,11 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
         List<Ciclo> ciclos = repo.buscar(idEmpresa, idGestor, status);
         return mapper.toResponseList(ciclos);
+    }
+
+    @Transactional(readOnly = true)
+    public Double avancoCiclo(Long id) {
+        return repo.avancoCiclo(id);
     }
 
     @Override
