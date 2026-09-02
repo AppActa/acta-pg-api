@@ -29,8 +29,8 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
     private final UsuarioRepository repo;
     protected final UsuarioMapper mapper;
     private final PatchConfig patchConfig = new PatchConfig(
-            Set.of("nome", "email", "senha", "tipo", "idEmpresa"),
-            Set.of("nome", "email", "senha")
+            Set.of("nome", "email", "tipo", "idEmpresa"),
+            Set.of("nome", "email")
     );
 
     public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo, AuthService authService){
