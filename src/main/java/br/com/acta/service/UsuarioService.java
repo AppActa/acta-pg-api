@@ -33,8 +33,8 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             Set.of("nome", "email")
     );
 
-    public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo){
-        super(repo, mapper, Usuario.class);
+    public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo, AuthService authService){
+        super(repo, mapper, Usuario.class, authService);
         this.empresaService = empresaService;
         this.repo = repo;
         this.mapper = mapper;
@@ -55,6 +55,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             if (repo.existsByEmailLoginIgnoreCase(email)) throw new UniqueViolationException("E-mail");
             usuario.setEmailLogin(email);
         }
+
         repo.save(usuario);
         return mapper.toResponse(usuario);
     }

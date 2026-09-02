@@ -58,4 +58,10 @@ public class CicloController {//implements CicloOpenapi {
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Double> avancoCiclo(@PathVariable @Positive Long id) {
+        Double avanco = service.avancoCiclo(id);
+        return ResponseEntity.ok(avanco);
+    }
 }

@@ -22,12 +22,6 @@ public class AlertaPrazoController {
         return ResponseEntity.ok(alerta);
     }
 
-    @PostMapping
-    public ResponseEntity<AlertaPrazoResponseDTO> inserir(@PathVariable @Positive Long idTarefa) {
-        AlertaPrazoResponseDTO alerta = service.inserir(idTarefa);
-        return ResponseEntity.status(201).body(alerta);
-    }
-
     @PatchMapping("/{id}")
     public ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@PathVariable @Positive Long idTarefa, @PathVariable @Positive Long id, @RequestParam @Positive Long idUsuario) {
         AlertaPrazoResponseDTO alerta = service.marcarLido(idTarefa, id, idUsuario);
