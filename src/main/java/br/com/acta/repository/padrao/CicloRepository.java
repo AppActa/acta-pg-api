@@ -18,7 +18,7 @@ public interface CicloRepository extends BaseRepository<Ciclo> {
     """)
     List<Ciclo> buscar(@Param("idEmpresa") Long idEmpresa, @Param("idGestor") Long idGestor, @Param("status") StatusCiclo status);
 
-    @Query("SELECT fn_avanco_ciclo(:cicloId)")
+    @Query(value = "SELECT pdca.fn_avanco_ciclo(:cicloId)", nativeQuery = true)
     Double avancoCiclo(@Param("cicloId") Long cicloId);
 
     @Procedure(procedureName = "pdca.pr_encerrar_ciclo")
