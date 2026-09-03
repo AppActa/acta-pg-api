@@ -2,7 +2,7 @@ package br.com.acta.common.handler;
 
 import br.com.acta.common.handler.exception.*;
 import com.google.i18n.phonenumbers.NumberParseException;
-import org.hibernate.exception.ConstraintViolationException;
+import jakarta.validation.ConstraintViolationException;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -10,12 +10,14 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
+import org.springframework.web.HttpMediaTypeNotAcceptableException;
 import org.springframework.web.HttpMediaTypeNotSupportedException;
 import org.springframework.web.HttpRequestMethodNotSupportedException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.method.annotation.HandlerMethodValidationException;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
@@ -122,7 +124,7 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(UniqueViolationException.class)
     public ResponseEntity<ErroResponse> handleUniqueViolation(UniqueViolationException uv){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
-                .body(new ErroResponse(List.of(uv.getMessage()), 400));
+                .body(new ErroResponse(List.of(uv.getMessage()), 409));
     }
 
     @ExceptionHandler(StatusUpdateException.class)
@@ -149,6 +151,20 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(mensagens, 400));
     }
 
+    @ExceptionHandler(HandlerMethodValidationException.class)
+    public ResponseEntity<ErroResponse> handleValidation(HandlerMethodValidationException hmve) {
+        List<String> mensagens = hmve.getParameterValidationResults()
+                .stream()
+                .flatMap(r -> r.getResolvableErrors().stream())
+                .map(e -> e.getDefaultMessage() != null
+                        ? e.getDefaultMessage()
+                        : "Um parâmetro informado é inválido")
+                .toList();
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+                .body(new ErroResponse(mensagens, 400));
+    }
+
     @ExceptionHandler(IllegalStateException.class)
     public ResponseEntity<ErroResponse> handleIllegalState(IllegalStateException ise){
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
@@ -160,6 +176,13 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErroResponse(List.of("Algum dos parâmetros informados é inválido"), 400));
     }
+
+    @ExceptionHandler(HttpMediaTypeNotAcceptableException.class)
+    public ResponseEntity<ErroResponse> handleHttpMediaNotAcceptable() {
+        return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE)
+                .body(new ErroResponse(List.of("O tipo de resposta solicitado não é suportado"), 406));
+    }
+
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<ErroResponse> handleValidation(){
