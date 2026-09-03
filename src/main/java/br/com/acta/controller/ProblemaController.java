@@ -4,6 +4,7 @@ import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusProblema;
 import br.com.acta.service.ProblemaService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -34,7 +35,7 @@ public class ProblemaController {
     }
 
     @PostMapping("/ciclos/{idCiclo}/problema")
-    public ResponseEntity<ProblemaResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody ProblemaRequestDTO dto) {
+    public ResponseEntity<ProblemaResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid ProblemaRequestDTO dto) {
         ProblemaResponseDTO problema = service.inserir(dto, idCiclo);
         return ResponseEntity.status(201).body(problema);
     }

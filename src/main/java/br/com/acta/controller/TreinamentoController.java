@@ -34,7 +34,7 @@ public class TreinamentoController {
     @PostMapping("/ciclo/{idCiclo}/treinamento")
     public ResponseEntity<TreinamentoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid TreinamentoRequestDTO dto) {
         TreinamentoResponseDTO treinamento = service.inserir(idCiclo, dto);
-        return ResponseEntity.ok(treinamento);
+        return ResponseEntity.status(201).body(treinamento);
     }
 
     @PatchMapping("/treinamento/{id}")
