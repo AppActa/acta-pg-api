@@ -58,8 +58,8 @@ public class SecurityConfig {
     }
 
     @Bean
-    public FirebaseAuthFilter filter(FirebaseUtils utils) {
-        return new FirebaseAuthFilter(utils);
+    public FirebaseAuthFilter filter(FirebaseUtils utils, ObjectMapper mapper) {
+        return new FirebaseAuthFilter(utils, mapper);
     }
 
     @Bean
