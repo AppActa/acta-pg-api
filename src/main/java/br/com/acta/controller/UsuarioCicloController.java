@@ -4,6 +4,7 @@ import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloRequestDTO;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.enums.PapelCiclo;
 import br.com.acta.service.UsuarioCicloService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -27,7 +28,7 @@ public class UsuarioCicloController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioCicloResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody UsuarioCicloRequestDTO dto){
+    public ResponseEntity<UsuarioCicloResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid UsuarioCicloRequestDTO dto){
         UsuarioCicloResponseDTO usuario = service.inserir(dto, idCiclo);
         return ResponseEntity.status(201).body(usuario);
     }

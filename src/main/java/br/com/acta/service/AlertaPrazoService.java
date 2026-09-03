@@ -26,7 +26,11 @@ public class AlertaPrazoService {
             Tarefa tarefa = tarefaService.getEntity(idTarefa);
             return repo.findByTarefa(tarefa).orElseThrow(() -> new ModelNotFoundException("Alerta de prazo"));
         }
-        return repo.findById(idAlerta).orElseThrow(() -> new ModelNotFoundException("Alerta de prazo"));
+
+        AlertaPrazo alertaPrazo = repo.findById(idAlerta).orElseThrow(() -> new ModelNotFoundException("Alerta de prazo"));
+
+        if (!alertaPrazo.getTarefa().getId().equals(idTarefa)) throw new ModelNotFoundException("Alerta de prazo");
+        return alertaPrazo;
     }
 
     @Transactional(readOnly = true)

@@ -73,7 +73,8 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         }
 
         if (campos.containsKey("idWhoResponsavel")){
-            Long idWhoResponsavel = (Long) campos.get("idWhoResponsavel");
+            Object idWhoResponsavelObject = campos.get("idWhoResponsavel");
+            Long idWhoResponsavel = ConversorObject.toLong(idWhoResponsavelObject);
             Usuario responsavel = usuarioService.getEntity(idWhoResponsavel);
 
             Validador.validarMesmoCiclo(plano5W2H.getPlanoAcao().getCiclo(), responsavel.getCiclos());

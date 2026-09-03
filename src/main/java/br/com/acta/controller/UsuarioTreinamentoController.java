@@ -4,6 +4,7 @@ import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.service.UsuarioTreinamentoService;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
@@ -25,9 +26,9 @@ public class UsuarioTreinamentoController {
     }
 
     @PostMapping
-    public ResponseEntity<UsuarioTreinamentoResponseDTO> inserir(@PathVariable @Positive Long id, UsuarioTreinamentoRequestDTO dto){
+    public ResponseEntity<UsuarioTreinamentoResponseDTO> inserir(@PathVariable @Positive Long id, @RequestBody @Valid UsuarioTreinamentoRequestDTO dto){
         UsuarioTreinamentoResponseDTO usuario = service.inserir(id, dto);
-        return ResponseEntity.ok(usuario);
+        return ResponseEntity.status(201).body(usuario);
     }
 
     @PatchMapping("/{idUsuario}")
