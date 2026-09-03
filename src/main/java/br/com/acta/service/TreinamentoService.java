@@ -34,8 +34,8 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
             Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio")
     );
 
-    public TreinamentoService(TreinamentoRepository repo, TreinamentoMapper mapper, CicloService cicloService, UsuarioService usuarioService){
-        super(repo, mapper, Treinamento.class);
+    public TreinamentoService(TreinamentoRepository repo, TreinamentoMapper mapper, CicloService cicloService, UsuarioService usuarioService, AuthService authService){
+        super(repo, mapper, Treinamento.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

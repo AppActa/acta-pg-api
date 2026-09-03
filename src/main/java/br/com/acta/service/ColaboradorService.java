@@ -53,8 +53,8 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
             Set.of("nome", "cargo", "area", "permissaoGestor", "status")
     );
 
-    public ColaboradorService(ColaboradorRepository repo, ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper) {
-        super(repo, mapper, Colaborador.class);
+    public ColaboradorService(ColaboradorRepository repo, ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
+        super(repo, mapper, Colaborador.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;

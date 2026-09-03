@@ -43,8 +43,8 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     );
     private final UsuarioMapper usuarioMapper;
 
-    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper) {
-        super(repo, mapper, Meta.class);
+    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper, AuthService authService) {
+        super(repo, mapper, Meta.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.usuarioService = usuarioService;

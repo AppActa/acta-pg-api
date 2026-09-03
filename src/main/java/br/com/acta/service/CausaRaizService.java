@@ -39,8 +39,8 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
             Set.of("descricao", "principal", "id5PorquesMongo")
     );
 
-    public CausaRaizService(CausaRaizRepository repo, CausaRaizMapper mapper, CicloService cicloService, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, ProblemaService problemaService) {
-        super(repo, mapper, CausaRaiz.class);
+    public CausaRaizService(CausaRaizRepository repo, CausaRaizMapper mapper, CicloService cicloService, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, ProblemaService problemaService, AuthService authService) {
+        super(repo, mapper, CausaRaiz.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

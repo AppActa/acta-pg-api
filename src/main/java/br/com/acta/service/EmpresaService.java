@@ -56,8 +56,8 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     );
     private final CNPJValidator cnpjValidator = new CNPJValidator();
 
-    public EmpresaService(EmpresaRepository repo, EmpresaMapper mapper, EmailEmpresaMapper emailMapper, EmailEmpresaRepository emailRepo, TelefoneEmpresaMapper telefoneMapper, TelefoneEmpresaRepository telefoneRepo, EnderecoMapper enderecoMapper, EnderecoRepository enderecoRepo) {
-        super(repo, mapper, Empresa.class);
+    public EmpresaService(EmpresaRepository repo, EmpresaMapper mapper, EmailEmpresaMapper emailMapper, EmailEmpresaRepository emailRepo, TelefoneEmpresaMapper telefoneMapper, TelefoneEmpresaRepository telefoneRepo, EnderecoMapper enderecoMapper, EnderecoRepository enderecoRepo, AuthService authService) {
+        super(repo, mapper, Empresa.class, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.emailMapper = emailMapper;
