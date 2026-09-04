@@ -14,6 +14,7 @@ import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.Treinamento;
 import br.com.acta.repository.padrao.TreinamentoRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     @Override
     public TreinamentoResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -65,6 +67,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<TreinamentoResponseDTO> buscarTreinamentos(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -73,6 +76,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         return mapper.toResponseList(treinamentos);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TreinamentoResponseDTO inserir(Long idCiclo, TreinamentoRequestDTO dto) {
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -88,6 +92,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
