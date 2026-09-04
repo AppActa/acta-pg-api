@@ -167,7 +167,6 @@ CREATE TABLE IF NOT EXISTS pdca.meta (
 CREATE TABLE IF NOT EXISTS pdca.treinamento (
     id BIGSERIAL PRIMARY KEY,
     id_ciclo BIGINT NOT NULL REFERENCES pdca.ciclo(id) ON DELETE CASCADE,
-    id_anexo_mongo INTEGER,
     id_responsavel BIGINT NOT NULL REFERENCES usuario_sistema(id),
     titulo VARCHAR(160) NOT NULL,
     descricao TEXT,

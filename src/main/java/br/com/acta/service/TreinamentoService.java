@@ -31,7 +31,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     private final CicloService cicloService;
     private final UsuarioService usuarioService;
     private final PatchConfig patchConfig = new PatchConfig(
-            Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio", "idAnexoMongo", "idCiclo", "idResponsavel"),
+            Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio", "idCiclo", "idResponsavel"),
             Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio")
     );
 

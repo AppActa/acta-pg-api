@@ -17,7 +17,6 @@ public record TreinamentoResponseDTO(
         Long idCiclo,
         Long idResponsavel,
         String nomeResponsavel,
-        Integer idAnexoMongo,
         List<UsuarioTreinamentoResponseDTO> participantes,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
