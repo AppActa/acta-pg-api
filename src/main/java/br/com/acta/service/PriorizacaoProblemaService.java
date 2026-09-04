@@ -18,6 +18,7 @@ import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
 import br.com.acta.repository.padrao.ProblemaRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -48,6 +49,7 @@ public class PriorizacaoProblemaService {
                 .orElseThrow(() -> new ModelNotFoundException("PriorizacaoProblema", List.of(idProblema, idUsuario)));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
         Problema problema = problemaService.getEntity(idProblema);
@@ -73,6 +75,7 @@ public class PriorizacaoProblemaService {
         }
     }
 
+    @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
         Validador.validarCampos(campos, patchConfig);
@@ -88,6 +91,7 @@ public class PriorizacaoProblemaService {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<PriorizacaoProblemaResponseDTO> buscar(Long idProblema, Long idUsuario){
         List<PriorizacaoProblema> priorizacoes;
@@ -104,6 +108,7 @@ public class PriorizacaoProblemaService {
         return mapper.toResponseList(priorizacoes);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
         Problema problema = problemaService.getEntity(idProblema);

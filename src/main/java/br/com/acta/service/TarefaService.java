@@ -15,9 +15,9 @@ import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Tarefa;
-import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +38,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
             Set.of("titulo", "descricao", "prioridade", "dataFimPrevista")
     );
 
-    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, UsuarioTreinamentoRepository usuarioTreinamentoRepo, AuthService authService) {
+    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
         super(repo, mapper, Tarefa.class, authService);
         this.repo = repo;
         this.mapper = mapper;
@@ -46,6 +46,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public TarefaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -70,6 +71,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<TarefaResponseDTO> buscar(Long idPlanoAcao, StatusTarefa status, Long idResponsavel, Prioridade prioridade){
         planoAcaoService.getEntity(idPlanoAcao);
@@ -78,6 +80,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
        return mapper.toResponseList(tarefas);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {
         Tarefa tarefa = mapper.toEntity(dto);
@@ -97,6 +100,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         Tarefa tarefa = getEntity(id);
@@ -132,6 +136,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salva);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reatribuir(Long idTarefa, Long idResponsavel){
         Tarefa tarefa = getEntity(idTarefa);
@@ -145,6 +150,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
         repo.reabrirTarefa(idTarefa, novoPrazo);
@@ -153,6 +159,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(tarefa);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -165,6 +172,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         repo.save(tarefa);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<TarefaSummaryResponseDTO> buscarDependentes(Long id){
         Tarefa tarefa = getEntity(id);
@@ -173,6 +181,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toSummaryList(dependentes);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO adicionarDependencia(Long id, Long idDependente){
         Tarefa tarefa = getEntity(id);
@@ -195,6 +204,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void removerDependencia(Long id, Long idDependente){
         Tarefa tarefa = getEntity(id);
@@ -210,6 +220,12 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
         repo.save(dependente);
         repo.save(tarefa);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public TarefaResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 
     private LocalDate capturarData(LocalDate data){
