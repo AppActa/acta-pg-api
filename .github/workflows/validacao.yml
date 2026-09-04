@@ -1,0 +1,46 @@
+name: validacao
+
+on:
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+
+      # Compila e gera o JAR sem subir o contexto Spring.
+      - run: ./mvnw -B clean package -DskipTests
+
+  seguranca:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: java
+          build-mode: manual
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+
+      # Compila para o CodeQL analisar o Java.
+      - run: ./mvnw -B clean package -DskipTests
+
+      - uses: github/codeql-action/analyze@v3
