@@ -206,7 +206,7 @@ CREATE TABLE IF NOT EXISTS pdca.causa_raiz (
     id_ciclo BIGINT NOT NULL REFERENCES pdca.ciclo(id) ON DELETE CASCADE,
     id_problema BIGINT NOT NULL REFERENCES pdca.problema(id),
     id_plano_acao BIGINT REFERENCES pdca.plano_acao(id),
-    id_5_porques_mongo INTEGER,
+    id_5_porques_mongo VARCHAR(255),
     validada_por BIGINT REFERENCES usuario_sistema(id),
     descricao TEXT NOT NULL,
     origem VARCHAR(40) NOT NULL CHECK (origem IN ('MANUAL', 'IA', 'FORMULARIO', 'IMPORTACAO', 'SISTEMA')),
