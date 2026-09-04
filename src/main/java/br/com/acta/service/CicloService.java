@@ -15,6 +15,7 @@ import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public CicloResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -60,6 +62,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CicloResponseDTO patchStatus(Long id, StatusCiclo status){
         Ciclo ciclo = getEntity(id);
@@ -79,6 +82,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -90,6 +94,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         repo.save(ciclo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<CicloResponseDTO> buscarPorStatus(Long idEmpresa, Long idGestor, StatusCiclo status){
         if (idEmpresa == null && idGestor == null) {
@@ -100,6 +105,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         return mapper.toResponseList(ciclos);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public Double avancoCiclo(Long id) {
         return repo.avancoCiclo(id);
@@ -113,5 +119,17 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         ciclo.setStatus(StatusCiclo.PLANEJAMENTO);
         ciclo.setEmpresa(empresa);
         ciclo.setGestor(gestor);
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
+    @Override
+    public CicloResponseDTO inserir(CicloRequestDTO dto) {
+        return super.inserir(dto);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public CicloResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 }

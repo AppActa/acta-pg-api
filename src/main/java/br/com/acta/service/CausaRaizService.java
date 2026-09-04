@@ -15,6 +15,7 @@ import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.padrao.CausaRaizRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -49,6 +50,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         this.problemaService = problemaService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public CausaRaizResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -63,6 +65,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<CausaRaizResponseDTO> buscar(Long idCiclo, Long idProblema, Boolean aceita, Boolean principal){
         List<CausaRaiz> causasRaiz = repo.buscar(idCiclo, idProblema, aceita, principal);
@@ -70,6 +73,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponseList(causasRaiz);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO inserir(CausaRaizRequestDTO dto, Long idCiclo) {
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -87,6 +91,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO vincularPlanoAcao(Long idCausaRaiz, Long idPlanoAcao) {
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
@@ -106,6 +111,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario, Boolean aceita){
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
