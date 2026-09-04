@@ -15,6 +15,7 @@ import br.com.acta.repository.padrao.PlanoAcaoRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public PlanoAcaoResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -59,6 +61,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public PlanoAcaoResponseDTO patchStatus(Long id, StatusPlanoAcao status) {
         PlanoAcao planoAcao = getEntity(id);
@@ -78,6 +81,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -97,6 +101,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
         repo.save(planoAcao);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<PlanoAcaoResponseDTO> buscar(Long id, StatusPlanoAcao status, Prioridade prioridade){
         List<PlanoAcao> planosAcao;
@@ -129,5 +134,11 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
 
         PlanoAcao salvo = repo.save(planoAcao);
         return mapper.toResponse(salvo);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public PlanoAcaoResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 }

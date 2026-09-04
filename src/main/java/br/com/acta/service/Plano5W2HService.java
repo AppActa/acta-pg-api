@@ -15,6 +15,7 @@ import br.com.acta.entity.pdca.Plano5W2H;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.repository.padrao.Plano5W2HRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -41,6 +42,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public Plano5W2HResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -85,6 +87,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public Plano5W2HResponseDTO inserir(Plano5W2HRequestDTO dto, Long idPlanoAcao) {
         Plano5W2H plano5W2H = mapper.toEntity(dto);
@@ -107,12 +110,14 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     public Plano5W2HResponseDTO buscarPorPlanoAcao(Long idPlanoAcao){
         Plano5W2H plano5W2H = repo.findByPlanoAcaoId(idPlanoAcao).orElseThrow(() -> new ModelNotFoundException("5W2H"));
         return mapper.toResponse(plano5W2H);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -125,5 +130,11 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
 
         planoAcao.setPlano5W2H(null);
         repo.delete(plano5W2H);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public Plano5W2HResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 }
