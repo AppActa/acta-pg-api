@@ -13,6 +13,7 @@ import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -42,6 +43,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         this.metaRepo = metaRepo;
     }
 
+    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     @Transactional
     public UsuarioResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -60,6 +62,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(usuario);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     public List<UsuarioResponseDTO> buscar(Long idEmpresa, TipoUsuario tipo) {
         List<Usuario> usuarios;
 
@@ -69,6 +72,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponseList(usuarios);
     }
 
+    @PreAuthorize("authService.isUsuarioEmpresa(#id) and hasRole('ADMIN')")
     @Override
     public void excluir(Long id) {
         Usuario usuario = getEntity(id);
@@ -99,6 +103,18 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
         usuario.setStatus(StatusGeral.INATIVO);
         repo.save(usuario);
+    }
+
+    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
+    @Override
+    public UsuarioResponseDTO buscar(Long id) {
+        return super.buscar(id);
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @Override
+    public UsuarioResponseDTO inserir(UsuarioRequestDTO dto) {
+        return super.inserir(dto);
     }
 
     @Override

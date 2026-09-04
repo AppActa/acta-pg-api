@@ -12,6 +12,7 @@ import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.VerificacaoResultado;
 import br.com.acta.repository.padrao.VerificacaoResultadoRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,6 +39,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         this.usuarioService = usuarioService;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public VerificacaoResultadoResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -55,6 +57,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<VerificacaoResultadoResponseDTO> buscarVerificacoes(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -63,6 +66,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         return mapper.toResponseList(resultados);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public VerificacaoResultadoResponseDTO inserir(Long idCiclo, VerificacaoResultadoRequestDTO dto, Long idCriadoPor){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -81,6 +85,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -91,5 +96,11 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         }
 
         repo.delete(resultado);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public VerificacaoResultadoResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 }

@@ -9,6 +9,7 @@ import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.repository.padrao.AlertaPrazoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.scheduling.annotation.Scheduled;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -33,6 +34,7 @@ public class AlertaPrazoService {
         return alertaPrazo;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional(readOnly = true)
     public AlertaPrazoResponseDTO buscar(Long idTarefa){
         AlertaPrazo alertaPrazo = getEntity(idTarefa, null);
@@ -45,6 +47,7 @@ public class AlertaPrazoService {
         repo.gerarAlertasAtraso();
     }
 
+    @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta, Long idUsuario){
         AlertaPrazo alertaPrazo = getEntity(idTarefa, idAlerta);

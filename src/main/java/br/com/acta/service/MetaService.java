@@ -21,6 +21,7 @@ import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.repository.padrao.MetaRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -52,6 +53,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         this.usuarioMapper = usuarioMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public MetaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -81,6 +83,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public MetaResponseDTO inserir(Long idPlanoAcao, MetaRequestDTO dto) {
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
@@ -107,6 +110,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public MetaResponseDTO patchStatus(Long id, StatusMeta status){
         Meta meta = getEntity(id);
@@ -117,6 +121,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -134,6 +139,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         repo.save(meta);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional
     public List<MetaResponseDTO> buscar(Long idCiclo, StatusMeta status, Prioridade prioridade) {
         List<Meta> metas;
@@ -151,6 +157,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return mapper.toResponseList(metas);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<UsuarioSummaryResponseDTO> buscarResponsaveis(Long id){
         Meta meta = getEntity(id);
@@ -159,6 +166,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return usuarioMapper.toSummaryList(responsaveis);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public List<UsuarioSummaryResponseDTO> inserirResponsaveis(Long idMeta, List<Long> idResponsaveis){
         Meta meta = getEntity(idMeta);
@@ -180,6 +188,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         return usuarioMapper.toSummaryList(responsaveisAtuais);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluirResponsaveis(Long idMeta, List<Long> idResponsaveis){
         Meta meta = getEntity(idMeta);
@@ -194,5 +203,11 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
         }
 
         repo.save(meta);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public MetaResponseDTO buscar(Long id) {
+        return super.buscar(id);
     }
 }

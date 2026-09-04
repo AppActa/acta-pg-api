@@ -15,6 +15,7 @@ import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.padrao.CausaRaizRepository;
 import br.com.acta.repository.padrao.ProblemaRepository;
 import br.com.acta.service.base.BaseService;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -43,6 +44,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         this.causaRaizRepo = causaRaizRepo;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public ProblemaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -62,6 +64,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO patchStatus(Long id, StatusProblema status){
         Problema problema = getEntity(id);
@@ -82,6 +85,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     @Transactional
     public void excluir(Long id) {
@@ -90,6 +94,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         atualizarStatusRecursivo(problema, StatusProblema.DESCARTADO);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO inserir(ProblemaRequestDTO dto, Long idCiclo) {
         Problema problema = mapper.toEntity(dto);
@@ -111,6 +116,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<ProblemaResponseDTO> buscar(Long idCiclo, StatusProblema status, Long idProblemaPai){
         List<Problema> problemas;
@@ -140,4 +146,11 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         problema.setStatus(status);
         problema.getSubProblemas().forEach(subProblema -> atualizarStatusRecursivo(subProblema, status));
     }
+
+    @PreAuthorize("isAuthenticated()")
+    @Override
+    public ProblemaResponseDTO buscar(Long id) {
+        return super.buscar(id);
+    }
+
 }

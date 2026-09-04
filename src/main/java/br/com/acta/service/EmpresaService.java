@@ -32,6 +32,7 @@ import br.com.acta.repository.padrao.EnderecoRepository;
 import br.com.acta.repository.padrao.TelefoneEmpresaRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.caelum.stella.validation.CNPJValidator;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -68,6 +69,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         this.enderecoRepo = enderecoRepo;
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     @Transactional
     public EmpresaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -86,6 +88,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @Transactional(readOnly = true)
     public List<EmpresaResponseDTO> buscar(TamanhoEmpresa tamanho){
         List<Empresa> empresas;
@@ -96,6 +99,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponseList(empresas);
     }
 
+    @PreAuthorize("isAuthenticated() and authService.isUsuarioEmpresa(#id)")
     @Transactional(readOnly = true)
     @Override
     public EmpresaResponseDTO buscar(Long id) {
@@ -105,6 +109,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponse(empresa);
     }
 
+    @PreAuthorize("hasAuthority('ROLE_SUPER_ADMIN')")
     @Transactional
     @Override
     public void excluir(Long id) {
@@ -138,6 +143,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         }
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<EmailResponseDTO> buscarEmails(Long idEmpresa){
         Empresa empresa = getEntity(idEmpresa);
@@ -146,6 +152,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponseList(email);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
@@ -159,12 +166,14 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void excluirEmail(Long idEmpresa, Long idEmail){
         EmailEmpresa email = getEmail(idEmpresa, idEmail);
         emailRepo.delete(email);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<TelefoneResponseDTO> buscarTelefones(Long idEmpresa){
         Empresa empresa = getEntity(idEmpresa);
@@ -173,6 +182,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponseList(telefone);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
@@ -186,18 +196,21 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void excluirTelefone(Long idEmpresa, Long idTelefone){
         TelefoneEmpresa telefone = getTelefone(idEmpresa, idTelefone);
         telefoneRepo.delete(telefone);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public EnderecoResponseDTO buscarEndereco(Long idEmpresa, Long idEndereco) {
         Endereco endereco = getEndereco(idEmpresa, idEndereco);
         return enderecoMapper.toResponse(endereco);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<EnderecoResponseDTO> buscarEndereco(Long idEmpresa) {
         Empresa empresa = getEntity(idEmpresa);
@@ -205,6 +218,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return enderecoMapper.toResponseList(enderecos);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public EnderecoResponseDTO inserirEndereco(Long idEmpresa, EnderecoRequestDTO dto) {
         Empresa empresa = getEntity(idEmpresa);
@@ -215,6 +229,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return enderecoMapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Transactional
     public void excluirEndereco(Long idEmpresa, Long idEndereco) {
         Endereco endereco = getEndereco(idEmpresa, idEndereco);
@@ -234,5 +249,11 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     private TelefoneEmpresa getTelefone(Long idEmpresa, Long idTelefone){
         Empresa empresa = getEntity(idEmpresa);
         return telefoneRepo.findByEmpresaIdAndId(empresa.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
+    }
+
+    @PreAuthorize("hasAuthority('ROLE_ADMIN')")
+    @Override
+    public EmpresaResponseDTO inserir(EmpresaRequestDTO dto) {
+        return super.inserir(dto);
     }
 }

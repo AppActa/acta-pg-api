@@ -13,7 +13,6 @@ import java.util.List;
 
 public interface TarefaRepository extends BaseRepository<Tarefa> {
     List<Tarefa> findByResponsavelId(Long idResponsavel);
-    List<Tarefa> findByDataFimPrevistaBeforeAndStatusNot(LocalDate hoje, StatusTarefa status);
 
     @Query("""
     SELECT t FROM Tarefa t WHERE t.planoAcao.id = :idPlanoAcao

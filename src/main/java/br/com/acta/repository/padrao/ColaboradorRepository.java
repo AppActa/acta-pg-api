@@ -9,4 +9,6 @@ import java.util.List;
 public interface ColaboradorRepository extends BaseRepository<Colaborador> {
     List<Colaborador> findAllByStatus(StatusGeral status);
     boolean existsByCpf(String cpf);
+
+    boolean existsByIdAndEmpresaId(Long id, Long empresaId);
 }

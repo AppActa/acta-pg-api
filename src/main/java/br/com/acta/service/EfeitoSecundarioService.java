@@ -11,6 +11,7 @@ import br.com.acta.entity.pdca.EfeitoSecundario;
 import br.com.acta.entity.pdca.VerificacaoResultado;
 import br.com.acta.repository.padrao.EfeitoSecundarioRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,6 +30,7 @@ public class EfeitoSecundarioService {
             Set.of("descricao", "peso", "impactoEstimado")
     );
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<EfeitoSecundarioResponseDTO> buscar(Long idVerificacaoResultado){
         VerificacaoResultado resultado = resultadoService.getEntity(idVerificacaoResultado);
@@ -37,6 +39,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponseList(efeitoSecundarios);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO inserir(Long idResultado, EfeitoSecundarioRequestDTO dto){
         VerificacaoResultado resultado = resultadoService.getEntity(idResultado);
@@ -49,6 +52,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO patch(Long idResultado, Long idEfeitoSecundario, Map<String, Object> campos){
         Validador.validarCampos(campos, patchConfig);
@@ -69,6 +73,7 @@ public class EfeitoSecundarioService {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idResultado, Long idEfeitoSecundario) {
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);

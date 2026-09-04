@@ -29,6 +29,7 @@ import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.repository.padrao.TelefoneColaboradorRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.caelum.stella.validation.CPFValidator;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -66,12 +67,14 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         this.telefoneMapper = telefoneMapper;
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     public List<ColaboradorResponseDTO> buscar() {
         List<Colaborador> colaboradores = repo.findAllByStatus(StatusGeral.ATIVO);
         return mapper.toResponseList(colaboradores);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     public ColaboradorResponseDTO buscar(Long id){
         Colaborador colaborador = getEntity(id);
@@ -81,6 +84,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(colaborador);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     public List<ColaboradorResponseDTO> buscarPorEmpresa(Long idEmpresa){
         Empresa empresa = empresaService.getEntity(idEmpresa);
         Set<Colaborador> colaboradores = empresa.getColaboradores();
@@ -95,6 +99,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         Validador.validarMesmoId(dto.idEmpresa(), dto.usuario().idEmpresa(), true);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     @Override
     @Transactional
     public ColaboradorResponseDTO inserir(ColaboradorRequestDTO dto) {
@@ -130,6 +135,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
     @Override
     public ColaboradorResponseDTO patch(Long id, Map<String, Object> campos) {
         Validador.validarCampos(campos, patchConfig);
@@ -146,6 +152,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
     @Override
     public void excluir(Long id) {
         Colaborador colaborador = getEntity(id);
@@ -157,6 +164,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         repo.save(colaborador);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     public List<EmailResponseDTO> buscarEmails(Long idColaborador){
         Colaborador colaborador = getEntity(idColaborador);
         List<EmailColaborador> email = emailRepo.findByColaborador_Id(colaborador.getId());
@@ -164,6 +172,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return emailMapper.toResponseList(email);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public EmailResponseDTO inserirEmail(Long idColaborador, EmailRequestDTO dto){
         Colaborador colaborador = getEntity(idColaborador);
 
@@ -176,11 +185,13 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return emailMapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void excluirEmail(Long idColaborador, Long idEmail){
         EmailColaborador email = getEmail(idColaborador, idEmail);
         emailRepo.delete(email);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     public List<TelefoneResponseDTO> buscarTelefones(Long idColaborador){
         Colaborador colaborador = getEntity(idColaborador);
         List<TelefoneColaborador> telefone = telefoneRepo.findByColaborador_Id(colaborador.getId());
@@ -188,6 +199,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return telefoneMapper.toResponseList(telefone);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public TelefoneResponseDTO inserirTelefone(Long idColaborador, TelefoneRequestDTO dto){
         Colaborador colaborador = getEntity(idColaborador);
         if (telefoneRepo.existsByColaboradorIdAndContato(idColaborador, dto.numero())) throw new UniqueViolationException("Telefone");
@@ -199,6 +211,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return telefoneMapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasRole('ADMIN')")
     public void excluirTelefone(Long idColaborador, Long idTelefone){
         TelefoneColaborador telefone = getTelefone(idColaborador, idTelefone);
         telefoneRepo.delete(telefone);

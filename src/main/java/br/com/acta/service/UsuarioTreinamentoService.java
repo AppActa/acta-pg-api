@@ -12,6 +12,7 @@ import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,6 +27,7 @@ public class UsuarioTreinamentoService {
     private final TreinamentoService treinamentoService;
     private final UsuarioService usuarioService;
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<UsuarioTreinamentoResponseDTO> buscar(Long idTreinamento){
         List<UsuarioTreinamento> usuarios = repo.findByTreinamentoId(idTreinamento);
@@ -33,6 +35,7 @@ public class UsuarioTreinamentoService {
         return mapper.toResponseList(usuarios);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioTreinamentoResponseDTO inserir(Long idTreinamento, UsuarioTreinamentoRequestDTO dto){
         Treinamento treinamento = treinamentoService.getEntity(idTreinamento);
@@ -57,6 +60,7 @@ public class UsuarioTreinamentoService {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') or authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public UsuarioTreinamentoResponseDTO patchStatus(Long idTreinamento, Long idUsuario, StatusTreinamento status){
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
@@ -78,6 +82,7 @@ public class UsuarioTreinamentoService {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idTreinamento, Long idUsuario){
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
