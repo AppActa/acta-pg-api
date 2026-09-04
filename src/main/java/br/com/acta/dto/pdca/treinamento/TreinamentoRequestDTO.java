@@ -31,10 +31,6 @@ public record TreinamentoRequestDTO(
         @Schema(description = "ID do responsável pelo treinamento", example = SwaggerRequestExamples.ID_RESPONSAVEL)
         @NotNull(message = "{validation.idResponsavel.notnull}")
         @Positive(message = "{validation.idResponsavel.positive}")
-        Long idResponsavel,
-
-        @Schema(description = "ID do anexo no MongoDB", example = SwaggerRequestExamples.ID_ANEXO_MONGO)
-        @Positive(message = "{validation.treinamento.idAnexoMongo.positive}")
-        Integer idAnexoMongo
+        Long idResponsavel
 ) {
 }

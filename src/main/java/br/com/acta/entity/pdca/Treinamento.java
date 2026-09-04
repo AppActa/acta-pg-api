@@ -35,7 +35,4 @@ public class Treinamento extends TituloDescricaoBase {
 
     @OneToMany(mappedBy = "treinamento")
     private Set<UsuarioTreinamento> participantes;
-
-    @Column(name = "id_anexo_mongo")
-    private Integer idAnexoMongo;
 }
