@@ -30,4 +30,6 @@ public interface UsuarioRepository extends BaseRepository<Usuario> {
         LEFT JOIN FETCH u.colaborador
         WHERE LOWER(u.emailLogin) = LOWER(:emailLogin)""")
     Optional<Usuario> findByEmailLoginIgnoreCase(String emailLogin);
+
+    boolean existsByIdAndEmpresaId(Long id, Long empresaId);
 }
