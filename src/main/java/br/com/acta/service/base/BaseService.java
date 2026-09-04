@@ -5,6 +5,7 @@ import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import br.com.acta.service.AuthService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -28,6 +29,7 @@ implements BaseCRUD<REQ, RESP> {
         return repo.findById(id).orElseThrow(() -> new ModelNotFoundException(classeENT.getSimpleName(), id));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     @Override
     public RESP buscar(Long id) {
@@ -35,6 +37,7 @@ implements BaseCRUD<REQ, RESP> {
         return mapper.toResponse(ent);
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     @Override
     public List<RESP> buscar() {
