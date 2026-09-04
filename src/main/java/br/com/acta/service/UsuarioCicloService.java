@@ -14,6 +14,7 @@ import br.com.acta.repository.composto.UsuarioCicloRepository;
 import br.com.acta.repository.padrao.CicloRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -40,6 +41,7 @@ public class UsuarioCicloService {
         return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(id.getIdUsuario(), id.getIdCiclo())));
     }
 
+    @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<UsuarioCicloResponseDTO> buscarPorCiclo(Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -48,6 +50,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(usuarios);
     }
 
+    @PreAuthorize("authService.isProprioUsuario(#idUsuario) or hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idUsuario)")
     @Transactional(readOnly = true)
     public List<UsuarioCicloResponseDTO> buscarPorUsuario(Long idUsuario){
         Usuario usuario = usuarioService.getEntity(idUsuario);
@@ -56,6 +59,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(ciclos);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioCicloResponseDTO inserir(UsuarioCicloRequestDTO dto, Long idCiclo){
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
@@ -80,6 +84,7 @@ public class UsuarioCicloService {
         }
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioCicloResponseDTO patch(Long idUsuario, Long idCiclo, PapelCiclo papelCiclo){
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
@@ -95,6 +100,7 @@ public class UsuarioCicloService {
         return mapper.toResponse(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public List<UsuarioCicloResponseDTO> substituirResponsavel(Long idCiclo, Long idUsuarioAntigo, Long idUsuarioNovo){
         Validador.validarMesmoId(idUsuarioAntigo, idUsuarioNovo, false);
@@ -120,6 +126,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(salvo);
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idUsuario, Long idCiclo){
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
