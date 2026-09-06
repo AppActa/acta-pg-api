@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
@@ -131,5 +132,11 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     @Override
     public CicloResponseDTO buscar(Long id) {
         return super.buscar(id);
+    }
+
+    @Override
+    public Ciclo getEntity(Long id) {
+        return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Ciclo", id));
     }
 }
