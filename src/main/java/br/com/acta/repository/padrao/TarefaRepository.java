@@ -10,6 +10,7 @@ import org.springframework.data.repository.query.Param;
 
 import java.time.LocalDate;
 import java.util.List;
+import java.util.Optional;
 
 public interface TarefaRepository extends BaseRepository<Tarefa> {
     List<Tarefa> findByResponsavelId(Long idResponsavel);
@@ -31,4 +32,6 @@ public interface TarefaRepository extends BaseRepository<Tarefa> {
 
     @Procedure(procedureName = "pdca.pr_reabrir_tarefa")
     void reabrirTarefa(@Param("p_tarefa_id") Long tarefaId, @Param("p_novo_prazo") LocalDate novoPrazo);
+
+    Optional<Tarefa> findByIdAndResponsavelEmpresaId(Long id, Long responsavelEmpresaId);
 }

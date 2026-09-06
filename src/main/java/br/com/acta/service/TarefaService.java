@@ -228,6 +228,12 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return super.buscar(id);
     }
 
+    @Override
+    public Tarefa getEntity(Long id) {
+        return repo.findByIdAndResponsavelEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Tarefa", id));
+    }
+
     private LocalDate capturarData(LocalDate data){
         return data != null ? data : LocalDate.now();
     }
