@@ -71,4 +71,8 @@ public class AuthService {
     public boolean isColaboradorEmpresa(Long idColaborador) {
         return colaboradorRepo.existsByIdAndEmpresaId(idColaborador, atual().idEmpresa());
     }
+
+    public boolean isUsuarioByIdEmpresa(Long idEmpresa) {
+        return usuarioRepo.existsByIdAndEmpresaId(atual().idUsuario(), idEmpresa);
+    }
 }

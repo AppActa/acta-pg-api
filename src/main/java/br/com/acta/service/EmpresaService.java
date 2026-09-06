@@ -69,7 +69,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         this.enderecoRepo = enderecoRepo;
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#id)")
     @Override
     @Transactional
     public EmpresaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -82,7 +82,6 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
             Object tamanhoObject = campos.get("tamanho");
             empresa.setTamanho(ConversorObject.toEnum(tamanhoObject, TamanhoEmpresa.class));
         }
-
 
         Empresa salvo = repo.save(empresa);
         return mapper.toResponse(salvo);
@@ -99,7 +98,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponseList(empresas);
     }
 
-    @PreAuthorize("isAuthenticated() and authService.isUsuarioEmpresa(#id)")
+    @PreAuthorize("isAuthenticated() and authService.isUsuarioByIdEmpresa(#id)")
     @Transactional(readOnly = true)
     @Override
     public EmpresaResponseDTO buscar(Long id) {
@@ -152,7 +151,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponseList(email);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
@@ -166,7 +165,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return emailMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEmail(Long idEmpresa, Long idEmail){
         EmailEmpresa email = getEmail(idEmpresa, idEmail);
@@ -182,7 +181,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponseList(telefone);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
         Empresa empresa = getEntity(idEmpresa);
@@ -196,7 +195,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return telefoneMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirTelefone(Long idEmpresa, Long idTelefone){
         TelefoneEmpresa telefone = getTelefone(idEmpresa, idTelefone);
@@ -218,7 +217,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return enderecoMapper.toResponseList(enderecos);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EnderecoResponseDTO inserirEndereco(Long idEmpresa, EnderecoRequestDTO dto) {
         Empresa empresa = getEntity(idEmpresa);
@@ -229,7 +228,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return enderecoMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN')")
+    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEndereco(Long idEmpresa, Long idEndereco) {
         Endereco endereco = getEndereco(idEmpresa, idEndereco);
