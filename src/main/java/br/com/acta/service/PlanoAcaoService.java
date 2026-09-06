@@ -141,4 +141,10 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     public PlanoAcaoResponseDTO buscar(Long id) {
         return super.buscar(id);
     }
+
+    @Override
+    public PlanoAcao getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Plano Ação", id));
+    }
 }
