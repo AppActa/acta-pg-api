@@ -62,7 +62,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(usuario);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idEmpresa)")
     public List<UsuarioResponseDTO> buscar(Long idEmpresa, TipoUsuario tipo) {
         List<Usuario> usuarios;
 
