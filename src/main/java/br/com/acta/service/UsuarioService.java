@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
@@ -123,5 +124,11 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
         usuario.setStatus(StatusGeral.ATIVO);
         usuario.setEmpresa(empresaService.getEntity(dto.idEmpresa()));
+    }
+
+    @Override
+    public Usuario getEntity(Long id) {
+        return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Usuário", id));
     }
 }

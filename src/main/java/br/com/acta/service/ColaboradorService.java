@@ -226,4 +226,10 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         Colaborador colaborador = getEntity(idColaborador);
         return telefoneRepo.findByColaboradorIdAndId(colaborador.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
     }
+
+    @Override
+    public Colaborador getEntity(Long id) {
+        return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Colaborador", id));
+    }
 }
