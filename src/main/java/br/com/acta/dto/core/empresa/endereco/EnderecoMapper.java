@@ -1,8 +1,6 @@
-package br.com.acta.dto.mapper.core;
+package br.com.acta.dto.core.empresa.endereco;
 
 import br.com.acta.common.utils.Formatador;
-import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
-import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import br.com.acta.entity.core.Endereco;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
 import org.mapstruct.Mapper;

@@ -1,8 +1,5 @@
-package br.com.acta.dto.mapper.core;
+package br.com.acta.dto.core.usuario;
 
-import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
-import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
-import br.com.acta.dto.core.usuario.UsuarioSummaryResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.dto.mapper.base.SummaryBaseMapper;
 import org.mapstruct.Mapper;

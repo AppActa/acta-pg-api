@@ -1,8 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.problema;
 
-import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
-import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
-import br.com.acta.dto.pdca.problema.ProblemaSummaryResponseDTO;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.dto.mapper.base.SummaryBaseMapper;
 import org.mapstruct.Mapper;

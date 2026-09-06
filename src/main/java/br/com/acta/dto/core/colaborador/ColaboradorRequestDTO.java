@@ -1,15 +1,24 @@
 package br.com.acta.dto.core.colaborador;
 
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
+import br.com.acta.common.utils.Formatador;
+import br.com.acta.dto.core.contato.email.EmailColaboradorMapper;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
+import br.com.acta.dto.core.contato.telefone.TelefoneColaboradorMapper;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
+import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
+import br.com.acta.entity.core.Colaborador;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.*;
 import org.hibernate.validator.constraints.br.CPF;
+import org.mapstruct.AfterMapping;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
+import org.mapstruct.MappingTarget;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -70,4 +79,31 @@ public record ColaboradorRequestDTO(
         @NotNull(message = "{validation.idEmpresa.notnull}")
         Long idEmpresa
 ) {
+    @Mapper(componentModel = "spring", uses = {EmailColaboradorMapper.class, TelefoneColaboradorMapper.class, Formatador.class})
+    public interface ColaboradorMapper
+    extends AuditoriaBaseMapper<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
+        @Mapping(source = "usuario.id", target = "idUsuario")
+        @Mapping(source = "empresa.id", target = "idEmpresa")
+        @Mapping(source = "cpf", target = "cpf", qualifiedByName = "formatarCpf")
+        @Override
+        ColaboradorResponseDTO toResponse(Colaborador colaborador);
+
+        @Mapping(target = "empresa", ignore = true)
+        @Mapping(target = "status", ignore = true)
+        @Mapping(target = "usuario", ignore = true)
+        @Override
+        Colaborador toEntity(ColaboradorRequestDTO dto);
+
+        @Mapping(target = "empresa", ignore = true)
+        @Mapping(target = "status", ignore = true)
+        @Mapping(target = "usuario", ignore = true)
+        @Override
+        void updateEntity(ColaboradorRequestDTO dto, @MappingTarget Colaborador colaborador);
+
+        @AfterMapping
+        default void link(@MappingTarget Colaborador colaborador){
+            colaborador.getEmails().forEach(e -> e.setColaborador(colaborador));
+            colaborador.getTelefones().forEach(t -> t.setColaborador(colaborador));
+        }
+    }
 }

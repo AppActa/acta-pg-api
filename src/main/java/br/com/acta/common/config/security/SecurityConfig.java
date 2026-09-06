@@ -2,7 +2,7 @@ package br.com.acta.common.config.security;
 
 import br.com.acta.common.handler.ErroResponse;
 import br.com.acta.repository.padrao.UsuarioRepository;
-import br.com.acta.dto.mapper.auth.AuthMapper;
+import br.com.acta.dto.auth.AuthMapper;
 import com.google.auth.oauth2.GoogleCredentials;
 import com.google.firebase.FirebaseApp;
 import com.google.firebase.FirebaseOptions;

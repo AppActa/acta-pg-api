@@ -3,7 +3,7 @@ package br.com.acta.controller;
 import br.com.acta.common.config.security.FirebaseAuthFilter.FirebaseIdentity;
 import br.com.acta.common.config.security.UsuarioAutenticado;
 import br.com.acta.dto.auth.MeResponseDTO;
-import br.com.acta.dto.mapper.auth.AuthMapper;
+import br.com.acta.dto.auth.AuthMapper;
 import br.com.acta.service.AuthService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;

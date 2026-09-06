@@ -7,7 +7,7 @@ import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
-import br.com.acta.dto.mapper.core.UsuarioMapper;
+import br.com.acta.dto.core.usuario.UsuarioMapper;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.*;
 import br.com.acta.repository.padrao.MetaRepository;

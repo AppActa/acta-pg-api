@@ -2,7 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.AlertaPrazoMapper;
+import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoMapper;
 import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
 import br.com.acta.entity.pdca.AlertaPrazo;
 import br.com.acta.entity.pdca.Tarefa;

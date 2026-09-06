@@ -5,7 +5,7 @@ import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.ProblemaMapper;
+import br.com.acta.dto.pdca.problema.ProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusPlanoAcao;

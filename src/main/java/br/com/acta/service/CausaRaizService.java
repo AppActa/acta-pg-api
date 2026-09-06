@@ -5,7 +5,7 @@ import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.CausaRaizMapper;
+import br.com.acta.dto.pdca.causa_raiz.CausaRaizMapper;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizRequestDTO;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizResponseDTO;
 import br.com.acta.entity.core.Usuario;

@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.join;
+package br.com.acta.dto.join.usuario_ciclo;
 
-import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloRequestDTO;
-import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import org.mapstruct.Mapper;

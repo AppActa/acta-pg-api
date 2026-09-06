@@ -1,6 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.alerta_prazo;
 
-import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
 import br.com.acta.entity.pdca.AlertaPrazo;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

@@ -1,8 +1,6 @@
-package br.com.acta.dto.mapper.core.contato;
+package br.com.acta.dto.core.contato.telefone;
 
 import br.com.acta.common.utils.Formatador;
-import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
-import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.entity.core.contato.TelefoneColaborador;
 import br.com.acta.dto.mapper.base.TelefoneBaseMapper;
 import org.mapstruct.Mapper;

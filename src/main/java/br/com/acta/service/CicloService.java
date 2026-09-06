@@ -7,7 +7,7 @@ import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.CicloMapper;
+import br.com.acta.dto.pdca.ciclo.CicloMapper;
 import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.core.Empresa;

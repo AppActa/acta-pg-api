@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.efeito_secundario;
 
-import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioRequestDTO;
-import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioResponseDTO;
 import br.com.acta.entity.pdca.EfeitoSecundario;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
 import org.mapstruct.Mapper;

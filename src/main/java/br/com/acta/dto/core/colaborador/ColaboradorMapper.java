@@ -1,12 +1,10 @@
-package br.com.acta.dto.mapper.core;
+package br.com.acta.dto.core.colaborador;
 
 import br.com.acta.common.utils.Formatador;
-import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
-import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
 import br.com.acta.entity.core.Colaborador;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.dto.mapper.core.contato.EmailColaboradorMapper;
-import br.com.acta.dto.mapper.core.contato.TelefoneColaboradorMapper;
+import br.com.acta.dto.core.contato.email.EmailColaboradorMapper;
+import br.com.acta.dto.core.contato.telefone.TelefoneColaboradorMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
@@ -14,7 +12,7 @@ import org.mapstruct.MappingTarget;
 
 @Mapper(componentModel = "spring", uses = {EmailColaboradorMapper.class, TelefoneColaboradorMapper.class, Formatador.class})
 public interface ColaboradorMapper
-extends AuditoriaBaseMapper<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
+        extends AuditoriaBaseMapper<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
     @Mapping(source = "usuario.id", target = "idUsuario")
     @Mapping(source = "empresa.id", target = "idEmpresa")
     @Mapping(source = "cpf", target = "cpf", qualifiedByName = "formatarCpf")

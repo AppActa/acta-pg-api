@@ -5,7 +5,7 @@ import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.TreinamentoMapper;
+import br.com.acta.dto.pdca.treinamento.TreinamentoMapper;
 import br.com.acta.dto.pdca.treinamento.TreinamentoRequestDTO;
 import br.com.acta.dto.pdca.treinamento.TreinamentoResponseDTO;
 import br.com.acta.entity.core.Usuario;

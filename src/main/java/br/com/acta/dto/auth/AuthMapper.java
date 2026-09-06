@@ -1,7 +1,6 @@
-package br.com.acta.dto.mapper.auth;
+package br.com.acta.dto.auth;
 
 import br.com.acta.common.config.security.UsuarioAutenticado;
-import br.com.acta.dto.auth.MeResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

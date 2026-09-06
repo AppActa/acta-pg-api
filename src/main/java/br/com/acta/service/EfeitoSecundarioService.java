@@ -4,7 +4,7 @@ import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.EfeitoSecundarioMapper;
+import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioMapper;
 import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioRequestDTO;
 import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioResponseDTO;
 import br.com.acta.entity.pdca.EfeitoSecundario;

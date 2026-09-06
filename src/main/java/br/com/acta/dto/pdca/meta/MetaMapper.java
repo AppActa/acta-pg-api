@@ -1,10 +1,8 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.meta;
 
-import br.com.acta.dto.pdca.meta.MetaRequestDTO;
-import br.com.acta.dto.pdca.meta.MetaResponseDTO;
 import br.com.acta.entity.pdca.Meta;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.dto.mapper.core.UsuarioMapper;
+import br.com.acta.dto.core.usuario.UsuarioMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

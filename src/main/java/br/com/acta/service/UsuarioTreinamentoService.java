@@ -7,7 +7,7 @@ import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusTreinamento;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.entity.pdca.Treinamento;
-import br.com.acta.dto.mapper.join.UsuarioTreinamentoMapper;
+import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoMapper;
 import br.com.acta.repository.composto.UsuarioTreinamentoRepository;
 import br.com.acta.common.utils.Validador;
 import lombok.AllArgsConstructor;

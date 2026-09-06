@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.causa_raiz;
 
-import br.com.acta.dto.pdca.causa_raiz.CausaRaizRequestDTO;
-import br.com.acta.dto.pdca.causa_raiz.CausaRaizResponseDTO;
 import br.com.acta.entity.pdca.CausaRaiz;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
 import org.mapstruct.Mapper;

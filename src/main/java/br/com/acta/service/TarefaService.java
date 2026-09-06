@@ -4,7 +4,7 @@ import br.com.acta.common.handler.exception.*;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.TarefaMapper;
+import br.com.acta.dto.pdca.tarefa.TarefaMapper;
 import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
