@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class CausaRaizController {
     private final CausaRaizService service;

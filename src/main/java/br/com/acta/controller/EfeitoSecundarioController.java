@@ -16,7 +16,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(value = "/verificacao/{idResultado}/efeito-secundario", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/verificacao/{idResultado}/efeito-secundario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class EfeitoSecundarioController {
     private final EfeitoSecundarioService service;

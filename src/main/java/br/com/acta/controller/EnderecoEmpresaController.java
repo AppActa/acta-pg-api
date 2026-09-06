@@ -15,7 +15,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(value = "/empresa/{idEmpresa}/endereco", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/empresa/{idEmpresa}/endereco", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class EnderecoEmpresaController {
     private final EmpresaService service;

@@ -14,7 +14,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(value = "/tarefa/{id}/dependencia", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/tarefa/{id}/dependencia", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class TarefaDependenteController {
     private final TarefaService service;

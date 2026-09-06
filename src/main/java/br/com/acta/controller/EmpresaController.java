@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(value = "/empresa", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/empresa", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class EmpresaController {
     private final EmpresaService service;

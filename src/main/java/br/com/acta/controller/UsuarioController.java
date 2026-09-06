@@ -28,7 +28,7 @@ import lombok.RequiredArgsConstructor;
 
 @Validated
 @RestController
-@RequestMapping(value = "/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class UsuarioController {
     private final UsuarioService service;

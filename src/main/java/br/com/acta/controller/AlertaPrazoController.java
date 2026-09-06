@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 
 @Validated
 @RestController
-@RequestMapping(value = "/tarefa/{idTarefa}/alerta", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "/api/v1/tarefa/{idTarefa}/alerta", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class AlertaPrazoController {
     private final AlertaPrazoService service;
