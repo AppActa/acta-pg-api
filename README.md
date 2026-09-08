@@ -14,7 +14,7 @@ Clientes autenticam no Firebase e enviam o **Firebase ID Token** para consumir a
 - Ciclos PDCA, participantes, problemas, priorização e causas-raiz.
 - Planos de ação, 5W2H, tarefas, dependências, metas e treinamentos.
 - Verificação de resultados, efeitos secundários e alertas de prazo.
-- Health check da API e do banco em `GET /health`.
+- Health check da API e do banco em `GET /api/v1/health`.
 
 ## 🛠️ Tecnologias
 
@@ -64,7 +64,7 @@ O [`.env.example`](.env.example) é somente uma referência; `PEPPER` não é li
 ./mvnw spring-boot:run
 ```
 
-A API usa a porta `8080`. Com banco e Firebase configurados, consulte `http://localhost:8080/health`.
+A API usa a porta `8080`. Com banco e Firebase configurados, consulte `http://localhost:8080/api/v1/health`.
 
 ### Docker
 
@@ -81,7 +81,7 @@ Ao executar em contêiner, também disponibilize as credenciais de servidor do F
 
 - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 - OpenAPI: `http://localhost:8080/v3/api-docs`
-- Público: `GET /health`, Swagger UI e OpenAPI.
+- Público: `GET /api/v1/health`, Swagger UI e OpenAPI.
 - Demais rotas: `Authorization: Bearer <FIREBASE_ID_TOKEN>`.
 
 Após o login Firebase, use `POST /auth/ativar` para vincular uma identidade a um usuário ACTA existente, ativo e com e-mail verificado. Consulte `GET /me` para obter o contexto autenticado.
@@ -90,7 +90,7 @@ Após o login Firebase, use `POST /auth/ativar` para vincular uma identidade a u
 
 ## 🔌 Endpoints principais
 
-Todas as rotas abaixo exigem Firebase ID Token, exceto `GET /health`.
+Todas as rotas abaixo exigem Firebase ID Token, exceto `GET /api/v1/health`.
 
 | Domínio | Rotas |
 | --- | --- |
@@ -108,7 +108,7 @@ O Swagger contém métodos, parâmetros, enumerações, esquemas e todas as rota
 ## 💻 Exemplos
 
 ```bash
-curl http://localhost:8080/health
+curl http://localhost:8080/api/v1/health
 ```
 
 ```bash

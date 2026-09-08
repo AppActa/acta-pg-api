@@ -1,14 +1,9 @@
 package br.com.acta.common.config.security;
 
-import br.com.acta.common.handler.ErroResponse;
-import br.com.acta.repository.padrao.UsuarioRepository;
-import br.com.acta.dto.auth.AuthMapper;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firebase.auth.FirebaseAuth;
-import jakarta.servlet.DispatcherType;
-import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.nio.charset.StandardCharsets;
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -24,11 +19,18 @@ import org.springframework.security.config.annotation.web.configurers.AbstractHt
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import tools.jackson.databind.ObjectMapper;
 
-import java.io.IOException;
-import java.nio.charset.StandardCharsets;
-import java.util.List;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firebase.auth.FirebaseAuth;
+
+import br.com.acta.common.handler.ErroResponse;
+import br.com.acta.dto.auth.AuthMapper;
+import br.com.acta.repository.padrao.UsuarioRepository;
+import jakarta.servlet.DispatcherType;
+import jakarta.servlet.http.HttpServletResponse;
+import tools.jackson.databind.ObjectMapper;
 
 @Configuration
 @Profile("!test")
@@ -84,11 +86,11 @@ public class SecurityConfig {
                 .authorizeHttpRequests(a -> a
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         // health e documentacao precisam abrir sem token
-                        .requestMatchers(HttpMethod.GET, "/health").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/v1/health").permitAll()
                         .requestMatchers("/swagger-ui/**", "/swagger-ui.html", "/v3/api-docs/**").permitAll()
 
                         // filtro ainda nao procura usuario no banco, so valida a identidade firebase
-                        .requestMatchers(HttpMethod.POST, "/auth/ativar").hasAuthority("ROLE_FIREBASE")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/auth/ativar").hasAuthority("ROLE_FIREBASE")
 
                         // o restante so segue depois que o filtro montou o usuario autenticado
                         .anyRequest().authenticated()
