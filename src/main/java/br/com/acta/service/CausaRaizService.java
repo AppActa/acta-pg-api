@@ -1,10 +1,11 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.CausaRaizMapper;
+import br.com.acta.dto.pdca.causa_raiz.CausaRaizMapper;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizRequestDTO;
 import br.com.acta.dto.pdca.causa_raiz.CausaRaizResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -131,4 +132,12 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         CausaRaiz salvo = repo.save(causaRaiz);
         return mapper.toResponse(salvo);
     }
+
+    @Override
+    public CausaRaiz getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Causa Raiz", id));
+    }
+
+
 }

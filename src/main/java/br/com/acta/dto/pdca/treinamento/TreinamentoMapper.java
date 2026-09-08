@@ -1,10 +1,8 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.treinamento;
 
-import br.com.acta.dto.pdca.treinamento.TreinamentoRequestDTO;
-import br.com.acta.dto.pdca.treinamento.TreinamentoResponseDTO;
 import br.com.acta.entity.pdca.Treinamento;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.dto.mapper.join.UsuarioTreinamentoMapper;
+import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

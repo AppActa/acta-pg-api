@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(value = "/colaborador", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/colaborador", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class ColaboradorController {
     private final ColaboradorService service;

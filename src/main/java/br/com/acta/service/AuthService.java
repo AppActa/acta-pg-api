@@ -6,7 +6,7 @@ import br.com.acta.common.config.security.UsuarioAutenticado;
 import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.dto.auth.MeResponseDTO;
-import br.com.acta.dto.mapper.auth.AuthMapper;
+import br.com.acta.dto.auth.AuthMapper;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.repository.padrao.ColaboradorRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
@@ -70,5 +70,9 @@ public class AuthService {
 
     public boolean isColaboradorEmpresa(Long idColaborador) {
         return colaboradorRepo.existsByIdAndEmpresaId(idColaborador, atual().idEmpresa());
+    }
+
+    public boolean isUsuarioByIdEmpresa(Long idEmpresa) {
+        return usuarioRepo.existsByIdAndEmpresaId(atual().idUsuario(), idEmpresa);
     }
 }

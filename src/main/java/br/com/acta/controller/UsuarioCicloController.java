@@ -16,7 +16,7 @@ import java.util.List;
 
 @Validated
 @RestController
-@RequestMapping(value = "/ciclo/{idCiclo}/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/ciclo/{idCiclo}/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class UsuarioCicloController {
     private final UsuarioCicloService service;

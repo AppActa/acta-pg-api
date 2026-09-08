@@ -1,12 +1,13 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
-import br.com.acta.dto.mapper.core.UsuarioMapper;
+import br.com.acta.dto.core.usuario.UsuarioMapper;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.*;
 import br.com.acta.repository.padrao.MetaRepository;
@@ -62,7 +63,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(usuario);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idEmpresa)")
     public List<UsuarioResponseDTO> buscar(Long idEmpresa, TipoUsuario tipo) {
         List<Usuario> usuarios;
 
@@ -123,5 +124,11 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
         usuario.setStatus(StatusGeral.ATIVO);
         usuario.setEmpresa(empresaService.getEntity(dto.idEmpresa()));
+    }
+
+    @Override
+    public Usuario getEntity(Long id) {
+        return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Usuário", id));
     }
 }

@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.verificacao_resultado;
 
-import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoRequestDTO;
-import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoResponseDTO;
 import br.com.acta.entity.pdca.VerificacaoResultado;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import org.mapstruct.Mapper;

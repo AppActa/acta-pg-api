@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(value = "/problema/{idProblema}/priorizacao", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/problema/{idProblema}/priorizacao", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class PriorizacaoProblemaController {
     private final PriorizacaoProblemaService service;

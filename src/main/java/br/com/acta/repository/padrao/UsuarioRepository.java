@@ -32,4 +32,5 @@ public interface UsuarioRepository extends BaseRepository<Usuario> {
     Optional<Usuario> findByEmailLoginIgnoreCase(String emailLogin);
 
     boolean existsByIdAndEmpresaId(Long id, Long empresaId);
+    Optional<Usuario> findByIdAndEmpresaId(Long id, Long empresaId);
 }

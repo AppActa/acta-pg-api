@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.join;
+package br.com.acta.dto.join.usuario_treinamento;
 
-import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
-import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import org.mapstruct.Mapper;

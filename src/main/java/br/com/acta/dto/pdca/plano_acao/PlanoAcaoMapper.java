@@ -1,7 +1,7 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.plano_acao;
 
-import br.com.acta.dto.pdca.plano_acao.PlanoAcaoRequestDTO;
-import br.com.acta.dto.pdca.plano_acao.PlanoAcaoResponseDTO;
+import br.com.acta.dto.pdca.tarefa.TarefaMapper;
+import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HMapper;
 import br.com.acta.entity.pdca.PlanoAcao;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
 import org.mapstruct.Mapper;

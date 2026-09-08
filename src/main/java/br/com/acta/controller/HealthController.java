@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(value = "/health", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/health", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class HealthController {
     private final HealthService service;

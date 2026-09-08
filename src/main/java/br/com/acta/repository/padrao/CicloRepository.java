@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.query.Procedure;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CicloRepository extends BaseRepository<Ciclo> {
     @Query("""
@@ -26,4 +27,6 @@ public interface CicloRepository extends BaseRepository<Ciclo> {
 
     @Query(value = "SELECT pdca.fn_pode_encerrar_ciclo(:cicloId)", nativeQuery = true)
     boolean podeEncerrarCiclo(@Param("cicloId") Long cicloId);
+
+    Optional<Ciclo> findByIdAndEmpresaId(Long id, Long idEmpresa);
 }

@@ -6,10 +6,10 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CausaRaizRepository extends BaseRepository<CausaRaiz> {
     List<CausaRaiz> findByProblemaId(Long idProblema);
-    List<CausaRaiz> findByCicloIdAndPrincipalTrue(Long idCiclo);
 
     @Query("""
         SELECT c FROM CausaRaiz c
@@ -24,4 +24,6 @@ public interface CausaRaizRepository extends BaseRepository<CausaRaiz> {
             @Param("aceita") Boolean aceita,
             @Param("principal") Boolean principal
     );
+
+    Optional<CausaRaiz> findByIdAndCicloEmpresaId(Long id, Long cicloEmpresaId);
 }

@@ -10,7 +10,7 @@ import br.com.acta.entity.enums.StatusPlanoAcao;
 import br.com.acta.entity.enums.StatusTarefa;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.entity.pdca.PlanoAcao;
-import br.com.acta.dto.mapper.pdca.PlanoAcaoMapper;
+import br.com.acta.dto.pdca.plano_acao.PlanoAcaoMapper;
 import br.com.acta.repository.padrao.PlanoAcaoRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.acta.common.utils.PatchConfig;
@@ -140,5 +140,11 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     @Override
     public PlanoAcaoResponseDTO buscar(Long id) {
         return super.buscar(id);
+    }
+
+    @Override
+    public PlanoAcao getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Plano Ação", id));
     }
 }

@@ -17,7 +17,7 @@ import java.util.Map;
 
 @Validated
 @RestController
-@RequestMapping(value = "/ciclo", produces = MediaType.APPLICATION_JSON_VALUE)
+@RequestMapping(value = "api/v1/ciclo", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class CicloController {//implements CicloOpenapi {
     private final CicloService service;

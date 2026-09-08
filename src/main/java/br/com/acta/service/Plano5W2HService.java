@@ -6,7 +6,7 @@ import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.Plano5W2HMapper;
+import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HMapper;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HRequestDTO;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HResponseDTO;
 import br.com.acta.entity.core.Usuario;

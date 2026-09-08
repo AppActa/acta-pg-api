@@ -1,9 +1,10 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.InvalidResourceStatusException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.VerificacaoResultadoMapper;
+import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoMapper;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoRequestDTO;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoResponseDTO;
 import br.com.acta.entity.core.Usuario;
@@ -102,5 +103,11 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     @Override
     public VerificacaoResultadoResponseDTO buscar(Long id) {
         return super.buscar(id);
+    }
+
+    @Override
+    public VerificacaoResultado getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Verificação de Resultado", id));
     }
 }

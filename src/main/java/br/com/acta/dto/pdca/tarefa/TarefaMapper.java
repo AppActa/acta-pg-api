@@ -1,9 +1,5 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.tarefa;
 
-import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
 import br.com.acta.entity.pdca.Tarefa;
 import br.com.acta.dto.mapper.base.SummaryBaseMapper;
 import org.mapstruct.Mapper;

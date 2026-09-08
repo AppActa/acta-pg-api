@@ -9,7 +9,7 @@ import br.com.acta.entity.enums.PapelCiclo;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.join.id.UsuarioCicloId;
 import br.com.acta.entity.pdca.Ciclo;
-import br.com.acta.dto.mapper.join.UsuarioCicloMapper;
+import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloMapper;
 import br.com.acta.repository.composto.UsuarioCicloRepository;
 import br.com.acta.repository.padrao.CicloRepository;
 import lombok.RequiredArgsConstructor;

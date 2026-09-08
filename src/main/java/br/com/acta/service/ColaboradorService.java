@@ -13,9 +13,8 @@ import br.com.acta.dto.core.contato.email.EmailResponseDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
-import br.com.acta.dto.mapper.core.ColaboradorMapper;
-import br.com.acta.dto.mapper.core.contato.EmailColaboradorMapper;
-import br.com.acta.dto.mapper.core.contato.TelefoneColaboradorMapper;
+import br.com.acta.dto.core.contato.email.EmailColaboradorMapper;
+import br.com.acta.dto.core.contato.telefone.TelefoneColaboradorMapper;
 import br.com.acta.entity.core.Colaborador;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
@@ -40,7 +39,7 @@ import java.util.Set;
 @Service
 public class ColaboradorService extends BaseService<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
     private final ColaboradorRepository repo;
-    private final ColaboradorMapper mapper;
+    private final ColaboradorRequestDTO.ColaboradorMapper mapper;
     private final EmpresaService empresaService;
     private final UsuarioService usuarioService;
     private final TarefaRepository tarefaRepo;
@@ -54,7 +53,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
             Set.of("nome", "cargo", "area", "permissaoGestor", "status")
     );
 
-    public ColaboradorService(ColaboradorRepository repo, ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
+    public ColaboradorService(ColaboradorRepository repo, ColaboradorRequestDTO.ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
         super(repo, mapper, Colaborador.class, authService);
         this.repo = repo;
         this.mapper = mapper;
@@ -225,5 +224,11 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     private TelefoneColaborador getTelefone(Long idColaborador, Long idTelefone){
         Colaborador colaborador = getEntity(idColaborador);
         return telefoneRepo.findByColaboradorIdAndId(colaborador.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
+    }
+
+    @Override
+    public Colaborador getEntity(Long id) {
+        return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Colaborador", id));
     }
 }

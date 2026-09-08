@@ -1,7 +1,5 @@
-package br.com.acta.dto.mapper.join;
+package br.com.acta.dto.join.priorizacao_problema;
 
-import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
-import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaResponseDTO;
 import br.com.acta.entity.join.PriorizacaoProblema;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import org.mapstruct.Mapper;

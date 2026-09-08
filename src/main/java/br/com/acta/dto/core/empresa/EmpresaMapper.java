@@ -1,13 +1,12 @@
-package br.com.acta.dto.mapper.core;
+package br.com.acta.dto.core.empresa;
 
 
 import br.com.acta.common.utils.Formatador;
-import br.com.acta.dto.core.empresa.EmpresaRequestDTO;
-import br.com.acta.dto.core.empresa.EmpresaResponseDTO;
+import br.com.acta.dto.core.empresa.endereco.EnderecoMapper;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.dto.mapper.core.contato.EmailEmpresaMapper;
-import br.com.acta.dto.mapper.core.contato.TelefoneEmpresaMapper;
+import br.com.acta.dto.core.contato.email.EmailEmpresaMapper;
+import br.com.acta.dto.core.contato.telefone.TelefoneEmpresaMapper;
 import org.mapstruct.AfterMapping;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

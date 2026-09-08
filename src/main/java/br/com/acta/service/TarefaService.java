@@ -4,7 +4,7 @@ import br.com.acta.common.handler.exception.*;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.mapper.pdca.TarefaMapper;
+import br.com.acta.dto.pdca.tarefa.TarefaMapper;
 import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
@@ -226,6 +226,12 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Override
     public TarefaResponseDTO buscar(Long id) {
         return super.buscar(id);
+    }
+
+    @Override
+    public Tarefa getEntity(Long id) {
+        return repo.findByIdAndResponsavelEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Tarefa", id));
     }
 
     private LocalDate capturarData(LocalDate data){

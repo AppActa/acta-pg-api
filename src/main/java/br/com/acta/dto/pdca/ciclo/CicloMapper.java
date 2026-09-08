@@ -1,10 +1,8 @@
-package br.com.acta.dto.mapper.pdca;
+package br.com.acta.dto.pdca.ciclo;
 
-import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
-import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.dto.mapper.base.AuditoriaBaseMapper;
-import br.com.acta.dto.mapper.join.UsuarioCicloMapper;
+import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;

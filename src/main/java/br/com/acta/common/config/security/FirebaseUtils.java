@@ -6,7 +6,7 @@ import br.com.acta.entity.core.Colaborador;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusGeral;
-import br.com.acta.dto.mapper.auth.AuthMapper;
+import br.com.acta.dto.auth.AuthMapper;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseAuthException;
