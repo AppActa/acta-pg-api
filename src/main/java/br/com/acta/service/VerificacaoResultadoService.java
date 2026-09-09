@@ -44,6 +44,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     @Transactional
     @Override
     public VerificacaoResultadoResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         VerificacaoResultado resultado = getEntity(id);
 
@@ -70,6 +71,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public VerificacaoResultadoResponseDTO inserir(Long idCiclo, VerificacaoResultadoRequestDTO dto, Long idCriadoPor){
+        configurarUsuarioAtual();
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Usuario usuario = usuarioService.getEntity(idCriadoPor);
         Validador.validarCicloAberto(ciclo);
@@ -90,6 +92,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         VerificacaoResultado resultado = getEntity(id);
 
         if (resultado.getCiclo().getStatus() != StatusCiclo.VERIFICACAO) {

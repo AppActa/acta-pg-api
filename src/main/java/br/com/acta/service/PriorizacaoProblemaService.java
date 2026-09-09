@@ -50,6 +50,7 @@ public class PriorizacaoProblemaService {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
+        authService.configurarUsuarioAtual();
         Problema problema = problemaService.getEntity(idProblema);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
 
@@ -76,6 +77,7 @@ public class PriorizacaoProblemaService {
     @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
+        authService.configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
 
@@ -109,6 +111,7 @@ public class PriorizacaoProblemaService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
+        authService.configurarUsuarioAtual();
         Problema problema = problemaService.getEntity(idProblema);
         List<PriorizacaoProblema> priorizacoes = repo.findByProblema(problema);
 

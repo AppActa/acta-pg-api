@@ -43,6 +43,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO inserir(Long idResultado, EfeitoSecundarioRequestDTO dto){
+        authService.configurarUsuarioAtual();
         VerificacaoResultado resultado = resultadoService.getEntity(idResultado);
         Validador.validarCicloAberto(resultado.getCiclo());
 
@@ -56,6 +57,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO patch(Long idResultado, Long idEfeitoSecundario, Map<String, Object> campos){
+        authService.configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
         EfeitoSecundario efeitoSecundario = getEntity(idEfeitoSecundario);
@@ -77,6 +79,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idResultado, Long idEfeitoSecundario) {
+        authService.configurarUsuarioAtual();
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
         EfeitoSecundario efeitoSecundario = getEntity(idEfeitoSecundario);
 

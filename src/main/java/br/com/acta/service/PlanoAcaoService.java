@@ -47,6 +47,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     @Transactional
     @Override
     public PlanoAcaoResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         PlanoAcao planoAcao = getEntity(id);
 
@@ -64,6 +65,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public PlanoAcaoResponseDTO patchStatus(Long id, StatusPlanoAcao status) {
+        configurarUsuarioAtual();
         PlanoAcao planoAcao = getEntity(id);
 
         Validador.validarCicloAberto(planoAcao.getCiclo());
@@ -85,6 +87,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         PlanoAcao planoAcao = getEntity(id);
         boolean temTarefasAtivas = planoAcao.getTarefas().stream()
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
@@ -121,6 +124,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
 
     @Transactional
     public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo, Long idCriadoPor) {
+        configurarUsuarioAtual();
         PlanoAcao planoAcao = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Validador.validarCicloAberto(ciclo);

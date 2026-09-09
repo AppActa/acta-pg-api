@@ -23,6 +23,7 @@ import java.util.List;
 @AllArgsConstructor
 public class UsuarioTreinamentoService {
     private final UsuarioTreinamentoRepository repo;
+    private final AuthService authService;
     private final UsuarioTreinamentoMapper mapper;
     private final TreinamentoService treinamentoService;
     private final UsuarioService usuarioService;
@@ -38,6 +39,7 @@ public class UsuarioTreinamentoService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioTreinamentoResponseDTO inserir(Long idTreinamento, UsuarioTreinamentoRequestDTO dto){
+        authService.configurarUsuarioAtual();
         Treinamento treinamento = treinamentoService.getEntity(idTreinamento);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
 
@@ -63,6 +65,7 @@ public class UsuarioTreinamentoService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') or authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public UsuarioTreinamentoResponseDTO patchStatus(Long idTreinamento, Long idUsuario, StatusTreinamento status){
+        authService.configurarUsuarioAtual();
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
             throw new ModelNotFoundException("Usuário e treinamento", List.of(idUsuario, idTreinamento));
         }
@@ -85,6 +88,7 @@ public class UsuarioTreinamentoService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idTreinamento, Long idUsuario){
+        authService.configurarUsuarioAtual();
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
             throw new ModelNotFoundException("Usuário e treinamento", List.of(idUsuario, idTreinamento));
         }

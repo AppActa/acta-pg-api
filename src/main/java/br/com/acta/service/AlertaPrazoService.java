@@ -52,6 +52,7 @@ public class AlertaPrazoService {
     @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta, Long idUsuario){
+        authService.configurarUsuarioAtual();
         AlertaPrazo alertaPrazo = getEntity(idTarefa, idAlerta);
 
         Validador.validarMesmoId(idUsuario, alertaPrazo.getUsuarioDestino().getId(), true);

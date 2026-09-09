@@ -21,6 +21,10 @@ implements BaseCRUD<REQ, RESP> {
         return authService.atual();
     }
 
+    protected void configurarUsuarioAtual() {
+        authService.configurarUsuarioAtual();
+    }
+
     protected void antesInserir(ENT ent, REQ dto){}
 
     public abstract ENT getEntity(Long id);
@@ -45,6 +49,7 @@ implements BaseCRUD<REQ, RESP> {
     @Transactional
     @Override
     public RESP inserir(REQ dto) {
+        configurarUsuarioAtual();
         ENT ent = mapper.toEntity(dto);
         antesInserir(ent, dto);
 
@@ -59,6 +64,7 @@ implements BaseCRUD<REQ, RESP> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         ENT ent = getEntity(id);
         repo.delete(ent);
     }

@@ -102,6 +102,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     @Override
     @Transactional
     public ColaboradorResponseDTO inserir(ColaboradorRequestDTO dto) {
+        configurarUsuarioAtual();
         Colaborador colaborador = mapper.toEntity(dto);
         antesInserir(colaborador, dto);
 
@@ -136,7 +137,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
 
     @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
     @Override
+    @Transactional
     public ColaboradorResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Colaborador colaborador = getEntity(id);
 
@@ -153,7 +156,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
 
     @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
     @Override
+    @Transactional
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Colaborador colaborador = getEntity(id);
         boolean possuiTarefa = tarefaRepo.findByResponsavelId(colaborador.getUsuario().getId()).stream()
                 .anyMatch(tarefa -> tarefa.getStatus() != StatusTarefa.CONCLUIDA && tarefa.getStatus() != StatusTarefa.CANCELADA);
@@ -172,7 +177,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public EmailResponseDTO inserirEmail(Long idColaborador, EmailRequestDTO dto){
+        configurarUsuarioAtual();
         Colaborador colaborador = getEntity(idColaborador);
 
         if (emailRepo.existsByColaboradorIdAndContatoIgnoreCase(idColaborador, dto.email())) throw new UniqueViolationException("E-mail");
@@ -185,7 +192,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public void excluirEmail(Long idColaborador, Long idEmail){
+        configurarUsuarioAtual();
         EmailColaborador email = getEmail(idColaborador, idEmail);
         emailRepo.delete(email);
     }
@@ -199,7 +208,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public TelefoneResponseDTO inserirTelefone(Long idColaborador, TelefoneRequestDTO dto){
+        configurarUsuarioAtual();
         Colaborador colaborador = getEntity(idColaborador);
         if (telefoneRepo.existsByColaboradorIdAndContato(idColaborador, dto.numero())) throw new UniqueViolationException("Telefone");
 
@@ -211,7 +222,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     @PreAuthorize("hasRole('ADMIN')")
+    @Transactional
     public void excluirTelefone(Long idColaborador, Long idTelefone){
+        configurarUsuarioAtual();
         TelefoneColaborador telefone = getTelefone(idColaborador, idTelefone);
         telefoneRepo.delete(telefone);
     }

@@ -50,6 +50,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Transactional
     @Override
     public TarefaResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfigConfig);
         Tarefa tarefa = getEntity(id);
         Validador.validarTarefaAberta(tarefa);
@@ -83,6 +84,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {
+        configurarUsuarioAtual();
         Tarefa tarefa = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
@@ -103,6 +105,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
         if (!tarefa.getStatus().podeAtualizarStatus(dto.status())) {
@@ -139,6 +142,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reatribuir(Long idTarefa, Long idResponsavel){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(idTarefa);
         Usuario responsavel = usuarioService.getEntity(idResponsavel);
 
@@ -153,6 +157,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
+        configurarUsuarioAtual();
         repo.reabrirTarefa(idTarefa, novoPrazo);
 
         Tarefa tarefa = getEntity(idTarefa);
@@ -163,6 +168,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
         if (!tarefa.getDependentes().isEmpty())
@@ -184,6 +190,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO adicionarDependencia(Long id, Long idDependente){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Tarefa dependenteNovo = getEntity(idDependente);
 
@@ -207,6 +214,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void removerDependencia(Long id, Long idDependente){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Tarefa dependente = getEntity(idDependente);
 

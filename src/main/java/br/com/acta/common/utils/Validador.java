@@ -1,7 +1,6 @@
 package br.com.acta.common.utils;
 
 import br.com.acta.common.handler.exception.*;
-import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.*;
 import br.com.acta.entity.join.UsuarioCiclo;
@@ -44,12 +43,6 @@ public final class Validador {
         }
 
         validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
-    }
-
-    public static void validarMesmaEmpresa(Empresa a, Empresa b){
-        if (!a.equals(b)) {
-            throw new InvalidRelationshipException("pertencer à mesma empresa");
-        }
     }
 
     public static void validarMesmoCiclo(Ciclo a, Ciclo b) {

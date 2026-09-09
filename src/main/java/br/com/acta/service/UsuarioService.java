@@ -48,6 +48,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
     @Override
     @Transactional
     public UsuarioResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Usuario usuario = getEntity(id);
 
@@ -75,7 +76,9 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
     @PreAuthorize("authService.isUsuarioEmpresa(#id) and hasRole('ADMIN')")
     @Override
+    @Transactional
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Usuario usuario = getEntity(id);
 
         boolean gestorCicloAtivo = usuario.getCiclos().stream()
@@ -114,6 +117,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
 
     @PreAuthorize("hasRole('ADMIN')")
     @Override
+    @Transactional
     public UsuarioResponseDTO inserir(UsuarioRequestDTO dto) {
         return super.inserir(dto);
     }

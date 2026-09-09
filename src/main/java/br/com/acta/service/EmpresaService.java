@@ -79,6 +79,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Override
     @Transactional
     public EmpresaResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Empresa empresa = getEntity(id);
 
@@ -118,6 +119,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Empresa empresa = getEntity(id);
 
         empresa.getCiclos().forEach(ciclo -> {
@@ -160,6 +162,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EmailResponseDTO inserirEmail(Long idEmpresa, EmailRequestDTO dto){
+        configurarUsuarioAtual();
         Empresa empresa = getEntity(idEmpresa);
 
         if (emailRepo.existsByEmpresaIdAndContatoIgnoreCase(idEmpresa, dto.email())) throw new UniqueViolationException("E-mail");
@@ -174,6 +177,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEmail(Long idEmpresa, Long idEmail){
+        configurarUsuarioAtual();
         EmailEmpresa email = getEmail(idEmpresa, idEmail);
         emailRepo.delete(email);
     }
@@ -190,6 +194,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public TelefoneResponseDTO inserirTelefone(Long idEmpresa, TelefoneRequestDTO dto){
+        configurarUsuarioAtual();
         Empresa empresa = getEntity(idEmpresa);
         TelefoneEmpresa telefone = telefoneMapper.toEntity(dto);
 
@@ -204,6 +209,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirTelefone(Long idEmpresa, Long idTelefone){
+        configurarUsuarioAtual();
         TelefoneEmpresa telefone = getTelefone(idEmpresa, idTelefone);
         telefoneRepo.delete(telefone);
     }
@@ -226,6 +232,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EnderecoResponseDTO inserirEndereco(Long idEmpresa, EnderecoRequestDTO dto) {
+        configurarUsuarioAtual();
         Empresa empresa = getEntity(idEmpresa);
         Endereco endereco = enderecoMapper.toEntity(dto);
 
@@ -237,6 +244,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEndereco(Long idEmpresa, Long idEndereco) {
+        configurarUsuarioAtual();
         Endereco endereco = getEndereco(idEmpresa, idEndereco);
         enderecoRepo.delete(endereco);
     }
@@ -258,6 +266,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
 
     @PreAuthorize("hasAuthority('ROLE_ADMIN')")
     @Override
+    @Transactional
     public EmpresaResponseDTO inserir(EmpresaRequestDTO dto) {
         return super.inserir(dto);
     }

@@ -19,6 +19,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.transaction.annotation.Propagation;
 
 import java.util.Objects;
 
@@ -62,11 +63,17 @@ public class AuthService {
         if (auth == null || !(auth.getPrincipal() instanceof UsuarioAutenticado usuario) || !auth.isAuthenticated())
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
 
-        entityManager.createNativeQuery("SELECT set_config('app.current_user_id', :id, true)")
-                .setParameter("id", usuario.idUsuario())
-                .getSingleResult();
-
         return usuario;
+    }
+
+    // só executa se existir uma transação aberta
+    @Transactional(propagation = Propagation.MANDATORY)
+    public void configurarUsuarioAtual() {
+        UsuarioAutenticado usuario = atual();
+
+        entityManager.createNativeQuery("SELECT set_config('app.current_user_id', :id, true)")
+                .setParameter("id", usuario.idUsuario().toString())
+                .getSingleResult();
     }
 
     public boolean isProprioUsuario(Long idUsuario) {

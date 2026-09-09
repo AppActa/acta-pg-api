@@ -55,9 +55,9 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
     @Transactional
     @Override
     public ProblemaResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Problema problema = getEntity(id);
-        Validador.validarCicloAberto(problema.getCiclo());
         Validador.validarProblemaAberto(problema);
 
         if (campos.containsKey("titulo")) problema.setTitulo((String) campos.get("titulo"));
@@ -74,6 +74,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO patchStatus(Long id, StatusProblema status){
+        configurarUsuarioAtual();
         Problema problema = getEntity(id);
 
         if (!problema.getStatus().podeAtualizarStatus(status)) {
@@ -96,6 +97,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
     @Override
     @Transactional
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Problema problema = getEntity(id);
         validarSemPlanoExecucao(problema);
         atualizarStatusRecursivo(problema, StatusProblema.DESCARTADO);
@@ -104,6 +106,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO inserir(ProblemaRequestDTO dto, Long idCiclo) {
+        configurarUsuarioAtual();
         Problema problema = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
 

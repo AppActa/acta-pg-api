@@ -31,11 +31,6 @@ public class UsuarioCicloService {
     private final AuthService authService;
 
     protected UsuarioCiclo getEntity(Long idUsuario, Long idCiclo){
-        Ciclo ciclo = cicloService.getEntity(idCiclo);
-        Usuario usuario = usuarioService.getEntity(idUsuario);
-
-        Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
-        Validador.validarMesmaEmpresa(ciclo.getEmpresa(), usuario.getEmpresa());
         return repo.findByUsuarioIdAndCicloIdAndCicloEmpresaId(idUsuario, idCiclo, authService.atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(idUsuario, idCiclo)));
     }
@@ -61,10 +56,10 @@ public class UsuarioCicloService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioCicloResponseDTO inserir(UsuarioCicloRequestDTO dto, Long idCiclo){
+        authService.configurarUsuarioAtual();
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
         Ciclo ciclo = cicloService.getEntity(idCiclo);
 
-        Validador.validarMesmaEmpresa(ciclo.getEmpresa(), usuario.getEmpresa());
 
         if (repo.existsByUsuarioIdAndCicloId(dto.idUsuario(), idCiclo)) {
             throw new UniqueViolationException("Usuário", "Ciclo");
@@ -86,6 +81,7 @@ public class UsuarioCicloService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioCicloResponseDTO patch(Long idUsuario, Long idCiclo, PapelCiclo papelCiclo){
+        authService.configurarUsuarioAtual();
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
         List<UsuarioCiclo> responsaveis = repo.findByCicloIdAndPapelCiclo(idCiclo, PapelCiclo.RESPONSAVEL);
 
@@ -102,15 +98,12 @@ public class UsuarioCicloService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public List<UsuarioCicloResponseDTO> substituirResponsavel(Long idCiclo, Long idUsuarioAntigo, Long idUsuarioNovo){
+        authService.configurarUsuarioAtual();
         Validador.validarMesmoId(idUsuarioAntigo, idUsuarioNovo, false);
 
         UsuarioCiclo gestorAntigo = getEntity(idUsuarioAntigo, idCiclo);
         UsuarioCiclo gestorNovo = getEntity(idUsuarioNovo, idCiclo);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
-
-        Validador.validarMesmaEmpresa(ciclo.getEmpresa(), gestorAntigo.getUsuario().getEmpresa());
-        Validador.validarMesmaEmpresa(ciclo.getEmpresa(), gestorNovo.getUsuario().getEmpresa());
-        Validador.validarMesmoCiclo(ciclo, Set.of(gestorAntigo, gestorNovo));
 
         if (!gestorAntigo.getPapelCiclo().equals(PapelCiclo.RESPONSAVEL)) {
             throw new InvalidRequestException("O usuário antigo não é o responsável do ciclo");
@@ -128,6 +121,7 @@ public class UsuarioCicloService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idUsuario, Long idCiclo){
+        authService.configurarUsuarioAtual();
         UsuarioCiclo usuarioCiclo = getEntity(idUsuario, idCiclo);
 
         if (usuarioCiclo.getPapelCiclo().equals(PapelCiclo.RESPONSAVEL)) {

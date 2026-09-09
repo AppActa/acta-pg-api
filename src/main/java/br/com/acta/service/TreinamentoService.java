@@ -54,6 +54,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     @Transactional
     @Override
     public TreinamentoResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Treinamento treinamento = getEntity(id);
 
@@ -86,6 +87,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TreinamentoResponseDTO inserir(Long idCiclo, TreinamentoRequestDTO dto) {
+        configurarUsuarioAtual();
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
         Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
@@ -103,6 +105,7 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Treinamento treinamento = getEntity(id);
         Validador.validarCicloAberto(treinamento.getCiclo());
 
