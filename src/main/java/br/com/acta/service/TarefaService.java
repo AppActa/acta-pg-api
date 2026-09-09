@@ -4,11 +4,7 @@ import br.com.acta.common.handler.exception.*;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.pdca.tarefa.TarefaMapper;
-import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
+import br.com.acta.dto.pdca.tarefa.*;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusPlanoAcao;
@@ -158,10 +154,11 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Transactional
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
         configurarUsuarioAtual();
-        repo.reabrirTarefa(idTarefa, novoPrazo);
-
         Tarefa tarefa = getEntity(idTarefa);
-        return mapper.toResponse(tarefa);
+
+        repo.reabrirTarefa(tarefa.getId(), novoPrazo);
+        Tarefa salvo = getEntity(idTarefa);
+        return mapper.toResponse(salvo);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
