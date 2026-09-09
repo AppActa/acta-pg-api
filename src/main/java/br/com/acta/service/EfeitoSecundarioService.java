@@ -25,6 +25,7 @@ public class EfeitoSecundarioService {
     private final EfeitoSecundarioRepository repo;
     private final EfeitoSecundarioMapper mapper;
     private final VerificacaoResultadoService resultadoService;
+    private final AuthService authService;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("descricao", "peso", "impactoEstimado", "tipo"),
             Set.of("descricao", "peso", "impactoEstimado")
@@ -85,6 +86,7 @@ public class EfeitoSecundarioService {
     }
 
     private EfeitoSecundario getEntity(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("Efeito Secundário", id));
+        return repo.findByIdAndVerificacaoResultadoCicloEmpresaId(id, authService.atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Efeito Secundário", id));
     }
 }

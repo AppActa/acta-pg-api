@@ -34,8 +34,14 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     );
     private final UsuarioService usuarioService;
 
+    @Override
+    public Plano5W2H getEntity(Long id) {
+        return repo.findByIdAndPlanoAcaoCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("5W2H", id));
+    }
+
     public Plano5W2HService(Plano5W2HRepository repo, Plano5W2HMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, Plano5W2H.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;

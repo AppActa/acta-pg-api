@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
@@ -36,8 +37,14 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
             Set.of("titulo", "descricao", "peso")
     );
 
+    @Override
+    public Problema getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Problema", id));
+    }
+
     public ProblemaService(ProblemaRepository repo, ProblemaMapper mapper, CicloService cicloService, CausaRaizRepository causaRaizRepo, AuthService authService) {
-        super(repo, mapper, Problema.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

@@ -37,7 +37,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     private final EmpresaService empresaService;
 
     public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService) {
-        super(repo, mapper, Ciclo.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;

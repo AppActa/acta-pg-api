@@ -57,8 +57,14 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     );
     private final CNPJValidator cnpjValidator = new CNPJValidator();
 
+    @Override
+    public Empresa getEntity(Long id) {
+        return repo.findByIdAndId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Empresa", id));
+    }
+
     public EmpresaService(EmpresaRepository repo, EmpresaMapper mapper, EmailEmpresaMapper emailMapper, EmailEmpresaRepository emailRepo, TelefoneEmpresaMapper telefoneMapper, TelefoneEmpresaRepository telefoneRepo, EnderecoMapper enderecoMapper, EnderecoRepository enderecoRepo, AuthService authService) {
-        super(repo, mapper, Empresa.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.emailMapper = emailMapper;

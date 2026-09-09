@@ -39,7 +39,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     );
 
     public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, Tarefa.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
@@ -230,7 +230,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
     @Override
     public Tarefa getEntity(Long id) {
-        return repo.findByIdAndResponsavelEmpresaId(id, atual().idEmpresa())
+        return repo.findByIdAndPlanoAcaoCicloEmpresaId(id, atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("Tarefa", id));
     }
 

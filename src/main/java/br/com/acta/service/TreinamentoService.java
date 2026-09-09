@@ -2,6 +2,7 @@ package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
@@ -35,8 +36,14 @@ extends BaseService<TreinamentoRequestDTO, TreinamentoResponseDTO, Treinamento> 
             Set.of("titulo", "descricao", "dataTreinamento", "obrigatorio")
     );
 
+    @Override
+    public Treinamento getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Treinamento", id));
+    }
+
     public TreinamentoService(TreinamentoRepository repo, TreinamentoMapper mapper, CicloService cicloService, UsuarioService usuarioService, AuthService authService){
-        super(repo, mapper, Treinamento.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

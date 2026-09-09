@@ -6,8 +6,10 @@ import br.com.acta.entity.pdca.Meta;
 import br.com.acta.repository.base.BaseRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface MetaRepository extends BaseRepository<Meta> {
+    Optional<Meta> findByIdAndCicloEmpresaId(Long id, Long idEmpresa);
     List<Meta> findByCicloId(Long idCiclo);
     List<Meta> findByResponsaveisId(Long idResponsavel);
     List<Meta> findByCicloIdAndStatus(Long cicloId, StatusMeta status);

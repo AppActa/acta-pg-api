@@ -33,7 +33,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
     private final UsuarioService usuarioService;
 
     public VerificacaoResultadoService(VerificacaoResultadoRepository repo, VerificacaoResultadoMapper mapper, CicloService cicloService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, VerificacaoResultado.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

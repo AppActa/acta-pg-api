@@ -33,5 +33,5 @@ public interface TarefaRepository extends BaseRepository<Tarefa> {
     @Procedure(procedureName = "pdca.pr_reabrir_tarefa")
     void reabrirTarefa(@Param("p_tarefa_id") Long tarefaId, @Param("p_novo_prazo") LocalDate novoPrazo);
 
-    Optional<Tarefa> findByIdAndResponsavelEmpresaId(Long id, Long responsavelEmpresaId);
+    Optional<Tarefa> findByIdAndPlanoAcaoCicloEmpresaId(Long id, Long idEmpresa);
 }

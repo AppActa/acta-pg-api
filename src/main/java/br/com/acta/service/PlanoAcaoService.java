@@ -36,7 +36,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     );
 
     public PlanoAcaoService(PlanoAcaoRepository repo, PlanoAcaoMapper mapper, CicloService cicloService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, PlanoAcao.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;

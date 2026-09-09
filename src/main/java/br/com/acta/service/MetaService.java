@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.PrerequisiteNotMetException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.ConversorObject;
@@ -44,8 +45,14 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     );
     private final UsuarioMapper usuarioMapper;
 
+    @Override
+    public Meta getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Meta", id));
+    }
+
     public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper, AuthService authService) {
-        super(repo, mapper, Meta.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.usuarioService = usuarioService;

@@ -54,7 +54,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     );
 
     public ColaboradorService(ColaboradorRepository repo, ColaboradorRequestDTO.ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
-        super(repo, mapper, Colaborador.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;

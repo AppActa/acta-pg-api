@@ -36,7 +36,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
     );
 
     public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo, AuthService authService){
-        super(repo, mapper, Usuario.class, authService);
+        super(repo, mapper, authService);
         this.empresaService = empresaService;
         this.repo = repo;
         this.mapper = mapper;

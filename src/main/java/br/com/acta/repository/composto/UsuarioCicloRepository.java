@@ -6,11 +6,11 @@ import br.com.acta.entity.join.id.UsuarioCicloId;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface UsuarioCicloRepository
 extends JpaRepository<UsuarioCiclo, UsuarioCicloId> {
+    Optional<UsuarioCiclo> findByUsuarioIdAndCicloIdAndCicloEmpresaId(Long idUsuario, Long idCiclo, Long idEmpresa);
     boolean existsByUsuarioIdAndCicloId(Long idUsuario, Long idCiclo);
     List<UsuarioCiclo> findByCicloIdAndPapelCiclo(Long idCiclo, PapelCiclo papelCiclo);
-    List<UsuarioCiclo> findByCicloId(Long idCiclo);
-    List<UsuarioCiclo> findByUsuarioId(Long idUsuario);
 }

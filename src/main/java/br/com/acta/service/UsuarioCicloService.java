@@ -7,7 +7,6 @@ import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.PapelCiclo;
 import br.com.acta.entity.join.UsuarioCiclo;
-import br.com.acta.entity.join.id.UsuarioCicloId;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloMapper;
 import br.com.acta.repository.composto.UsuarioCicloRepository;
@@ -29,6 +28,7 @@ public class UsuarioCicloService {
     protected final UsuarioService usuarioService;
     private final UsuarioCicloMapper mapper;
     private final UsuarioCicloRepository repo;
+    private final AuthService authService;
 
     protected UsuarioCiclo getEntity(Long idUsuario, Long idCiclo){
         Ciclo ciclo = cicloService.getEntity(idCiclo);
@@ -36,9 +36,8 @@ public class UsuarioCicloService {
 
         Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
         Validador.validarMesmaEmpresa(ciclo.getEmpresa(), usuario.getEmpresa());
-        UsuarioCicloId id = new UsuarioCicloId(idUsuario, idCiclo);
-
-        return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(id.getIdUsuario(), id.getIdCiclo())));
+        return repo.findByUsuarioIdAndCicloIdAndCicloEmpresaId(idUsuario, idCiclo, authService.atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("UsuarioCiclo", List.of(idUsuario, idCiclo)));
     }
 
     @PreAuthorize("isAuthenticated()")
