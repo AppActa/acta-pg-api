@@ -1,5 +1,5 @@
 package br.com.acta.service.base;
-import br.com.acta.common.config.security.UsuarioAutenticado;
+import br.com.acta.common.config.firebase.UsuarioAutenticado;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import br.com.acta.service.AuthService;

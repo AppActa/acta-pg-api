@@ -1,4 +1,4 @@
-package br.com.acta.common.config.security;
+package br.com.acta.common.config.firebase;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
