@@ -2,11 +2,12 @@ package br.com.acta.dto.pdca.verificacao_resultado;
 
 import br.com.acta.entity.pdca.VerificacaoResultado;
 import br.com.acta.dto.mapper.base.BaseMapper;
+import br.com.acta.dto.pdca.efeito_secundario.EfeitoSecundarioMapper;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.MappingTarget;
 
-@Mapper(componentModel = "spring")
+@Mapper(componentModel = "spring", uses = EfeitoSecundarioMapper.class)
 public interface VerificacaoResultadoMapper
 extends BaseMapper<VerificacaoResultadoRequestDTO, VerificacaoResultadoResponseDTO, VerificacaoResultado> {
     @Mapping(source = "ciclo.id", target = "idCiclo")

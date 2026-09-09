@@ -19,6 +19,10 @@ extends SummaryBaseMapper<ProblemaRequestDTO, ProblemaResponseDTO, Problema, Pro
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "criadoPor", ignore = true)
     @Mapping(target = "problemaPai", ignore = true)
+    @Mapping(target = "subProblemas", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Problema toEntity(ProblemaRequestDTO dto);
 
@@ -26,6 +30,10 @@ extends SummaryBaseMapper<ProblemaRequestDTO, ProblemaResponseDTO, Problema, Pro
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "criadoPor", ignore = true)
     @Mapping(target = "problemaPai", ignore = true)
+    @Mapping(target = "subProblemas", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(ProblemaRequestDTO dto, @MappingTarget Problema problema);
 }

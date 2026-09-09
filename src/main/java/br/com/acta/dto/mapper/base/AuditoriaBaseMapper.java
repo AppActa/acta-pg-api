@@ -6,11 +6,14 @@ import org.mapstruct.MappingTarget;
 
 public interface AuditoriaBaseMapper<REQ, RESP, ENT extends AuditoriaBase>
 extends BaseMapper<REQ, RESP, ENT> {
+    @Override
+    RESP toResponse(ENT ent);
+
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "criadoEm", ignore = true)
     @Mapping(target = "atualizadoEm", ignore = true)
     @Override
-    RESP toResponse(ENT ent);
+    ENT toEntity(REQ dto);
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "criadoEm", ignore = true)

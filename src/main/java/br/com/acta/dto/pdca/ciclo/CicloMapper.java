@@ -21,6 +21,9 @@ extends AuditoriaBaseMapper<CicloRequestDTO, CicloResponseDTO, Ciclo> {
     @Mapping(target = "dataFimReal", ignore = true)
     @Mapping(target = "colaboradores", ignore = true)
     @Mapping(target = "idIshikawaMongo", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Ciclo toEntity(CicloRequestDTO dto);
 
@@ -30,6 +33,9 @@ extends AuditoriaBaseMapper<CicloRequestDTO, CicloResponseDTO, Ciclo> {
     @Mapping(target = "dataFimReal", ignore = true)
     @Mapping(target = "colaboradores", ignore = true)
     @Mapping(target = "idIshikawaMongo", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(CicloRequestDTO dto, @MappingTarget Ciclo ciclo);
 }

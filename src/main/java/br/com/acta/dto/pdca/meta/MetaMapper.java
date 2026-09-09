@@ -19,6 +19,9 @@ extends AuditoriaBaseMapper<MetaRequestDTO, MetaResponseDTO, Meta> {
     @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "responsaveis", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Meta toEntity(MetaRequestDTO dto);
 
@@ -26,6 +29,9 @@ extends AuditoriaBaseMapper<MetaRequestDTO, MetaResponseDTO, Meta> {
     @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "responsaveis", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(MetaRequestDTO dto, @MappingTarget Meta meta);
 }

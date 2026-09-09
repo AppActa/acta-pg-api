@@ -8,6 +8,7 @@ import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
+import br.com.acta.dto.core.colaborador.ColaboradorMapper;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
 import br.com.acta.dto.core.contato.email.EmailResponseDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
@@ -39,7 +40,7 @@ import java.util.Set;
 @Service
 public class ColaboradorService extends BaseService<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
     private final ColaboradorRepository repo;
-    private final ColaboradorRequestDTO.ColaboradorMapper mapper;
+    private final ColaboradorMapper mapper;
     private final EmpresaService empresaService;
     private final UsuarioService usuarioService;
     private final TarefaRepository tarefaRepo;
@@ -53,7 +54,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
             Set.of("nome", "cargo", "area", "permissaoGestor", "status")
     );
 
-    public ColaboradorService(ColaboradorRepository repo, ColaboradorRequestDTO.ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
+    public ColaboradorService(ColaboradorRepository repo, ColaboradorMapper mapper, EmpresaService empresaService, UsuarioService usuarioService, TarefaRepository tarefaRepo, EmailColaboradorRepository emailRepo, TelefoneColaboradorRepository telefoneRepo, EmailColaboradorMapper emailMapper, TelefoneColaboradorMapper telefoneMapper, AuthService authService) {
         super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;

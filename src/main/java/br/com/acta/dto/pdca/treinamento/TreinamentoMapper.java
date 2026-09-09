@@ -18,11 +18,19 @@ extends AuditoriaBaseMapper<TreinamentoRequestDTO, TreinamentoResponseDTO, Trein
 
     @Mapping(target = "ciclo", ignore = true)
     @Mapping(target = "responsavel", ignore = true)
+    @Mapping(target = "participantes", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Treinamento toEntity(TreinamentoRequestDTO dto);
 
     @Mapping(target = "ciclo", ignore = true)
     @Mapping(target = "responsavel", ignore = true)
+    @Mapping(target = "participantes", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(TreinamentoRequestDTO dto, @MappingTarget Treinamento treinamento);
 }
