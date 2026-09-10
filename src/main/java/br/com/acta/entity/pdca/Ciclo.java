@@ -12,6 +12,7 @@ import lombok.Setter;
 
 import java.time.LocalDate;
 import java.util.Set;
+import java.util.UUID;
 
 @Entity
 @Table(name = "ciclo", schema = "pdca")
@@ -44,5 +45,5 @@ public class Ciclo extends TituloDescricaoBase {
     private Usuario gestor;
 
     @Column(name = "id_ishikawa_mongo")
-    private Integer idIshikawaMongo;
+    private UUID idIshikawaMongo;
 }

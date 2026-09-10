@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 import java.time.OffsetDateTime;
+import java.util.UUID;
 
 @Entity
 @Table(name = "causa_raiz", schema = "pdca")
@@ -45,7 +46,7 @@ public class CausaRaiz extends AuditoriaBase {
     private PlanoAcao planoAcao;
 
     @Column(name = "id_5_porques_mongo")
-    private String id5PorquesMongo;
+    private UUID id5PorquesMongo;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "validada_por")

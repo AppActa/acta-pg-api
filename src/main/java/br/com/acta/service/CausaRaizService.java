@@ -61,7 +61,6 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
 
         if (campos.containsKey("descricao")) causaRaiz.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("principal")) causaRaiz.setPrincipal((Boolean) campos.get("principal"));
-        if (campos.containsKey("id5PorquesMongo")) causaRaiz.setId5PorquesMongo((String) campos.get("id5PorquesMongo"));
 
         CausaRaiz salvo = repo.save(causaRaiz);
         return mapper.toResponse(salvo);
