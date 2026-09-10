@@ -33,5 +33,5 @@ jobs:
           push: true
           tags: ghcr.io/appacta/acta-pg-api:sha-${{ github.sha }}
           labels: |
-            org.opencontainers.image.source = https://github.com/AppActa/acta-pg-api
-            org.opencontainers.image.revision = ${{ github.sha }}
+            org.opencontainers.image.source=https://github.com/AppActa/acta-pg-api
+            org.opencontainers.image.revision=${{ github.sha }}
