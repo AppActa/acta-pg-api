@@ -1,6 +1,6 @@
 package br.com.acta;
 
-import br.com.acta.common.config.security.FirebaseUtils;
+import br.com.acta.common.config.firebase.FirebaseUtils;
 import org.springframework.boot.test.context.TestConfiguration;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Profile;

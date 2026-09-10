@@ -12,7 +12,6 @@ import br.com.acta.dto.pdca.problema.ProblemaMapper;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.join.PriorizacaoProblema;
-import br.com.acta.entity.join.id.PriorizacaoProblemaId;
 import br.com.acta.entity.pdca.Problema;
 import br.com.acta.repository.composto.PriorizacaoProblemaRepository;
 import br.com.acta.repository.padrao.ProblemaRepository;
@@ -41,17 +40,17 @@ public class PriorizacaoProblemaService {
     );
     private final ProblemaRepository problemaRepo;
     private final ProblemaMapper problemaMapper;
+    private final AuthService authService;
 
     protected PriorizacaoProblema getEntity(Long idProblema, Long idUsuario){
-        PriorizacaoProblemaId id = new PriorizacaoProblemaId(idProblema, idUsuario);
-
-        return repo.findById(id)
+        return repo.findByProblemaIdAndUsuarioIdAndProblemaCicloEmpresaId(idProblema, idUsuario, authService.atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("PriorizacaoProblema", List.of(idProblema, idUsuario)));
     }
 
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
+        authService.configurarUsuarioAtual();
         Problema problema = problemaService.getEntity(idProblema);
         Usuario usuario = usuarioService.getEntity(dto.idUsuario());
 
@@ -78,6 +77,7 @@ public class PriorizacaoProblemaService {
     @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
+        authService.configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
 
@@ -111,6 +111,7 @@ public class PriorizacaoProblemaService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public ProblemaResponseDTO aplicarPeso(Long idProblema){
+        authService.configurarUsuarioAtual();
         Problema problema = problemaService.getEntity(idProblema);
         List<PriorizacaoProblema> priorizacoes = repo.findByProblema(problema);
 

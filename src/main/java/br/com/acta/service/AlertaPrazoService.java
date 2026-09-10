@@ -21,6 +21,7 @@ public class AlertaPrazoService {
     private final AlertaPrazoRepository repo;
     private final AlertaPrazoMapper mapper;
     private final TarefaService tarefaService;
+    private final AuthService authService;
 
     private AlertaPrazo getEntity(Long idTarefa, Long idAlerta){
         if (idAlerta == null){
@@ -28,7 +29,8 @@ public class AlertaPrazoService {
             return repo.findByTarefa(tarefa).orElseThrow(() -> new ModelNotFoundException("Alerta de prazo"));
         }
 
-        AlertaPrazo alertaPrazo = repo.findById(idAlerta).orElseThrow(() -> new ModelNotFoundException("Alerta de prazo"));
+        AlertaPrazo alertaPrazo = repo.findByIdAndTarefaPlanoAcaoCicloEmpresaId(idAlerta, authService.atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Alerta de prazo", idAlerta));
 
         if (!alertaPrazo.getTarefa().getId().equals(idTarefa)) throw new ModelNotFoundException("Alerta de prazo");
         return alertaPrazo;
@@ -50,6 +52,7 @@ public class AlertaPrazoService {
     @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta, Long idUsuario){
+        authService.configurarUsuarioAtual();
         AlertaPrazo alertaPrazo = getEntity(idTarefa, idAlerta);
 
         Validador.validarMesmoId(idUsuario, alertaPrazo.getUsuarioDestino().getId(), true);

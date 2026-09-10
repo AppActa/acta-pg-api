@@ -1,4 +1,4 @@
-package br.com.acta.common.config.security;
+package br.com.acta.common.config.firebase;
 
 import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
 import br.com.acta.common.handler.exception.FirebaseIdTokenException;

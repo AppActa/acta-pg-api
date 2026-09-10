@@ -25,6 +25,7 @@ public class EfeitoSecundarioService {
     private final EfeitoSecundarioRepository repo;
     private final EfeitoSecundarioMapper mapper;
     private final VerificacaoResultadoService resultadoService;
+    private final AuthService authService;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("descricao", "peso", "impactoEstimado", "tipo"),
             Set.of("descricao", "peso", "impactoEstimado")
@@ -42,6 +43,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO inserir(Long idResultado, EfeitoSecundarioRequestDTO dto){
+        authService.configurarUsuarioAtual();
         VerificacaoResultado resultado = resultadoService.getEntity(idResultado);
         Validador.validarCicloAberto(resultado.getCiclo());
 
@@ -55,6 +57,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public EfeitoSecundarioResponseDTO patch(Long idResultado, Long idEfeitoSecundario, Map<String, Object> campos){
+        authService.configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
         EfeitoSecundario efeitoSecundario = getEntity(idEfeitoSecundario);
@@ -76,6 +79,7 @@ public class EfeitoSecundarioService {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluir(Long idResultado, Long idEfeitoSecundario) {
+        authService.configurarUsuarioAtual();
         VerificacaoResultado verificacaoResultado = resultadoService.getEntity(idResultado);
         EfeitoSecundario efeitoSecundario = getEntity(idEfeitoSecundario);
 
@@ -85,6 +89,7 @@ public class EfeitoSecundarioService {
     }
 
     private EfeitoSecundario getEntity(Long id) {
-        return repo.findById(id).orElseThrow(() -> new ModelNotFoundException("Efeito Secundário", id));
+        return repo.findByIdAndVerificacaoResultadoCicloEmpresaId(id, authService.atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Efeito Secundário", id));
     }
 }

@@ -4,11 +4,7 @@ import br.com.acta.common.handler.exception.*;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
-import br.com.acta.dto.pdca.tarefa.TarefaMapper;
-import br.com.acta.dto.pdca.tarefa.TarefaRequestDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaStatusUpdateDTO;
-import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
+import br.com.acta.dto.pdca.tarefa.*;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.Prioridade;
 import br.com.acta.entity.enums.StatusPlanoAcao;
@@ -39,7 +35,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     );
 
     public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, Tarefa.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
@@ -50,6 +46,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @Transactional
     @Override
     public TarefaResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfigConfig);
         Tarefa tarefa = getEntity(id);
         Validador.validarTarefaAberta(tarefa);
@@ -83,6 +80,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {
+        configurarUsuarioAtual();
         Tarefa tarefa = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
@@ -103,6 +101,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
         if (!tarefa.getStatus().podeAtualizarStatus(dto.status())) {
@@ -139,6 +138,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reatribuir(Long idTarefa, Long idResponsavel){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(idTarefa);
         Usuario responsavel = usuarioService.getEntity(idResponsavel);
 
@@ -153,16 +153,19 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO reabrir(Long idTarefa, LocalDate novoPrazo){
-        repo.reabrirTarefa(idTarefa, novoPrazo);
-
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(idTarefa);
-        return mapper.toResponse(tarefa);
+
+        repo.reabrirTarefa(tarefa.getId(), novoPrazo);
+        Tarefa salvo = getEntity(idTarefa);
+        return mapper.toResponse(salvo);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
         if (!tarefa.getDependentes().isEmpty())
@@ -184,6 +187,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO adicionarDependencia(Long id, Long idDependente){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Tarefa dependenteNovo = getEntity(idDependente);
 
@@ -207,6 +211,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void removerDependencia(Long id, Long idDependente){
+        configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
         Tarefa dependente = getEntity(idDependente);
 
@@ -230,7 +235,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
     @Override
     public Tarefa getEntity(Long id) {
-        return repo.findByIdAndResponsavelEmpresaId(id, atual().idEmpresa())
+        return repo.findByIdAndPlanoAcaoCicloEmpresaId(id, atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("Tarefa", id));
     }
 

@@ -21,12 +21,20 @@ extends AuditoriaBaseMapper<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usuarios", ignore = true)
     @Mapping(target = "colaboradores", ignore = true)
+    @Mapping(target = "ciclos", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Empresa toEntity(EmpresaRequestDTO dto);
 
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usuarios", ignore = true)
     @Mapping(target = "colaboradores", ignore = true)
+    @Mapping(target = "ciclos", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(EmpresaRequestDTO dto, @MappingTarget Empresa empresa);
 

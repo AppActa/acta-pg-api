@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.PrerequisiteNotMetException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.ConversorObject;
@@ -44,8 +45,14 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     );
     private final UsuarioMapper usuarioMapper;
 
+    @Override
+    public Meta getEntity(Long id) {
+        return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("Meta", id));
+    }
+
     public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper, AuthService authService) {
-        super(repo, mapper, Meta.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.usuarioService = usuarioService;
@@ -57,6 +64,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @Transactional
     @Override
     public MetaResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Meta meta = getEntity(id);
 
@@ -86,6 +94,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public MetaResponseDTO inserir(Long idPlanoAcao, MetaRequestDTO dto) {
+        configurarUsuarioAtual();
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Ciclo ciclo = planoAcao.getCiclo();
         Validador.validarCicloAberto(ciclo);
@@ -113,6 +122,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public MetaResponseDTO patchStatus(Long id, StatusMeta status){
+        configurarUsuarioAtual();
         Meta meta = getEntity(id);
 
         meta.setStatus(status);
@@ -125,6 +135,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Meta meta = getEntity(id);
         List<Tarefa> tarefas = meta.getPlanoAcao().getTarefas();
 
@@ -169,6 +180,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public List<UsuarioSummaryResponseDTO> inserirResponsaveis(Long idMeta, List<Long> idResponsaveis){
+        configurarUsuarioAtual();
         Meta meta = getEntity(idMeta);
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
         Set<Long> usuariosJaResponsaveis = responsaveisAtuais.stream()
@@ -191,6 +203,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public void excluirResponsaveis(Long idMeta, List<Long> idResponsaveis){
+        configurarUsuarioAtual();
         Meta meta = getEntity(idMeta);
         Set<Usuario> responsaveisAtuais = meta.getResponsaveis();
 

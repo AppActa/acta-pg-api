@@ -42,7 +42,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     );
 
     public CausaRaizService(CausaRaizRepository repo, CausaRaizMapper mapper, CicloService cicloService, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, ProblemaService problemaService, AuthService authService) {
-        super(repo, mapper, CausaRaiz.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.cicloService = cicloService;
@@ -55,6 +55,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     @Transactional
     @Override
     public CausaRaizResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         CausaRaiz causaRaiz = getEntity(id);
 
@@ -77,6 +78,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO inserir(CausaRaizRequestDTO dto, Long idCiclo) {
+        configurarUsuarioAtual();
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Validador.validarCicloAberto(ciclo);
 
@@ -95,6 +97,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO vincularPlanoAcao(Long idCausaRaiz, Long idPlanoAcao) {
+        configurarUsuarioAtual();
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
 
         if (causaRaiz.getPlanoAcao() != null){
@@ -115,6 +118,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario, Boolean aceita){
+        configurarUsuarioAtual();
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
         Usuario usuario = usuarioService.getEntity(idUsuario);
 

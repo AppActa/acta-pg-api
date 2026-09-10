@@ -22,6 +22,9 @@ extends AuditoriaBaseMapper<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz
     @Mapping(target = "ciclo", ignore = true)
     @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "validadaPor", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     CausaRaiz toEntity(CausaRaizRequestDTO dto);
 
@@ -31,6 +34,9 @@ extends AuditoriaBaseMapper<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz
     @Mapping(target = "ciclo", ignore = true)
     @Mapping(target = "planoAcao", ignore = true)
     @Mapping(target = "validadaPor", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(CausaRaizRequestDTO dto, @MappingTarget CausaRaiz causaRaiz);
 }

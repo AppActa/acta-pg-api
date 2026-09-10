@@ -15,10 +15,16 @@ extends AuditoriaBaseMapper<EnderecoRequestDTO, EnderecoResponseDTO, Endereco> {
     EnderecoResponseDTO toResponse(Endereco endereco);
 
     @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Endereco toEntity(EnderecoRequestDTO dto);
 
     @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(EnderecoRequestDTO dto, @MappingTarget Endereco endereco);
 }

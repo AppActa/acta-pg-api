@@ -1,4 +1,4 @@
-package br.com.acta.common.config.security;
+package br.com.acta.common.config.firebase;
 
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TipoUsuario;

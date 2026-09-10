@@ -131,6 +131,9 @@
                             <goal>compile</goal>
                         </goals>
                         <configuration>
+                            <compilerArgs>
+                                <arg>-Amapstruct.unmappedTargetPolicy=ERROR</arg>
+                            </compilerArgs>
                             <annotationProcessorPaths>
                                 <path>
                                     <groupId>org.projectlombok</groupId>

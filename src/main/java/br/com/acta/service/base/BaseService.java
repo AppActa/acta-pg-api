@@ -1,6 +1,5 @@
 package br.com.acta.service.base;
-import br.com.acta.common.config.security.UsuarioAutenticado;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
+import br.com.acta.common.config.firebase.UsuarioAutenticado;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import br.com.acta.service.AuthService;
@@ -16,18 +15,19 @@ public abstract class BaseService<REQ, RESP, ENT>
 implements BaseCRUD<REQ, RESP> {
     protected final BaseRepository<ENT> repo;
     protected final BaseMapper<REQ, RESP, ENT> mapper;
-    protected final Class<ENT> classeENT;
     protected final AuthService authService;
 
     protected UsuarioAutenticado atual() {
         return authService.atual();
     }
 
+    protected void configurarUsuarioAtual() {
+        authService.configurarUsuarioAtual();
+    }
+
     protected void antesInserir(ENT ent, REQ dto){}
 
-    public ENT getEntity(Long id){
-        return repo.findById(id).orElseThrow(() -> new ModelNotFoundException(classeENT.getSimpleName(), id));
-    }
+    public abstract ENT getEntity(Long id);
 
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
@@ -49,6 +49,7 @@ implements BaseCRUD<REQ, RESP> {
     @Transactional
     @Override
     public RESP inserir(REQ dto) {
+        configurarUsuarioAtual();
         ENT ent = mapper.toEntity(dto);
         antesInserir(ent, dto);
 
@@ -63,6 +64,7 @@ implements BaseCRUD<REQ, RESP> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         ENT ent = getEntity(id);
         repo.delete(ent);
     }

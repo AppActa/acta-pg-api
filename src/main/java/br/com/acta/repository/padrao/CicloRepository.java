@@ -23,7 +23,7 @@ public interface CicloRepository extends BaseRepository<Ciclo> {
     Double avancoCiclo(@Param("cicloId") Long cicloId);
 
     @Procedure(procedureName = "pdca.pr_encerrar_ciclo")
-    void encerrarCiclo(@Param("p_ciclo_id") Long idCiclo);
+    void encerrarCiclo(@Param("ciclo_id") Long idCiclo);
 
     @Query(value = "SELECT pdca.fn_pode_encerrar_ciclo(:cicloId)", nativeQuery = true)
     boolean podeEncerrarCiclo(@Param("cicloId") Long cicloId);

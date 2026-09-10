@@ -7,10 +7,11 @@ import br.com.acta.entity.pdca.Problema;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface PriorizacaoProblemaRepository
 extends JpaRepository<PriorizacaoProblema, PriorizacaoProblemaId> {
-    boolean existsByUsuarioIdAndProblemaId(Long idUsuario, Long idProblema);
+    Optional<PriorizacaoProblema> findByProblemaIdAndUsuarioIdAndProblemaCicloEmpresaId(Long idProblema, Long idUsuario, Long idEmpresa);
     List<PriorizacaoProblema> findByProblema(Problema problema);
     List<PriorizacaoProblema> findByProblemaAndUsuario(Problema problema, Usuario usuario);
 }

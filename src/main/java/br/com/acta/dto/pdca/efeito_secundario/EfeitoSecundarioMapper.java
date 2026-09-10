@@ -14,10 +14,16 @@ extends AuditoriaBaseMapper<EfeitoSecundarioRequestDTO, EfeitoSecundarioResponse
     EfeitoSecundarioResponseDTO toResponse(EfeitoSecundario efeitoSecundario);
 
     @Mapping(target = "verificacaoResultado", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     EfeitoSecundario toEntity(EfeitoSecundarioRequestDTO dto);
 
     @Mapping(target = "verificacaoResultado", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(EfeitoSecundarioRequestDTO dto, @MappingTarget EfeitoSecundario efeitoSecundario);
 }

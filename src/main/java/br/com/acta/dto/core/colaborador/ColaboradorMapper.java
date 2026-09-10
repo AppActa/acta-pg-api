@@ -22,12 +22,18 @@ public interface ColaboradorMapper
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usuario", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Colaborador toEntity(ColaboradorRequestDTO dto);
 
     @Mapping(target = "empresa", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usuario", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(ColaboradorRequestDTO dto, @MappingTarget Colaborador colaborador);
 

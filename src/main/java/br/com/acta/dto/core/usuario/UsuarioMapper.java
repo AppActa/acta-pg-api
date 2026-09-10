@@ -19,6 +19,10 @@ extends SummaryBaseMapper<UsuarioRequestDTO, UsuarioResponseDTO, Usuario, Usuari
     @Mapping(target = "colaborador", ignore = true)
     @Mapping(target = "ciclos", ignore = true)
     @Mapping(target = "metas", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Usuario toEntity(UsuarioRequestDTO dto);
 
@@ -27,6 +31,10 @@ extends SummaryBaseMapper<UsuarioRequestDTO, UsuarioResponseDTO, Usuario, Usuari
     @Mapping(target = "colaborador", ignore = true)
     @Mapping(target = "ciclos", ignore = true)
     @Mapping(target = "metas", ignore = true)
+    @Mapping(target = "empresa", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(UsuarioRequestDTO dto, @MappingTarget Usuario usuario);
 }

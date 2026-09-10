@@ -15,9 +15,15 @@ extends AuditoriaBaseMapper<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H
 
     @Mapping(target = "whoResponsavel", ignore = true)
     @Mapping(target = "planoAcao", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     Plano5W2H toEntity(Plano5W2HRequestDTO dto);
 
     @Mapping(target = "whoResponsavel", ignore = true)
     @Mapping(target = "planoAcao", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     void updateEntity(Plano5W2HRequestDTO dto, @MappingTarget Plano5W2H plano5W2H);
 }

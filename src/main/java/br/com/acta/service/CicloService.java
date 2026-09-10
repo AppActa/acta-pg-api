@@ -37,7 +37,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     private final EmpresaService empresaService;
 
     public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService) {
-        super(repo, mapper, Ciclo.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;
@@ -48,6 +48,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     @Transactional
     @Override
     public CicloResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Ciclo ciclo = getEntity(id);
         Validador.validarCicloAberto(ciclo);
@@ -66,6 +67,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public CicloResponseDTO patchStatus(Long id, StatusCiclo status){
+        configurarUsuarioAtual();
         Ciclo ciclo = getEntity(id);
 
         if (status == StatusCiclo.CONCLUIDO) {
@@ -87,6 +89,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Ciclo ciclo = getEntity(id);
 
         Validador.validarCicloAberto(ciclo);
@@ -124,6 +127,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Override
+    @Transactional
     public CicloResponseDTO inserir(CicloRequestDTO dto) {
         return super.inserir(dto);
     }

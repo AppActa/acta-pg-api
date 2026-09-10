@@ -34,8 +34,14 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     );
     private final UsuarioService usuarioService;
 
+    @Override
+    public Plano5W2H getEntity(Long id) {
+        return repo.findByIdAndPlanoAcaoCicloEmpresaId(id, atual().idEmpresa())
+                .orElseThrow(() -> new ModelNotFoundException("5W2H", id));
+    }
+
     public Plano5W2HService(Plano5W2HRepository repo, Plano5W2HMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
-        super(repo, mapper, Plano5W2H.class, authService);
+        super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
@@ -46,6 +52,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     @Transactional
     @Override
     public Plano5W2HResponseDTO patch(Long id, Map<String, Object> campos) {
+        configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
         Plano5W2H plano5W2H = getEntity(id);
         PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
@@ -90,6 +97,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public Plano5W2HResponseDTO inserir(Plano5W2HRequestDTO dto, Long idPlanoAcao) {
+        configurarUsuarioAtual();
         Plano5W2H plano5W2H = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
 
@@ -121,6 +129,7 @@ extends BaseService<Plano5W2HRequestDTO, Plano5W2HResponseDTO, Plano5W2H> {
     @Transactional
     @Override
     public void excluir(Long id) {
+        configurarUsuarioAtual();
         Plano5W2H plano5W2H = getEntity(id);
         PlanoAcao planoAcao = plano5W2H.getPlanoAcao();
 

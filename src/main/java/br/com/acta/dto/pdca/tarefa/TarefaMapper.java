@@ -26,6 +26,9 @@ extends SummaryBaseMapper<TarefaRequestDTO, TarefaResponseDTO, Tarefa, TarefaSum
     @Mapping(target = "responsavel", ignore = true)
     @Mapping(target = "dependencias", ignore = true)
     @Mapping(target = "dependentes", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     Tarefa toEntity(TarefaRequestDTO dto);
 
@@ -36,6 +39,9 @@ extends SummaryBaseMapper<TarefaRequestDTO, TarefaResponseDTO, Tarefa, TarefaSum
     @Mapping(target = "responsavel", ignore = true)
     @Mapping(target = "dependencias", ignore = true)
     @Mapping(target = "dependentes", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(TarefaRequestDTO dto, @MappingTarget Tarefa tarefa);
 
@@ -47,5 +53,8 @@ extends SummaryBaseMapper<TarefaRequestDTO, TarefaResponseDTO, Tarefa, TarefaSum
     @Mapping(target = "responsavel", ignore = true)
     @Mapping(target = "dependencias", ignore = true)
     @Mapping(target = "dependentes", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     void updateStatus(TarefaStatusUpdateDTO dto, @MappingTarget Tarefa tarefa);
 }

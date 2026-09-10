@@ -21,6 +21,9 @@ extends AuditoriaBaseMapper<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao
     @Mapping(target = "criadoPor", ignore = true)
     @Mapping(target = "plano5W2H", ignore = true)
     @Mapping(target = "tarefas", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     PlanoAcao toEntity(PlanoAcaoRequestDTO dto);
 
@@ -29,6 +32,9 @@ extends AuditoriaBaseMapper<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao
     @Mapping(target = "criadoPor", ignore = true)
     @Mapping(target = "plano5W2H", ignore = true)
     @Mapping(target = "tarefas", ignore = true)
+    @Mapping(target = "id", ignore = true)
+    @Mapping(target = "criadoEm", ignore = true)
+    @Mapping(target = "atualizadoEm", ignore = true)
     @Override
     void updateEntity(PlanoAcaoRequestDTO dto, @MappingTarget PlanoAcao planoAcao);
 }
