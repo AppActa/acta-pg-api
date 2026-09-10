@@ -8,6 +8,8 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
 import jakarta.validation.constraints.Size;
 
+import java.util.UUID;
+
 public record CausaRaizRequestDTO(
         @Schema(description = "Descrição da causa raiz", example = SwaggerRequestExamples.DESCRICAO_CAUSA_RAIZ)
         @NotBlank(message = "{validation.causaRaiz.descricao.notblank}")
@@ -28,6 +30,6 @@ public record CausaRaizRequestDTO(
         Long idProblema,
 
         @Schema(description = "ID do registro correspondente na ferramenta dos 5 porquês (mongo), quando aplicável", example = SwaggerRequestExamples.ID_5_PORQUES)
-        String id5PorquesMongo
+        UUID id5PorquesMongo
 ) {
 }
