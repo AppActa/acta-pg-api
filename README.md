@@ -8,6 +8,14 @@ A API é a camada de persistência, regras de negócio e autorização do ecossi
 
 Clientes autenticam no Firebase e enviam o **Firebase ID Token** para consumir as rotas protegidas.
 
+## 🧩 Padrão de projeto: Template Method
+
+A API utiliza o padrão comportamental **Template Method** na classe [`BaseService`](src/main/java/br/com/acta/service/base/BaseService.java). Ela define o fluxo comum das operações CRUD e, no método `inserir`, mantém a sequência de autenticação, conversão do DTO, preparação da entidade, persistência e conversão da resposta.
+
+O método protegido `antesInserir` funciona como um ponto de extensão desse fluxo. Serviços como [`CicloService`](src/main/java/br/com/acta/service/CicloService.java), [`EmpresaService`](src/main/java/br/com/acta/service/EmpresaService.java) e [`UsuarioService`](src/main/java/br/com/acta/service/UsuarioService.java) sobrescrevem essa etapa para executar validações e configurar relacionamentos ou estados próprios de cada entidade antes de salvá-la.
+
+Esse padrão foi adotado para **evitar duplicação de código, manter uniforme o processo de persistência e permitir que cada serviço especialize somente as etapas necessárias**, sem reimplementar todo o algoritmo.
+
 ## ✨ Funcionalidades
 
 - Gestão de empresas, usuários, colaboradores e contatos.
