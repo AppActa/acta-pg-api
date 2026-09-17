@@ -23,6 +23,7 @@ public class SwaggerRequestExamples {
     // Auth
     public static final String NOVA_SENHA = "SenhaNova@123";
     public static final String FIREBASE_UID = "HgrZsrAyeURocKW1uso0gFq01ks1";
+    public static final String TOKEN_CONVITE = "q7duCcjvbKt8qbcgTb2qWRcL7zV5xYk1YGsS0D9k1rA";
 
     // Usuário
     public static final String TIPO_USUARIO = "ADMIN";
