@@ -2,7 +2,7 @@ package br.com.acta.controller;
 
 import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
-import br.com.acta.service.EmpresaService;
+import br.com.acta.service.EnderecoEmpresaService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -18,7 +18,7 @@ import java.util.List;
 @RequestMapping(value = "api/v1/empresa/{idEmpresa}/endereco", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
 public class EnderecoEmpresaController {
-    private final EmpresaService service;
+    private final EnderecoEmpresaService service;
 
     @GetMapping("/{idEndereco}")
     public ResponseEntity<EnderecoResponseDTO> buscar(@PathVariable @Positive Long idEmpresa, @PathVariable @Positive Long idEndereco){
