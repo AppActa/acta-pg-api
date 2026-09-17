@@ -9,10 +9,6 @@ import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorMapper;
-import br.com.acta.dto.core.contato.email.EmailRequestDTO;
-import br.com.acta.dto.core.contato.email.EmailResponseDTO;
-import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
-import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
 import br.com.acta.dto.core.contato.email.EmailColaboradorMapper;
 import br.com.acta.dto.core.contato.telefone.TelefoneColaboradorMapper;
@@ -167,77 +163,6 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         if (possuiTarefa) throw new ActiveEntityDeletionException("Colaborador");
         colaborador.setStatus(StatusGeral.INATIVO);
         repo.save(colaborador);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
-    public List<EmailResponseDTO> buscarEmails(Long idColaborador){
-        Colaborador colaborador = getEntity(idColaborador);
-        List<EmailColaborador> email = emailRepo.findByColaborador_Id(colaborador.getId());
-
-        return emailMapper.toResponseList(email);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
-    public EmailResponseDTO inserirEmail(Long idColaborador, EmailRequestDTO dto){
-        configurarUsuarioAtual();
-        Colaborador colaborador = getEntity(idColaborador);
-
-        if (emailRepo.existsByColaboradorIdAndContatoIgnoreCase(idColaborador, dto.email())) throw new UniqueViolationException("E-mail");
-
-        EmailColaborador email = emailMapper.toEntity(dto);
-        email.setColaborador(colaborador);
-
-        EmailColaborador salvo = emailRepo.save(email);
-        return emailMapper.toResponse(salvo);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
-    public void excluirEmail(Long idColaborador, Long idEmail){
-        configurarUsuarioAtual();
-        EmailColaborador email = getEmail(idColaborador, idEmail);
-        emailRepo.delete(email);
-    }
-
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
-    public List<TelefoneResponseDTO> buscarTelefones(Long idColaborador){
-        Colaborador colaborador = getEntity(idColaborador);
-        List<TelefoneColaborador> telefone = telefoneRepo.findByColaborador_Id(colaborador.getId());
-
-        return telefoneMapper.toResponseList(telefone);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
-    public TelefoneResponseDTO inserirTelefone(Long idColaborador, TelefoneRequestDTO dto){
-        configurarUsuarioAtual();
-        Colaborador colaborador = getEntity(idColaborador);
-        if (telefoneRepo.existsByColaboradorIdAndContato(idColaborador, dto.numero())) throw new UniqueViolationException("Telefone");
-
-        TelefoneColaborador telefone = telefoneMapper.toEntity(dto);
-        telefone.setColaborador(colaborador);
-
-        TelefoneColaborador salvo = telefoneRepo.save(telefone);
-        return telefoneMapper.toResponse(salvo);
-    }
-
-    @PreAuthorize("hasRole('ADMIN')")
-    @Transactional
-    public void excluirTelefone(Long idColaborador, Long idTelefone){
-        configurarUsuarioAtual();
-        TelefoneColaborador telefone = getTelefone(idColaborador, idTelefone);
-        telefoneRepo.delete(telefone);
-    }
-
-    private EmailColaborador getEmail(Long idColaborador, Long idEmail){
-        Colaborador colaborador = getEntity(idColaborador);
-        return emailRepo.findByColaboradorIdAndId(colaborador.getId(), idEmail).orElseThrow(() -> new ModelNotFoundException("Email", idEmail));
-    }
-
-    private TelefoneColaborador getTelefone(Long idColaborador, Long idTelefone){
-        Colaborador colaborador = getEntity(idColaborador);
-        return telefoneRepo.findByColaboradorIdAndId(colaborador.getId(), idTelefone).orElseThrow(() -> new ModelNotFoundException("Telefone", idTelefone));
     }
 
     @Override
