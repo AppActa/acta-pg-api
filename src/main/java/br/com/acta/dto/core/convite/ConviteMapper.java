@@ -14,6 +14,7 @@ public interface ConviteMapper extends BaseMapper<ConviteRequestDTO, ConviteResp
     ConviteResponseDTO toResponse(Convite convite);
 
     @Mapping(target = "usuarioDestino", ignore = true)
+    @Mapping(source = "email", target = "emailDestino")
     @Mapping(target = "tokenHash", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usadoEm", ignore = true)
@@ -25,6 +26,7 @@ public interface ConviteMapper extends BaseMapper<ConviteRequestDTO, ConviteResp
     Convite toEntity(ConviteRequestDTO dto);
 
     @Mapping(target = "usuarioDestino", ignore = true)
+    @Mapping(source = "email", target = "emailDestino")
     @Mapping(target = "tokenHash", ignore = true)
     @Mapping(target = "status", ignore = true)
     @Mapping(target = "usadoEm", ignore = true)
