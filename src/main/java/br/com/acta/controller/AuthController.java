@@ -4,13 +4,16 @@ import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
 import br.com.acta.common.config.firebase.UsuarioAutenticado;
 import br.com.acta.dto.auth.MeResponseDTO;
 import br.com.acta.dto.auth.AuthMapper;
+import br.com.acta.dto.core.convite.AtivacaoRequestDTO;
 import br.com.acta.service.AuthService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -27,7 +30,7 @@ public class AuthController {
     }
 
     @PostMapping("/auth/ativar")
-    public ResponseEntity<MeResponseDTO> ativar(@AuthenticationPrincipal FirebaseIdentity identity) {
-        return ResponseEntity.ok(service.ativar(identity));
+    public ResponseEntity<MeResponseDTO> ativar(@AuthenticationPrincipal FirebaseIdentity identity, @RequestBody @Valid AtivacaoRequestDTO dto) {
+        return ResponseEntity.ok(service.ativar(identity, dto));
     }
 }

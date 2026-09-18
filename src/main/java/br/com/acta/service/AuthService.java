@@ -4,22 +4,25 @@ import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
 import br.com.acta.common.config.firebase.FirebaseUtils;
 import br.com.acta.common.config.firebase.UsuarioAutenticado;
 import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
-import br.com.acta.common.handler.exception.ModelNotFoundException;
-import br.com.acta.dto.auth.MeResponseDTO;
 import br.com.acta.dto.auth.AuthMapper;
+import br.com.acta.dto.auth.MeResponseDTO;
+import br.com.acta.dto.core.convite.AtivacaoRequestDTO;
+import br.com.acta.entity.core.Colaborador;
 import br.com.acta.entity.core.Usuario;
+import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.repository.padrao.ColaboradorRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Objects;
 
@@ -31,18 +34,18 @@ public class AuthService {
     private final FirebaseUtils utils;
     private final UsuarioRepository usuarioRepo;
     private final ColaboradorRepository colaboradorRepo;
+    @Lazy // evita dependência circular
+    private final ConviteService conviteService;
 
     @PersistenceContext
     private EntityManager entityManager;
 
     @PreAuthorize("hasAuthority('ROLE_FIREBASE')")
     @Transactional
-    public MeResponseDTO ativar(FirebaseIdentity identity) {
+    public MeResponseDTO ativar(FirebaseIdentity identity, AtivacaoRequestDTO dto) {
         if (!identity.emailVerificado()) throw new FirebaseAccessRevokedException();
 
-        Usuario usuario = repo.findByEmailLoginIgnoreCase(identity.email())
-                .orElseThrow(() -> new ModelNotFoundException("Usuário"));
-        utils.validarAcesso(usuario);
+        Usuario usuario = conviteService.consumirConvite(identity, dto.tokenConvite());
 
         if (usuario.getFirebaseUid() != null && !usuario.getFirebaseUid().equals(identity.firebaseUid())) throw new FirebaseAccessRevokedException();
         String firebaseUid = usuario.getFirebaseUid();
@@ -50,8 +53,17 @@ public class AuthService {
         if (firebaseUid == null) {
             if (repo.existsByFirebaseUid(identity.firebaseUid())) throw new FirebaseAccessRevokedException();
             usuario.setFirebaseUid(identity.firebaseUid());
-            repo.save(usuario);
         }
+
+        usuario.setStatus(StatusGeral.ATIVO);
+
+        Colaborador colaborador = usuario.getColaborador();
+        if (colaborador == null) throw new FirebaseAccessRevokedException();
+        colaborador.setStatus(StatusGeral.ATIVO);
+
+        repo.save(usuario);
+        colaboradorRepo.save(colaborador);
+        utils.validarAcesso(usuario);
 
         UsuarioAutenticado usuarioAuth = mapper.toUsuarioAutenticado(usuario);
         return mapper.toMeResponse(usuarioAuth);
