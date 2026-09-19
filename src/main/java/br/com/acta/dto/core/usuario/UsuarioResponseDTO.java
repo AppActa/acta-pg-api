@@ -11,6 +11,8 @@ public record UsuarioResponseDTO(
         TipoUsuario tipo,
         Long idEmpresa,
         StatusGeral status,
+        String fotoUrl,
+        String fotoPublicId,
         OffsetDateTime criadoEm,
         OffsetDateTime atualizadoEm
 ) {
