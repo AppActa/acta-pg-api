@@ -25,8 +25,8 @@ import java.util.Set;
 @Service
 public class UsuarioService
 extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
-    private static final String FOTO_URL_PADRAO = "https://res.cloudinary.com/kcypohk3/image/upload/icone-de-perfil-de-avatar-padrao-imagem-de-usuario-de-midia-social-icone-de-avatar-cinza-silhueta-de-perfil-em-branco-ilustracao-vetorial_561158-3407";
-    private static final String FOTO_PUBLIC_ID_PADRAO = "icone-de-perfil-de-avatar-padrao-imagem-de-usuario-de-midia-social-icone-de-avatar-cinza-silhueta-de-perfil-em-branco-ilustracao-vetorial_561158-3407";
+    private static final String FOTO_URL_PADRAO = "https://res.cloudinary.com/kcypohk3/image/upload/default-avatar";
+    private static final String FOTO_PUBLIC_ID_PADRAO = "default-avatar";
     private final EmpresaService empresaService;
     private final TarefaRepository tarefaRepo;
     private final MetaRepository metaRepo;
