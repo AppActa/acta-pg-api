@@ -67,7 +67,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             usuario.setFotoPublicId(
                 fotoUrl.substring(fotoUrl.indexOf("/upload/") + 8)
                 .replaceFirst("^v\\d+/", "")
-                .replaceFirst("\\.[^.]+$", "");
+                .replaceFirst("\\.[^.]+$", "")
             );
         }
 
