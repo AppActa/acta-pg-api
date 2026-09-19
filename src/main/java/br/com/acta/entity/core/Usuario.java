@@ -9,11 +9,13 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
+import org.hibernate.annotations.DynamicInsert;
 
 import java.util.Set;
 
 @Entity
 @Table(name = "usuario_sistema", schema = "public")
+@DynamicInsert // ignora colunas nulas para aplicar default nas urls do cloudinary
 @Getter
 @Setter
 @NoArgsConstructor
@@ -26,6 +28,12 @@ public class Usuario extends AuditoriaBase {
 
     @Column(name = "firebase_uid", unique = true, length = 128)
     private String firebaseUid;
+
+    @Column(name = "foto_url")
+    private String fotoUrl;
+
+    @Column(name = "foto_public_id")
+    private String fotoPublicId;
 
     @Column(name = "tipo_usuario", nullable = false)
     @Enumerated(EnumType.STRING)
