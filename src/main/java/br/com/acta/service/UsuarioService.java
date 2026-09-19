@@ -25,14 +25,16 @@ import java.util.Set;
 @Service
 public class UsuarioService
 extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
+    private static final String FOTO_URL_PADRAO = "https://res.cloudinary.com/kcypohk3/image/upload/icone-de-perfil-de-avatar-padrao-imagem-de-usuario-de-midia-social-icone-de-avatar-cinza-silhueta-de-perfil-em-branco-ilustracao-vetorial_561158-3407";
+    private static final String FOTO_PUBLIC_ID_PADRAO = "icone-de-perfil-de-avatar-padrao-imagem-de-usuario-de-midia-social-icone-de-avatar-cinza-silhueta-de-perfil-em-branco-ilustracao-vetorial_561158-3407";
     private final EmpresaService empresaService;
     private final TarefaRepository tarefaRepo;
     private final MetaRepository metaRepo;
     private final UsuarioRepository repo;
     protected final UsuarioMapper mapper;
     private final PatchConfig patchConfig = new PatchConfig(
-            Set.of("nome", "email", "tipo", "idEmpresa"),
-            Set.of("nome", "email")
+            Set.of("nome", "email", "tipo", "idEmpresa", "fotoUrl"),
+            Set.of("nome", "email", "fotoUrl")
     );
 
     public UsuarioService(EmpresaService empresaService, UsuarioRepository repo, UsuarioMapper mapper, TarefaRepository tarefaRepo, MetaRepository metaRepo, AuthService authService){
@@ -59,9 +61,32 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
             if (repo.existsByEmailLoginIgnoreCase(email)) throw new UniqueViolationException("E-mail");
             usuario.setEmailLogin(email);
         }
+        if (campos.containsKey("fotoUrl")) {
+            String fotoUrl = (String) campos.get("fotoUrl");
+            usuario.setFotoUrl(fotoUrl);
+            usuario.setFotoPublicId(
+                fotoUrl.substring(fotoUrl.indexOf("/upload/") + 8)
+                .replaceFirst("^v\\d+/", "")
+                .replaceFirst("\\.[^.]+$", "");
+            );
+        }
 
         repo.save(usuario);
         return mapper.toResponse(usuario);
+    }
+
+    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
+    @Transactional
+    public UsuarioResponseDTO excluirFoto(Long id) {
+        configurarUsuarioAtual();
+
+        Usuario usuario = getEntity(id);
+
+        usuario.setFotoUrl(FOTO_URL_PADRAO);
+        usuario.setFotoPublicId(FOTO_PUBLIC_ID_PADRAO);
+
+        Usuario salvo = repo.save(usuario);
+        return mapper.toResponse(salvo);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idEmpresa)")

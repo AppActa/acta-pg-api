@@ -64,6 +64,12 @@ public class UsuarioController {
         return ResponseEntity.ok(usuario);
     }
 
+    @DeleteMapping("/{id}/foto")
+    public ResponseEntity<UsuarioResponseDTO> excluirFoto(@PathVariable @Positive Long id) {
+        UsuarioResponseDTO usuario = service.excluirFoto(id);
+        return ResponseEntity.ok(usuario);
+    }
+
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
