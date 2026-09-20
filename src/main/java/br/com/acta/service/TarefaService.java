@@ -84,7 +84,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Tarefa tarefa = mapper.toEntity(dto);
         PlanoAcao planoAcao = planoAcaoService.getEntity(idPlanoAcao);
         Usuario usuario = usuarioService.getEntity(dto.idResponsavel());
-        Validador.validarCicloAberto(planoAcao.getCiclo());
+        Validador.validarMesmoCiclo(planoAcao.getCiclo(), usuario.getCiclos());
 
         if (!Set.of(StatusPlanoAcao.APROVADO, StatusPlanoAcao.EM_EXECUCAO).contains(planoAcao.getStatus())){
             throw new InvalidResourceStatusException("Plano de Ação", List.of(StatusPlanoAcao.APROVADO.toString(), StatusPlanoAcao.EM_EXECUCAO.toString()));

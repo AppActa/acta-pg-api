@@ -74,7 +74,7 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
         configurarUsuarioAtual();
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Usuario usuario = usuarioService.getEntity(idCriadoPor);
-        Validador.validarCicloAberto(ciclo);
+        Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
 
         if (ciclo.getStatus() != StatusCiclo.VERIFICACAO) {
             throw new InvalidResourceStatusException("inserir", "Verificação de Resultado", StatusCiclo.VERIFICACAO.toString(), "Ciclo");
