@@ -50,6 +50,41 @@ public final class SwaggerOpenapiDescriptions {
             - Inativar um colaborador.
             """;
 
+    public static final String TAREFA_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de tarefas dos planos de ação.
+
+            A API permite:
+
+            - Criar e consultar tarefas;
+            - Filtrar tarefas por status, responsável e prioridade;
+            - Atualizar dados e status;
+            - Reabrir e reatribuir tarefas;
+            - Excluir tarefas.
+            """;
+
+    public static final String META_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de metas do ciclo PDCA.
+
+            A API permite:
+
+            - Criar e consultar metas;
+            - Filtrar metas por ciclo, status e prioridade;
+            - Atualizar dados e status;
+            - Gerenciar os responsáveis por uma meta;
+            - Excluir metas.
+            """;
+
+    public static final String PLANO_ACAO_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento dos planos de ação de um ciclo PDCA.
+
+            A API permite:
+
+            - Criar e consultar planos de ação;
+            - Filtrar planos por ciclo, status e prioridade;
+            - Atualizar dados e status;
+            - Excluir planos de ação.
+            """;
+
     public static final String CICLO_CONTROLLER = """
             Endpoints responsáveis pelo gerenciamento dos ciclos PDCA.
             
