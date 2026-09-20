@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.ProblemaOpenapi;
 import br.com.acta.dto.pdca.problema.ProblemaRequestDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
 import br.com.acta.entity.enums.StatusProblema;
@@ -19,40 +20,46 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class ProblemaController {
+public class ProblemaController implements ProblemaOpenapi {
     private final ProblemaService service;
 
     @GetMapping("/ciclo/{idCiclo}/problema")
+    @Override
     public ResponseEntity<List<ProblemaResponseDTO>> buscar(@PathVariable @Positive Long idCiclo, @RequestParam(required = false) StatusProblema status, @RequestParam(required = false) @Positive Long idProblemaPai) {
         List<ProblemaResponseDTO> problemas = service.buscar(idCiclo, status, idProblemaPai);
         return ResponseEntity.ok(problemas);
     }
 
     @GetMapping("/problema/{id}")
+    @Override
     public ResponseEntity<ProblemaResponseDTO> buscar(@PathVariable @Positive Long id) {
         ProblemaResponseDTO problema = service.buscar(id);
         return ResponseEntity.ok(problema);
     }
 
     @PostMapping("/ciclos/{idCiclo}/problema")
+    @Override
     public ResponseEntity<ProblemaResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid ProblemaRequestDTO dto) {
         ProblemaResponseDTO problema = service.inserir(dto, idCiclo);
         return ResponseEntity.status(201).body(problema);
     }
 
     @PatchMapping("/problema/{id}")
+    @Override
     public ResponseEntity<ProblemaResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         ProblemaResponseDTO problema = service.patch(id, campos);
         return ResponseEntity.ok(problema);
     }
 
     @PatchMapping("/problema/{id}/status")
+    @Override
     public ResponseEntity<ProblemaResponseDTO> patchStatus(@PathVariable @Positive Long id, @RequestParam StatusProblema status) {
         ProblemaResponseDTO problema = service.patchStatus(id, status);
         return ResponseEntity.ok(problema);
     }
 
     @DeleteMapping("/problema/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();

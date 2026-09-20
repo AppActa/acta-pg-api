@@ -85,6 +85,38 @@ public final class SwaggerOpenapiDescriptions {
             - Excluir planos de ação.
             """;
 
+    public static final String PROBLEMA_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de problemas dos ciclos PDCA.
+
+            A API permite:
+
+            - Criar e consultar problemas;
+            - Filtrar problemas por ciclo, status e problema pai;
+            - Atualizar dados e status;
+            - Excluir problemas.
+            """;
+
+    public static final String CAUSA_RAIZ_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento das causas-raiz dos ciclos PDCA.
+
+            A API permite:
+
+            - Criar e consultar causas-raiz;
+            - Filtrar causas por ciclo, problema, aceite e indicação principal;
+            - Atualizar e validar causas-raiz;
+            - Excluir causas-raiz.
+            """;
+
+    public static final String PLANO_5W2H_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento do plano 5W2H de um plano de ação.
+
+            A API permite:
+
+            - Criar e consultar um plano 5W2H;
+            - Atualizar parcialmente os dados do plano;
+            - Excluir o plano 5W2H.
+            """;
+
     public static final String CICLO_CONTROLLER = """
             Endpoints responsáveis pelo gerenciamento dos ciclos PDCA.
             
