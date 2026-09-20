@@ -1,5 +1,6 @@
 package br.com.acta.controller.contato;
 
+import br.com.acta.common.config.swagger.openapi.TelefoneOpenapi;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.service.TelefoneService;
@@ -17,40 +18,46 @@ import java.util.List;
 @RestController
 @RequiredArgsConstructor
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
-public class TelefoneController {
+public class TelefoneController implements TelefoneOpenapi {
     private final TelefoneService service;
 
     @GetMapping("/empresa/{idEmpresa}/telefone")
+    @Override
     public ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneEmpresa(@PathVariable @Positive Long idEmpresa) {
         List<TelefoneResponseDTO> telefones = service.buscarTelefonesEmpresa(idEmpresa);
         return ResponseEntity.ok(telefones);
     }
 
     @PostMapping("/empresa/{idEmpresa}/telefone/")
+    @Override
     public ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(@PathVariable @Positive Long idEmpresa, @RequestBody @Valid TelefoneRequestDTO dto) {
         TelefoneResponseDTO telefone = service.inserirTelefoneEmpresa(idEmpresa, dto);
         return ResponseEntity.status(201).body(telefone);
     }
 
     @DeleteMapping("/empresa/{idEmpresa}/telefone/{idTelefone}")
+    @Override
     public ResponseEntity<Void> excluirTelefoneEmpresa(@PathVariable @Positive Long idEmpresa, @PathVariable @Positive Long idTelefone) {
         service.excluirTelefoneEmpresa(idEmpresa, idTelefone);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/colaborador/{idColaborador}/telefone")
+    @Override
     public ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneColaborador(@PathVariable @Positive Long idColaborador) {
         List<TelefoneResponseDTO> telefones = service.buscarTelefonesColaborador(idColaborador);
         return ResponseEntity.ok(telefones);
     }
 
     @PostMapping("/colaborador/{idColaborador}/telefone/")
+    @Override
     public ResponseEntity<TelefoneResponseDTO> inserirTelefoneColaborador(@PathVariable @Positive Long idColaborador, @RequestBody @Valid TelefoneRequestDTO dto) {
         TelefoneResponseDTO telefone = service.inserirTelefoneColaborador(idColaborador, dto);
         return ResponseEntity.status(201).body(telefone);
     }
 
     @DeleteMapping("/colaborador/{idColaborador}/telefone/{idTelefone}")
+    @Override
     public ResponseEntity<Void> excluirTelefoneColaborador(@PathVariable @Positive Long idColaborador, @PathVariable @Positive Long idTelefone) {
         service.excluirTelefoneColaborador(idColaborador, idTelefone);
         return ResponseEntity.noContent().build();
