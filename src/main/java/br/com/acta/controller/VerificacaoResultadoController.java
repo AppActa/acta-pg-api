@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.VerificacaoResultadoOpenapi;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoRequestDTO;
 import br.com.acta.dto.pdca.verificacao_resultado.VerificacaoResultadoResponseDTO;
 import br.com.acta.service.VerificacaoResultadoService;
@@ -16,34 +17,39 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class VerificacaoResultadoController {
+public class VerificacaoResultadoController implements VerificacaoResultadoOpenapi {
     private final VerificacaoResultadoService service;
 
     @GetMapping("/ciclos/{idCiclo}/verificacoes")
+    @Override
     public ResponseEntity< List<VerificacaoResultadoResponseDTO>> buscar(@PathVariable @Positive Long idCiclo) {
         List<VerificacaoResultadoResponseDTO> resultados = service.buscarVerificacoes(idCiclo);
         return ResponseEntity.ok(resultados);
     }
 
     @GetMapping("/verificacoes/{id}")
+    @Override
     public ResponseEntity<VerificacaoResultadoResponseDTO> buscarPorId(@PathVariable @Positive Long id) {
         VerificacaoResultadoResponseDTO resultado = service.buscar(id);
         return ResponseEntity.ok(resultado);
     }
 
     @PostMapping("/ciclos/{idCiclo}/verificacoes")
+    @Override
     public ResponseEntity<VerificacaoResultadoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestParam @Positive Long idCriadoPor, @Valid @RequestBody VerificacaoResultadoRequestDTO dto){
         VerificacaoResultadoResponseDTO resultado = service.inserir(idCiclo, dto, idCriadoPor);
         return ResponseEntity.status(201).body(resultado);
     }
 
     @PatchMapping("/verificacoes/{id}")
+    @Override
     public ResponseEntity<VerificacaoResultadoResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         VerificacaoResultadoResponseDTO resultado = service.patch(id, campos);
         return ResponseEntity.ok(resultado);
     }
 
     @DeleteMapping("/verificacoes/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();

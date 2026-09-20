@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.TreinamentoOpenapi;
 import br.com.acta.dto.pdca.treinamento.TreinamentoRequestDTO;
 import br.com.acta.dto.pdca.treinamento.TreinamentoResponseDTO;
 import br.com.acta.service.TreinamentoService;
@@ -16,34 +17,39 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class TreinamentoController {
+public class TreinamentoController implements TreinamentoOpenapi {
     private final TreinamentoService service;
 
     @GetMapping("/ciclo/{idCiclo}/treinamento")
+    @Override
     public ResponseEntity<List<TreinamentoResponseDTO>> buscarTreinamentos(@PathVariable @Positive Long idCiclo) {
         List<TreinamentoResponseDTO> treinamentos = service.buscarTreinamentos(idCiclo);
         return ResponseEntity.ok(treinamentos);
     }
 
     @GetMapping("/treinamento/{id}")
+    @Override
     public ResponseEntity<TreinamentoResponseDTO> buscar(@PathVariable @Positive Long id){
         TreinamentoResponseDTO treinamento = service.buscar(id);
         return ResponseEntity.ok(treinamento);
     }
 
     @PostMapping("/ciclo/{idCiclo}/treinamento")
+    @Override
     public ResponseEntity<TreinamentoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid TreinamentoRequestDTO dto) {
         TreinamentoResponseDTO treinamento = service.inserir(idCiclo, dto);
         return ResponseEntity.status(201).body(treinamento);
     }
 
     @PatchMapping("/treinamento/{id}")
+    @Override
     public ResponseEntity<TreinamentoResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         TreinamentoResponseDTO treinamento = service.patch(id, campos);
         return ResponseEntity.ok(treinamento);
     }
 
     @DeleteMapping("/treinamento/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();
