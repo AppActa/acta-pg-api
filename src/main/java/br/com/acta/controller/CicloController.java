@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.CicloOpenapi;
 import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.enums.StatusCiclo;
@@ -19,10 +20,11 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1/ciclo", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class CicloController {//implements CicloOpenapi {
+public class CicloController implements CicloOpenapi {
     private final CicloService service;
 
     @GetMapping
+    @Override
     public ResponseEntity<List<CicloResponseDTO>> buscar(@RequestParam(required = false) @Positive Long idEmpresa, @RequestParam(required = false) @Positive Long idGestor, @RequestParam(required = false) StatusCiclo status) {
         List<CicloResponseDTO> ciclos = service.buscarPorStatus(idEmpresa, idGestor, status);
 
@@ -30,36 +32,42 @@ public class CicloController {//implements CicloOpenapi {
     }
 
     @GetMapping("/{id}")
+    @Override
     public ResponseEntity<CicloResponseDTO> buscar(@PathVariable @Positive Long id) {
         CicloResponseDTO ciclo = service.buscar(id);
         return ResponseEntity.ok(ciclo);
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<CicloResponseDTO> inserir(@RequestBody @Valid CicloRequestDTO cicloRequest) {
         CicloResponseDTO ciclo = service.inserir(cicloRequest);
         return ResponseEntity.status(201).body(ciclo);
     }
 
     @PatchMapping("/{id}")
+    @Override
     public ResponseEntity<CicloResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         CicloResponseDTO ciclo = service.patch(id, campos);
         return ResponseEntity.ok(ciclo);
     }
 
     @PatchMapping("/{id}/status")
+    @Override
     public ResponseEntity<CicloResponseDTO> patchStatus(@PathVariable @Positive Long id, @RequestParam StatusCiclo status) {
         CicloResponseDTO ciclo = service.patchStatus(id, status);
         return ResponseEntity.ok(ciclo);
     }
 
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();
     }
 
     @GetMapping("/avanco/{id}")
+    @Override
     public ResponseEntity<Double> avancoCiclo(@PathVariable @Positive Long id) {
         Double avanco = service.avancoCiclo(id);
         return ResponseEntity.ok(avanco);

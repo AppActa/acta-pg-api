@@ -1,0 +1,34 @@
+package br.com.acta.common.config.swagger.openapi;
+
+import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
+import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
+import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
+import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
+import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
+import br.com.acta.common.config.swagger.examples.SwaggerParameterDescriptions;
+import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
+import io.swagger.v3.oas.annotations.media.Content;
+import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import org.springframework.http.ResponseEntity;
+
+@Tag(name = "Alertas de prazo", description = SwaggerOpenapiDescriptions.ALERTA_PRAZO_CONTROLLER)
+public interface AlertaPrazoOpenapi {
+
+    @Operation(summary = "Busca o alerta de prazo de uma tarefa")
+    @ApiResponse(responseCode = "200", description = "Alerta encontrado", content = @Content(schema = @Schema(implementation = AlertaPrazoResponseDTO.class)))
+    @ApiAuthenticationResponses
+    @ApiBadRequestResponse
+    @ApiNotFoundResponse
+    ResponseEntity<AlertaPrazoResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long idTarefa);
+
+    @Operation(summary = "Marca um alerta como lido")
+    @ApiResponse(responseCode = "200", description = "Alerta marcado como lido", content = @Content(schema = @Schema(implementation = AlertaPrazoResponseDTO.class)))
+    @ApiResourceResponses
+    @ApiBusinessRuleResponse
+    ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long idTarefa, @Parameter(description = SwaggerParameterDescriptions.ID_ALERTA) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_USUARIO) Long idUsuario);
+}

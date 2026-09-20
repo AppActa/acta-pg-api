@@ -3,6 +3,7 @@ package br.com.acta.controller;
 import java.util.List;
 import java.util.Map;
 
+import br.com.acta.common.config.swagger.openapi.UsuarioOpenapi;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.service.UsuarioCicloService;
 import org.springframework.http.MediaType;
@@ -30,47 +31,54 @@ import lombok.RequiredArgsConstructor;
 @RestController
 @RequestMapping(value = "api/v1/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class UsuarioController {
+public class UsuarioController implements UsuarioOpenapi {
     private final UsuarioService service;
     private final UsuarioCicloService usuarioCicloService;
 
     @GetMapping("/ciclos-usuario/{idUsuario}")
+    @Override
     public ResponseEntity<List<UsuarioCicloResponseDTO>> buscarCiclosUsuario(@PathVariable @Positive Long idUsuario) {
         List<UsuarioCicloResponseDTO> ciclos = usuarioCicloService.buscarPorUsuario(idUsuario);
         return ResponseEntity.ok(ciclos);
     }
 
     @GetMapping("/empresa/{idEmpresa}")
+    @Override
     public ResponseEntity<List<UsuarioResponseDTO>> buscar(@PathVariable @Positive Long idEmpresa, @RequestParam(required = false) TipoUsuario tipo) {
         List<UsuarioResponseDTO> usuarios = service.buscar(idEmpresa, tipo);
         return ResponseEntity.ok(usuarios);
     }
 
     @GetMapping("/{id}")
+    @Override
     public ResponseEntity<UsuarioResponseDTO> buscarPorId(@PathVariable @Positive Long id){
         UsuarioResponseDTO usuario = service.buscar(id);
         return ResponseEntity.ok(usuario);
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<UsuarioResponseDTO> inserir(@RequestBody @Valid UsuarioRequestDTO dto) {
         UsuarioResponseDTO usuario = service.inserir(dto);
         return ResponseEntity.status(201).body(usuario);
     }
 
     @PatchMapping("/{id}")
+    @Override
     public ResponseEntity<UsuarioResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         UsuarioResponseDTO usuario = service.patch(id, campos);
         return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{id}/foto")
+    @Override
     public ResponseEntity<UsuarioResponseDTO> excluirFoto(@PathVariable @Positive Long id) {
         UsuarioResponseDTO usuario = service.excluirFoto(id);
         return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();

@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.PlanoAcaoOpenapi;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoRequestDTO;
 import br.com.acta.dto.pdca.plano_acao.PlanoAcaoResponseDTO;
 import br.com.acta.entity.enums.Prioridade;
@@ -20,40 +21,46 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class PlanoAcaoController {
+public class PlanoAcaoController implements PlanoAcaoOpenapi {
     private final PlanoAcaoService service;
 
     @GetMapping("/ciclo/{idCiclo}/plano-acao")
+    @Override
     public ResponseEntity<List<PlanoAcaoResponseDTO>> buscar(@PathVariable @Positive Long idCiclo, @RequestParam(required = false) StatusPlanoAcao status, @RequestParam(required = false) Prioridade prioridade) {
         List<PlanoAcaoResponseDTO> planos = service.buscar(idCiclo, status, prioridade);
         return ResponseEntity.ok(planos);
     }
 
     @GetMapping("/plano-acao/{id}")
+    @Override
     public ResponseEntity<PlanoAcaoResponseDTO> buscar(@PathVariable @Positive Long id) {
         PlanoAcaoResponseDTO plano = service.buscar(id);
         return ResponseEntity.ok(plano);
     }
 
     @PostMapping("/ciclo/{idCiclo}/plano-acao")
+    @Override
     public ResponseEntity<PlanoAcaoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @Valid @RequestBody PlanoAcaoRequestDTO dto, @RequestParam @Positive Long idCriadoPor) {
         PlanoAcaoResponseDTO plano = service.inserir(dto, idCiclo, idCriadoPor);
         return ResponseEntity.status(201).body(plano);
     }
 
     @PatchMapping("/plano-acao/{id}")
+    @Override
     public ResponseEntity<PlanoAcaoResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
         PlanoAcaoResponseDTO plano = service.patch(id, campos);
         return ResponseEntity.ok(plano);
     }
 
     @PatchMapping("/plano-acao/{id}/status")
+    @Override
     public ResponseEntity<PlanoAcaoResponseDTO> patchStatus(@PathVariable @Positive Long id, @RequestParam StatusPlanoAcao status) {
         PlanoAcaoResponseDTO plano = service.patchStatus(id, status);
         return ResponseEntity.ok(plano);
     }
 
     @DeleteMapping("/plano-acao/{id}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
         service.excluir(id);
         return ResponseEntity.noContent().build();

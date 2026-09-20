@@ -39,3 +39,7 @@ desktop.ini
 Desktop.ini
 
 src/main/resources/firebase/
+skills/
+
+*.env
+*.json

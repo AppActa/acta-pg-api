@@ -123,7 +123,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(UniqueViolationException.class)
     public ResponseEntity<ErroResponse> handleUniqueViolation(UniqueViolationException uv){
-        return ResponseEntity.status(HttpStatus.BAD_REQUEST)
+        return ResponseEntity.status(HttpStatus.CONFLICT)
                 .body(new ErroResponse(List.of(uv.getMessage()), 409));
     }
 

@@ -25,7 +25,7 @@ import tools.jackson.databind.ObjectMapper;
 
 @RequiredArgsConstructor
 public class FirebaseAuthFilter extends OncePerRequestFilter {
-    private static final String AUTH = "/auth/ativar";
+    private static final String AUTH = "/api/v1/auth/ativar";
     private final FirebaseUtils utils;
     private final ObjectMapper mapper;
 

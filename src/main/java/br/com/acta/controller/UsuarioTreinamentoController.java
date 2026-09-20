@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.UsuarioTreinamentoOpenapi;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.enums.StatusTreinamento;
@@ -16,28 +17,32 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/treinamento/{id}/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class UsuarioTreinamentoController {
+public class UsuarioTreinamentoController implements UsuarioTreinamentoOpenapi {
     private final UsuarioTreinamentoService service;
 
     @GetMapping
+    @Override
     public ResponseEntity<List<UsuarioTreinamentoResponseDTO>> buscar(@PathVariable @Positive Long id) {
         List<UsuarioTreinamentoResponseDTO> usuarios = service.buscar(id);
         return ResponseEntity.ok(usuarios);
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<UsuarioTreinamentoResponseDTO> inserir(@PathVariable @Positive Long id, @RequestBody @Valid UsuarioTreinamentoRequestDTO dto){
         UsuarioTreinamentoResponseDTO usuario = service.inserir(id, dto);
         return ResponseEntity.status(201).body(usuario);
     }
 
     @PatchMapping("/{idUsuario}")
+    @Override
     public ResponseEntity<UsuarioTreinamentoResponseDTO> patchStatus(@PathVariable @Positive Long id, @PathVariable @Positive Long idUsuario, @RequestParam StatusTreinamento status){
         UsuarioTreinamentoResponseDTO usuario = service.patchStatus(id, idUsuario, status);
         return ResponseEntity.ok(usuario);
     }
 
     @DeleteMapping("/{idUsuario}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long id, @PathVariable @Positive Long idUsuario){
         service.excluir(id, idUsuario);
         return ResponseEntity.noContent().build();

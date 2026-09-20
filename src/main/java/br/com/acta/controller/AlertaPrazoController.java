@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.AlertaPrazoOpenapi;
 import br.com.acta.dto.pdca.alerta_prazo.AlertaPrazoResponseDTO;
 import br.com.acta.service.AlertaPrazoService;
 import jakarta.validation.constraints.Positive;
@@ -13,16 +14,18 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping(value = "/api/v1/tarefa/{idTarefa}/alerta", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class AlertaPrazoController {
+public class AlertaPrazoController implements AlertaPrazoOpenapi {
     private final AlertaPrazoService service;
 
     @GetMapping
+    @Override
     public ResponseEntity<AlertaPrazoResponseDTO> buscar(@PathVariable @Positive Long idTarefa) {
         AlertaPrazoResponseDTO alerta = service.buscar(idTarefa);
         return ResponseEntity.ok(alerta);
     }
 
     @PatchMapping("/{id}")
+    @Override
     public ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@PathVariable @Positive Long idTarefa, @PathVariable @Positive Long id, @RequestParam @Positive Long idUsuario) {
         AlertaPrazoResponseDTO alerta = service.marcarLido(idTarefa, id, idUsuario);
         return ResponseEntity.ok(alerta);
