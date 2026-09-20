@@ -117,6 +117,119 @@ public final class SwaggerOpenapiDescriptions {
             - Excluir o plano 5W2H.
             """;
 
+    public static final String USUARIO_CICLO_CONTROLLER = """
+            Endpoints responsáveis pelo vínculo entre usuários e ciclos PDCA.
+
+            A API permite:
+
+            - Consultar os usuários de um ciclo;
+            - Adicionar e remover usuários;
+            - Alterar o papel de um usuário no ciclo;
+            - Substituir o responsável pelo ciclo.
+            """;
+
+    public static final String PRIORIZACAO_PROBLEMA_CONTROLLER = """
+            Endpoints responsáveis pela priorização de problemas.
+
+            A API permite:
+
+            - Consultar e registrar priorizações;
+            - Atualizar os critérios de uma priorização;
+            - Aplicar o peso calculado ao problema.
+            """;
+
+    public static final String TAREFA_DEPENDENTE_CONTROLLER = """
+            Endpoints responsáveis pelas dependências entre tarefas.
+
+            A API permite:
+
+            - Consultar as dependências de uma tarefa;
+            - Adicionar uma tarefa dependente;
+            - Remover uma dependência.
+            """;
+
+    public static final String USUARIO_TREINAMENTO_CONTROLLER = """
+            Endpoints responsáveis pelo vínculo entre usuários e treinamentos.
+
+            A API permite:
+
+            - Consultar os usuários de um treinamento;
+            - Vincular usuários;
+            - Atualizar o status do vínculo;
+            - Remover usuários do treinamento.
+            """;
+
+    public static final String TREINAMENTO_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de treinamentos dos ciclos PDCA.
+
+            A API permite:
+
+            - Criar e consultar treinamentos;
+            - Consultar os treinamentos de um ciclo;
+            - Atualizar parcialmente os dados;
+            - Excluir treinamentos.
+            """;
+
+    public static final String VERIFICACAO_RESULTADO_CONTROLLER = """
+            Endpoints responsáveis pelo registro e acompanhamento das verificações de resultado.
+
+            A API permite:
+
+            - Criar e consultar verificações;
+            - Consultar as verificações de um ciclo;
+            - Atualizar parcialmente os resultados;
+            - Excluir verificações.
+            """;
+
+    public static final String EFEITO_SECUNDARIO_CONTROLLER = """
+            Endpoints responsáveis pelos efeitos secundários de uma verificação de resultado.
+
+            A API permite:
+
+            - Criar e consultar efeitos secundários;
+            - Atualizar parcialmente os efeitos;
+            - Excluir efeitos secundários.
+            """;
+
+    public static final String ALERTA_PRAZO_CONTROLLER = """
+            Endpoints responsáveis pelos alertas de prazo das tarefas.
+
+            A API permite:
+
+            - Consultar o alerta de uma tarefa;
+            - Marcar um alerta como lido.
+            """;
+
+    public static final String ENDERECO_EMPRESA_CONTROLLER = """
+            Endpoints responsáveis pelos endereços das empresas.
+
+            A API permite:
+
+            - Consultar os endereços de uma empresa;
+            - Adicionar um endereço;
+            - Excluir um endereço.
+            """;
+
+    public static final String EMAIL_CONTROLLER = """
+            Endpoints responsáveis pelos e-mails de empresas e colaboradores.
+
+            A API permite:
+
+            - Consultar e-mails;
+            - Adicionar e-mails;
+            - Excluir e-mails de empresas e colaboradores.
+            """;
+
+    public static final String TELEFONE_CONTROLLER = """
+            Endpoints responsáveis pelos telefones de empresas e colaboradores.
+
+            A API permite:
+
+            - Consultar telefones;
+            - Adicionar telefones;
+            - Excluir telefones de empresas e colaboradores.
+            """;
+
     public static final String CICLO_CONTROLLER = """
             Endpoints responsáveis pelo gerenciamento dos ciclos PDCA.
             
