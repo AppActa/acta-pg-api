@@ -16,6 +16,40 @@ public final class SwaggerOpenapiDescriptions {
             A verificação informa se a aplicação está disponível e se a conexão com o banco de dados está funcionando.
             """;
 
+    public static final String USUARIO_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de usuários.
+
+            A API permite:
+
+            - Criar e consultar usuários;
+            - Filtrar usuários por empresa e tipo;
+            - Consultar os ciclos de um usuário;
+            - Atualizar dados e remover a foto de perfil;
+            - Inativar um usuário.
+            """;
+
+    public static final String EMPRESA_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de empresas.
+
+            A API permite:
+
+            - Criar e consultar empresas;
+            - Filtrar empresas por tamanho;
+            - Atualizar parcialmente os dados de uma empresa;
+            - Inativar uma empresa.
+            """;
+
+    public static final String COLABORADOR_CONTROLLER = """
+            Endpoints responsáveis pelo gerenciamento de colaboradores.
+
+            A API permite:
+
+            - Criar e consultar colaboradores;
+            - Consultar colaboradores de uma empresa;
+            - Atualizar parcialmente os dados de um colaborador;
+            - Inativar um colaborador.
+            """;
+
     public static final String CICLO_CONTROLLER = """
             Endpoints responsáveis pelo gerenciamento dos ciclos PDCA.
             
