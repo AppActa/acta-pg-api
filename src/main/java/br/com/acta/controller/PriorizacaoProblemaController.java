@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.PriorizacaoProblemaOpenapi;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaRequestDTO;
 import br.com.acta.dto.join.priorizacao_problema.PriorizacaoProblemaResponseDTO;
 import br.com.acta.dto.pdca.problema.ProblemaResponseDTO;
@@ -19,28 +20,32 @@ import java.util.Map;
 @RestController
 @RequestMapping(value = "api/v1/problema/{idProblema}/priorizacao", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class PriorizacaoProblemaController {
+public class PriorizacaoProblemaController implements PriorizacaoProblemaOpenapi {
     private final PriorizacaoProblemaService service;
 
     @GetMapping
+    @Override
     public ResponseEntity<List<PriorizacaoProblemaResponseDTO>> buscar(@PathVariable @Positive Long idProblema, @RequestParam(required = false) Long idUsuario) {
         List<PriorizacaoProblemaResponseDTO> priorizacao = service.buscar(idProblema, idUsuario);
         return ResponseEntity.ok(priorizacao);
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<PriorizacaoProblemaResponseDTO> inserir(@PathVariable @Positive Long idProblema, @RequestBody @Valid PriorizacaoProblemaRequestDTO dto) {
         PriorizacaoProblemaResponseDTO priorizacao = service.inserir(idProblema, dto);
         return ResponseEntity.status(201).body(priorizacao);
     }
 
     @PatchMapping("/{idUsuario}")
+    @Override
     public ResponseEntity<PriorizacaoProblemaResponseDTO> patch(@PathVariable @Positive Long idProblema, @PathVariable @Positive Long idUsuario, @RequestBody Map<String, Object> campos) {
         PriorizacaoProblemaResponseDTO priorizacao = service.patch(idProblema, idUsuario, campos);
         return ResponseEntity.ok(priorizacao);
     }
 
     @PatchMapping("/aplicar-peso")
+    @Override
     public ResponseEntity<ProblemaResponseDTO> aplicarPeso(@PathVariable @Positive Long idProblema){
         ProblemaResponseDTO priorizacao = service.aplicarPeso(idProblema);
         return ResponseEntity.ok(priorizacao);

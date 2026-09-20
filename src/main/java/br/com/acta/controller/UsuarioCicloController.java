@@ -1,5 +1,6 @@
 package br.com.acta.controller;
 
+import br.com.acta.common.config.swagger.openapi.UsuarioCicloOpenapi;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloRequestDTO;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.enums.PapelCiclo;
@@ -18,34 +19,39 @@ import java.util.List;
 @RestController
 @RequestMapping(value = "api/v1/ciclo/{idCiclo}/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
-public class UsuarioCicloController {
+public class UsuarioCicloController implements UsuarioCicloOpenapi {
     private final UsuarioCicloService service;
 
     @GetMapping
+    @Override
     public ResponseEntity<List<UsuarioCicloResponseDTO>> buscar(@PathVariable @Positive Long idCiclo){
         List<UsuarioCicloResponseDTO> usuario = service.buscarPorCiclo(idCiclo);
         return ResponseEntity.ok(usuario);
     }
 
     @PostMapping
+    @Override
     public ResponseEntity<UsuarioCicloResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestBody @Valid UsuarioCicloRequestDTO dto){
         UsuarioCicloResponseDTO usuario = service.inserir(dto, idCiclo);
         return ResponseEntity.status(201).body(usuario);
     }
 
     @PatchMapping("/{idUsuario}")
+    @Override
     public ResponseEntity<UsuarioCicloResponseDTO> patch(@PathVariable @Positive Long idCiclo, @PathVariable @Positive Long idUsuario, @RequestParam PapelCiclo papelCiclo) {
         UsuarioCicloResponseDTO usuario = service.patch(idUsuario, idCiclo, papelCiclo);
         return ResponseEntity.ok(usuario);
     }
 
     @PatchMapping("/substituir-responsavel")
+    @Override
     public ResponseEntity<List<UsuarioCicloResponseDTO>> substituirResponsavel(@PathVariable @Positive Long idCiclo, @RequestParam @Positive Long idUsuarioAntigo, @RequestParam @Positive Long idUsuarioNovo) {
         List<UsuarioCicloResponseDTO> usuarios = service.substituirResponsavel(idCiclo, idUsuarioAntigo, idUsuarioNovo);
         return ResponseEntity.ok(usuarios);
     }
 
     @DeleteMapping("/{idUsuario}")
+    @Override
     public ResponseEntity<Void> excluir(@PathVariable @Positive Long idCiclo, @PathVariable @Positive Long idUsuario) {
         service.excluir(idUsuario, idCiclo);
         return ResponseEntity.noContent().build();
