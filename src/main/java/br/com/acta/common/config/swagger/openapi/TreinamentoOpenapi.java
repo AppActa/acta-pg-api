@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -39,29 +39,20 @@ public interface TreinamentoOpenapi {
 
     @Operation(summary = "Cria um treinamento")
     @ApiResponse(responseCode = "201", description = "Treinamento criado", content = @Content(schema = @Schema(implementation = TreinamentoResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TreinamentoResponseDTO> inserir(Long idCiclo, TreinamentoRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um treinamento")
     @ApiResponse(responseCode = "200", description = "Treinamento atualizado", content = @Content(schema = @Schema(implementation = TreinamentoResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TreinamentoResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Exclui um treinamento")
     @ApiResponse(responseCode = "204", description = "Treinamento excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long id);
 }

@@ -1,8 +1,8 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -30,19 +30,13 @@ public interface TelefoneOpenapi {
 
     @Operation(summary = "Adiciona um telefone a uma empresa")
     @ApiResponse(responseCode = "201", description = "Telefone adicionado", content = @Content(schema = @Schema(implementation = TelefoneResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(Long idEmpresa, TelefoneRequestDTO dto);
 
     @Operation(summary = "Exclui um telefone de uma empresa")
     @ApiResponse(responseCode = "204", description = "Telefone excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluirTelefoneEmpresa(Long idEmpresa, Long idTelefone);
 
     @Operation(summary = "Lista os telefones de um colaborador")
@@ -54,18 +48,12 @@ public interface TelefoneOpenapi {
 
     @Operation(summary = "Adiciona um telefone a um colaborador")
     @ApiResponse(responseCode = "201", description = "Telefone adicionado", content = @Content(schema = @Schema(implementation = TelefoneResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TelefoneResponseDTO> inserirTelefoneColaborador(Long idColaborador, TelefoneRequestDTO dto);
 
     @Operation(summary = "Exclui um telefone de um colaborador")
     @ApiResponse(responseCode = "204", description = "Telefone excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluirTelefoneColaborador(Long idColaborador, Long idTelefone);
 }

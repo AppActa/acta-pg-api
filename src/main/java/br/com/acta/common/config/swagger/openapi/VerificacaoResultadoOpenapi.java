@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -39,30 +39,21 @@ public interface VerificacaoResultadoOpenapi {
 
     @Operation(summary = "Cria uma verificação")
     @ApiResponse(responseCode = "201", description = "Verificação criada", content = @Content(schema = @Schema(implementation = VerificacaoResultadoResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<VerificacaoResultadoResponseDTO> inserir(Long idCiclo, Long idCriadoPor, VerificacaoResultadoRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente uma verificação")
     @ApiResponse(responseCode = "200", description = "Verificação atualizada", content = @Content(schema = @Schema(implementation = VerificacaoResultadoResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<VerificacaoResultadoResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Exclui uma verificação")
     @ApiResponse(responseCode = "204", description = "Verificação excluída")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long id);
 }

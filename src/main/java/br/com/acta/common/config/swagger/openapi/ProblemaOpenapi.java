@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -39,38 +39,26 @@ public interface ProblemaOpenapi {
 
     @Operation(summary = "Cria um problema")
     @ApiResponse(responseCode = "201", description = "Problema criado", content = @Content(schema = @Schema(implementation = ProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<ProblemaResponseDTO> inserir(Long idCiclo, ProblemaRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um problema")
     @ApiResponse(responseCode = "200", description = "Problema atualizado", content = @Content(schema = @Schema(implementation = ProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<ProblemaResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Atualiza o status de um problema")
     @ApiResponse(responseCode = "200", description = "Status atualizado", content = @Content(schema = @Schema(implementation = ProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<ProblemaResponseDTO> patchStatus(Long id, StatusProblema status);
 
     @Operation(summary = "Exclui um problema")
     @ApiResponse(responseCode = "204", description = "Problema excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluir(Long id);
 }

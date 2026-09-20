@@ -1,6 +1,7 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
@@ -46,18 +47,12 @@ public interface EmpresaOpenapi {
 
     @Operation(summary = "Atualiza parcialmente uma empresa")
     @ApiResponse(responseCode = "200", description = "Empresa atualizada", content = @Content(schema = @Schema(implementation = EmpresaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<EmpresaResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Inativa uma empresa")
     @ApiResponse(responseCode = "204", description = "Empresa inativada")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluir(Long id);
 }

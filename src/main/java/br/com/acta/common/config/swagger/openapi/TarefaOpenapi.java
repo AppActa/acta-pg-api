@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -43,58 +43,40 @@ public interface TarefaOpenapi {
 
     @Operation(summary = "Cria uma tarefa")
     @ApiResponse(responseCode = "201", description = "Tarefa criada", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TarefaResponseDTO> inserir(Long idPlanoAcao, TarefaRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente uma tarefa")
     @ApiResponse(responseCode = "200", description = "Tarefa atualizada", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TarefaResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Atualiza o status de uma tarefa")
     @ApiResponse(responseCode = "200", description = "Status atualizado", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<TarefaResponseDTO> patchStatus(Long id, TarefaStatusUpdateDTO dto);
 
     @Operation(summary = "Reabre uma tarefa")
     @ApiResponse(responseCode = "200", description = "Tarefa reaberta", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<TarefaResponseDTO> reabrir(Long id, LocalDate novoPrazo);
 
     @Operation(summary = "Reatribui uma tarefa")
     @ApiResponse(responseCode = "200", description = "Tarefa reatribuída", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<TarefaResponseDTO> reatribuir(Long id, Long idResponsavel);
 
     @Operation(summary = "Exclui uma tarefa")
     @ApiResponse(responseCode = "204", description = "Tarefa excluída")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long id);
 }

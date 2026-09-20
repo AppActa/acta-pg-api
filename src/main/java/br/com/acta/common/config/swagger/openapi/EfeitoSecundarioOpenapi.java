@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -32,30 +32,21 @@ public interface EfeitoSecundarioOpenapi {
 
     @Operation(summary = "Cria um efeito secundário")
     @ApiResponse(responseCode = "201", description = "Efeito secundário criado", content = @Content(schema = @Schema(implementation = EfeitoSecundarioResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<EfeitoSecundarioResponseDTO> inserir(Long idResultado, EfeitoSecundarioRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um efeito secundário")
     @ApiResponse(responseCode = "200", description = "Efeito secundário atualizado", content = @Content(schema = @Schema(implementation = EfeitoSecundarioResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<EfeitoSecundarioResponseDTO> patch(Long idResultado, Long idEfeitoSecundario, Map<String, Object> campos);
 
     @Operation(summary = "Exclui um efeito secundário")
     @ApiResponse(responseCode = "204", description = "Efeito secundário excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long idResultado, Long idEfeitoSecundario);
 }

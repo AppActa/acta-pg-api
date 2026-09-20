@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -45,28 +45,19 @@ public interface ColaboradorOpenapi {
 
     @Operation(summary = "Cria um colaborador")
     @ApiResponse(responseCode = "201", description = "Colaborador criado", content = @Content(schema = @Schema(implementation = ColaboradorResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<ColaboradorResponseDTO> inserir(ColaboradorRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um colaborador")
     @ApiResponse(responseCode = "200", description = "Colaborador atualizado", content = @Content(schema = @Schema(implementation = ColaboradorResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<ColaboradorResponseDTO> patch(Long id, Map<String, Object> dto);
 
     @Operation(summary = "Inativa um colaborador")
     @ApiResponse(responseCode = "204", description = "Colaborador inativado")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluir(Long id);
 }

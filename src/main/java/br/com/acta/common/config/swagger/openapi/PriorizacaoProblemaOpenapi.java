@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -34,28 +34,19 @@ public interface PriorizacaoProblemaOpenapi {
 
     @Operation(summary = "Cria uma priorização")
     @ApiResponse(responseCode = "201", description = "Priorização criada", content = @Content(schema = @Schema(implementation = PriorizacaoProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<PriorizacaoProblemaResponseDTO> inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto);
 
     @Operation(summary = "Atualiza uma priorização")
     @ApiResponse(responseCode = "200", description = "Priorização atualizada", content = @Content(schema = @Schema(implementation = PriorizacaoProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<PriorizacaoProblemaResponseDTO> patch(Long idProblema, Long idUsuario, Map<String, Object> campos);
 
     @Operation(summary = "Aplica o peso da priorização ao problema")
     @ApiResponse(responseCode = "200", description = "Peso aplicado", content = @Content(schema = @Schema(implementation = ProblemaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<ProblemaResponseDTO> aplicarPeso(Long idProblema);
 }

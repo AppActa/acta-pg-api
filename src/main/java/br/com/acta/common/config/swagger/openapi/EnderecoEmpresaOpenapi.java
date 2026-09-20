@@ -1,8 +1,8 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -37,18 +37,12 @@ public interface EnderecoEmpresaOpenapi {
 
     @Operation(summary = "Adiciona um endereço a uma empresa")
     @ApiResponse(responseCode = "201", description = "Endereço adicionado", content = @Content(schema = @Schema(implementation = EnderecoResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<EnderecoResponseDTO> inserir(Long idEmpresa, EnderecoRequestDTO dto);
 
     @Operation(summary = "Exclui um endereço de uma empresa")
     @ApiResponse(responseCode = "204", description = "Endereço excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluir(Long idEmpresa, Long idEndereco);
 }

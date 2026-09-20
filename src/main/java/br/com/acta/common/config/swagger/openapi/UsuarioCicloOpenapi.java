@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -32,38 +32,26 @@ public interface UsuarioCicloOpenapi {
 
     @Operation(summary = "Adiciona um usuário ao ciclo")
     @ApiResponse(responseCode = "201", description = "Usuário adicionado", content = @Content(schema = @Schema(implementation = UsuarioCicloResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<UsuarioCicloResponseDTO> inserir(Long idCiclo, UsuarioCicloRequestDTO dto);
 
     @Operation(summary = "Atualiza o papel de um usuário no ciclo")
     @ApiResponse(responseCode = "200", description = "Papel atualizado", content = @Content(schema = @Schema(implementation = UsuarioCicloResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<UsuarioCicloResponseDTO> patch(Long idCiclo, Long idUsuario, PapelCiclo papelCiclo);
 
     @Operation(summary = "Substitui o responsável pelo ciclo")
     @ApiResponse(responseCode = "200", description = "Responsável substituído", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UsuarioCicloResponseDTO.class))))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<List<UsuarioCicloResponseDTO>> substituirResponsavel(Long idCiclo, Long idUsuarioAntigo, Long idUsuarioNovo);
 
     @Operation(summary = "Remove um usuário do ciclo")
     @ApiResponse(responseCode = "204", description = "Usuário removido")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long idCiclo, Long idUsuario);
 }

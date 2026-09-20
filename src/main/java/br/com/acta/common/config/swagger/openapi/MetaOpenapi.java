@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -41,37 +41,25 @@ public interface MetaOpenapi {
 
     @Operation(summary = "Cria uma meta")
     @ApiResponse(responseCode = "201", description = "Meta criada", content = @Content(schema = @Schema(implementation = MetaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<MetaResponseDTO> inserir(Long idPlanoAcao, MetaRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente uma meta")
     @ApiResponse(responseCode = "200", description = "Meta atualizada", content = @Content(schema = @Schema(implementation = MetaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<MetaResponseDTO> patch(Long id, Map<String, Object> dto);
 
     @Operation(summary = "Atualiza o status de uma meta")
     @ApiResponse(responseCode = "200", description = "Status atualizado", content = @Content(schema = @Schema(implementation = MetaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<MetaResponseDTO> patchStatus(Long id, StatusMeta status);
 
     @Operation(summary = "Exclui uma meta")
     @ApiResponse(responseCode = "204", description = "Meta excluída")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> delete(Long id);
 
     @Operation(summary = "Lista os responsáveis por uma meta")
@@ -83,19 +71,13 @@ public interface MetaOpenapi {
 
     @Operation(summary = "Adiciona responsáveis a uma meta")
     @ApiResponse(responseCode = "201", description = "Responsáveis adicionados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UsuarioSummaryResponseDTO.class))))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<List<UsuarioSummaryResponseDTO>> adicionarResponsavel(List<Long> idsResponsaveis, Long id);
 
     @Operation(summary = "Remove responsáveis de uma meta")
     @ApiResponse(responseCode = "204", description = "Responsáveis removidos")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluirResponsaveis(Long id, List<Long> idsResponsaveis);
 }

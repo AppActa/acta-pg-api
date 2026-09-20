@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -30,30 +30,21 @@ public interface Plano5W2HOpenapi {
 
     @Operation(summary = "Cria um plano 5W2H")
     @ApiResponse(responseCode = "201", description = "Plano 5W2H criado", content = @Content(schema = @Schema(implementation = Plano5W2HResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<Plano5W2HResponseDTO> inserir(Long idPlanoAcao, Plano5W2HRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um plano 5W2H")
     @ApiResponse(responseCode = "200", description = "Plano 5W2H atualizado", content = @Content(schema = @Schema(implementation = Plano5W2HResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<Plano5W2HResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Exclui um plano 5W2H")
     @ApiResponse(responseCode = "204", description = "Plano 5W2H excluído")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> excluir(Long id);
 }

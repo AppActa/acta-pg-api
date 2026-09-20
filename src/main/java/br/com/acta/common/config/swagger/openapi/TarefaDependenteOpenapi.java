@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
@@ -30,19 +30,13 @@ public interface TarefaDependenteOpenapi {
 
     @Operation(summary = "Adiciona uma dependência à tarefa")
     @ApiResponse(responseCode = "201", description = "Dependência adicionada", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<TarefaResponseDTO> adicionar(Long id, Long idDependente);
 
     @Operation(summary = "Remove uma dependência da tarefa")
     @ApiResponse(responseCode = "204", description = "Dependência removida")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<Void> remover(Long id, Long idDependente);
 }

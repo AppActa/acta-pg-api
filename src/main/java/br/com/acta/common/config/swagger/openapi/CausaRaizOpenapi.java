@@ -1,9 +1,9 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
-import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
@@ -38,37 +38,25 @@ public interface CausaRaizOpenapi {
 
     @Operation(summary = "Cria uma causa-raiz")
     @ApiResponse(responseCode = "201", description = "Causa-raiz criada", content = @Content(schema = @Schema(implementation = CausaRaizResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<CausaRaizResponseDTO> inserir(Long idCiclo, CausaRaizRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente uma causa-raiz")
     @ApiResponse(responseCode = "200", description = "Causa-raiz atualizada", content = @Content(schema = @Schema(implementation = CausaRaizResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<CausaRaizResponseDTO> patch(Long id, Map<String, Object> campos);
 
     @Operation(summary = "Valida uma causa-raiz")
     @ApiResponse(responseCode = "200", description = "Causa-raiz validada", content = @Content(schema = @Schema(implementation = CausaRaizResponseDTO.class)))
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<CausaRaizResponseDTO> validar(Long id, Long idUsuario, Boolean aceita);
 
     @Operation(summary = "Exclui uma causa-raiz")
     @ApiResponse(responseCode = "204", description = "Causa-raiz excluída")
-    @ApiAuthenticationResponses
-    @ApiBadRequestResponse
-    @ApiNotFoundResponse
-    @ApiConflictResponse
+    @ApiResourceResponses
     ResponseEntity<Void> excluir(Long id);
 }
