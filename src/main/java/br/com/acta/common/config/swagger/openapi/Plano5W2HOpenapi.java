@@ -7,13 +7,16 @@ import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
+import br.com.acta.common.config.swagger.examples.SwaggerParameterDescriptions;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HRequestDTO;
 import br.com.acta.dto.pdca.plano_5w2h.Plano5W2HResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 
 import java.util.Map;
@@ -26,25 +29,25 @@ public interface Plano5W2HOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<Plano5W2HResponseDTO> buscar(Long idPlanoAcao);
+    ResponseEntity<Plano5W2HResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_ACAO) Long idPlanoAcao);
 
     @Operation(summary = "Cria um plano 5W2H")
     @ApiResponse(responseCode = "201", description = "Plano 5W2H criado", content = @Content(schema = @Schema(implementation = Plano5W2HResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<Plano5W2HResponseDTO> inserir(Long idPlanoAcao, Plano5W2HRequestDTO dto);
+    ResponseEntity<Plano5W2HResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_ACAO) Long idPlanoAcao, @RequestBody(description = "Dados do plano 5W2H", required = true) Plano5W2HRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um plano 5W2H")
     @ApiResponse(responseCode = "200", description = "Plano 5W2H atualizado", content = @Content(schema = @Schema(implementation = Plano5W2HResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<Plano5W2HResponseDTO> patch(Long id, Map<String, Object> campos);
+    ResponseEntity<Plano5W2HResponseDTO> patch(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_5W2H) Long id, @RequestBody(description = SwaggerParameterDescriptions.CAMPOS_PLANO_5W2H, required = true) Map<String, Object> campos);
 
     @Operation(summary = "Exclui um plano 5W2H")
     @ApiResponse(responseCode = "204", description = "Plano 5W2H excluído")
     @ApiResourceResponses
     @ApiBusinessRuleResponse
-    ResponseEntity<Void> excluir(Long id);
+    ResponseEntity<Void> excluir(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_5W2H) Long id);
 }

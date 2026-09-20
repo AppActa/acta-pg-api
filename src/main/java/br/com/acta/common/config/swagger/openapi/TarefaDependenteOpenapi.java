@@ -6,9 +6,11 @@ import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
+import br.com.acta.common.config.swagger.examples.SwaggerParameterDescriptions;
 import br.com.acta.dto.pdca.tarefa.TarefaResponseDTO;
 import br.com.acta.dto.pdca.tarefa.TarefaSummaryResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
@@ -26,17 +28,17 @@ public interface TarefaDependenteOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<TarefaSummaryResponseDTO>> buscar(Long id);
+    ResponseEntity<List<TarefaSummaryResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long id);
 
     @Operation(summary = "Adiciona uma dependência à tarefa")
     @ApiResponse(responseCode = "201", description = "Dependência adicionada", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
-    ResponseEntity<TarefaResponseDTO> adicionar(Long id, Long idDependente);
+    ResponseEntity<TarefaResponseDTO> adicionar(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_DEPENDENTE) Long idDependente);
 
     @Operation(summary = "Remove uma dependência da tarefa")
     @ApiResponse(responseCode = "204", description = "Dependência removida")
     @ApiResourceResponses
     @ApiBusinessRuleResponse
-    ResponseEntity<Void> remover(Long id, Long idDependente);
+    ResponseEntity<Void> remover(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_DEPENDENTE) Long idDependente);
 }

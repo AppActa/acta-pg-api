@@ -8,6 +8,7 @@ import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
 import br.com.acta.dto.auth.MeResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
@@ -20,12 +21,12 @@ public interface AuthOpenapi {
     @Operation(summary = "Consulta o usuário autenticado")
     @ApiResponse(responseCode = "200", description = "Usuário autenticado", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
     @ApiAuthenticationResponses
-    ResponseEntity<MeResponseDTO> me(UsuarioAutenticado usuario);
+    ResponseEntity<MeResponseDTO> me(@Parameter(hidden = true) UsuarioAutenticado usuario);
 
     @Operation(summary = "Ativa o usuário autenticado")
     @ApiResponse(responseCode = "200", description = "Usuário ativado", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
     @ApiAuthenticationResponses
     @ApiNotFoundResponse
     @ApiConflictResponse
-    ResponseEntity<MeResponseDTO> ativar(FirebaseIdentity identity);
+    ResponseEntity<MeResponseDTO> ativar(@Parameter(hidden = true) FirebaseIdentity identity);
 }

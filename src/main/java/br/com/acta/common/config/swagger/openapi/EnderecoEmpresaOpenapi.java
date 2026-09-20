@@ -6,14 +6,17 @@ import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
+import br.com.acta.common.config.swagger.examples.SwaggerParameterDescriptions;
 import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
 import br.com.acta.dto.core.empresa.endereco.EnderecoResponseDTO;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -26,23 +29,23 @@ public interface EnderecoEmpresaOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<EnderecoResponseDTO> buscar(Long idEmpresa, Long idEndereco);
+    ResponseEntity<EnderecoResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
 
     @Operation(summary = "Lista os endereços de uma empresa")
     @ApiResponse(responseCode = "200", description = "Endereços encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = EnderecoResponseDTO.class))))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<EnderecoResponseDTO>> buscar(Long idEmpresa);
+    ResponseEntity<List<EnderecoResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa);
 
     @Operation(summary = "Adiciona um endereço a uma empresa")
     @ApiResponse(responseCode = "201", description = "Endereço adicionado", content = @Content(schema = @Schema(implementation = EnderecoResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<EnderecoResponseDTO> inserir(Long idEmpresa, EnderecoRequestDTO dto);
+    ResponseEntity<EnderecoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @RequestBody(description = "Dados do endereço", required = true) EnderecoRequestDTO dto);
 
     @Operation(summary = "Exclui um endereço de uma empresa")
     @ApiResponse(responseCode = "204", description = "Endereço excluído")
     @ApiResourceResponses
-    ResponseEntity<Void> excluir(Long idEmpresa, Long idEndereco);
+    ResponseEntity<Void> excluir(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
 }
