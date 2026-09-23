@@ -3,6 +3,7 @@ package br.com.acta.common.handler;
 import br.com.acta.common.handler.exception.*;
 import com.google.i18n.phonenumbers.NumberParseException;
 import jakarta.validation.ConstraintViolationException;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
@@ -24,6 +25,7 @@ import org.springframework.web.servlet.resource.NoResourceFoundException;
 import java.util.List;
 
 @ControllerAdvice
+@Slf4j
 public class GlobalExceptionHandler {
     @ExceptionHandler(FirebaseIdTokenException.class)
     public ResponseEntity<ErroResponse> handleFirebaseIdToken(FirebaseIdTokenException fite){
@@ -239,14 +241,15 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(RuntimeException.class)
-    public ResponseEntity<ErroResponse> handleRuntime(){
+    public ResponseEntity<ErroResponse> handleRuntime(RuntimeException exception){
+        log.error("Erro interno não tratado", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErroResponse(List.of("Ocorreu um erro interno inesperado"), 500));
-//                .body(new ErroResponse(List.of(re.getMessage()), 500));
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<ErroResponse> handleException(){
+    public ResponseEntity<ErroResponse> handleException(Exception exception){
+        log.error("Erro interno não tratado", exception);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
                 .body(new ErroResponse(List.of("Ocorreu um erro interno inesperado"), 500));
     }
