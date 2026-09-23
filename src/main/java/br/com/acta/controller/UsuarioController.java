@@ -8,7 +8,6 @@ import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.service.UsuarioCicloService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PatchMapping;
@@ -27,7 +26,6 @@ import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 
-@Validated
 @RestController
 @RequestMapping(value = "api/v1/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor

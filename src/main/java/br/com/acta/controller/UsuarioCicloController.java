@@ -10,12 +10,10 @@ import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
-import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@Validated
 @RestController
 @RequestMapping(value = "api/v1/ciclo/{idCiclo}/usuario", produces = MediaType.APPLICATION_JSON_VALUE)
 @RequiredArgsConstructor
