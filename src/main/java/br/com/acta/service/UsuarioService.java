@@ -46,7 +46,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         this.metaRepo = metaRepo;
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("@authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     @Transactional
     public UsuarioResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -75,7 +75,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(usuario);
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("@authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public UsuarioResponseDTO excluirFoto(Long id) {
         configurarUsuarioAtual();
@@ -89,7 +89,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idEmpresa)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and @authService.isUsuarioEmpresa(#idEmpresa)")
     public List<UsuarioResponseDTO> buscar(Long idEmpresa, TipoUsuario tipo) {
         List<Usuario> usuarios;
 
@@ -99,7 +99,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponseList(usuarios);
     }
 
-    @PreAuthorize("authService.isUsuarioEmpresa(#id) and hasRole('ADMIN')")
+    @PreAuthorize("@authService.isUsuarioEmpresa(#id) and hasRole('ADMIN')")
     @Override
     @Transactional
     public void excluir(Long id) {
@@ -134,7 +134,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         repo.save(usuario);
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("@authService.isProprioUsuario(#id) or hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     public UsuarioResponseDTO buscar(Long id) {
         return super.buscar(id);

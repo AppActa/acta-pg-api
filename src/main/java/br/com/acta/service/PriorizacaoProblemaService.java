@@ -74,7 +74,7 @@ public class PriorizacaoProblemaService {
         }
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
+    @PreAuthorize("@authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
         authService.configurarUsuarioAtual();

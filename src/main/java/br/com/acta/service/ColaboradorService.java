@@ -132,7 +132,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isColaboradorEmpresa(#id)")
     @Override
     @Transactional
     public ColaboradorResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -151,7 +151,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         return mapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isColaboradorEmpresa(#id)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isColaboradorEmpresa(#id)")
     @Override
     @Transactional
     public void excluir(Long id) {

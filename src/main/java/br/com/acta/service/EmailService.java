@@ -39,7 +39,7 @@ public class EmailService {
         return emailEmpresaMapper.toResponseList(emails);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EmailResponseDTO inserirEmailEmpresa(Long idEmpresa, EmailRequestDTO dto) {
         authService.configurarUsuarioAtual();
@@ -54,7 +54,7 @@ public class EmailService {
         return emailEmpresaMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEmailEmpresa(Long idEmpresa, Long idEmail) {
         authService.configurarUsuarioAtual();

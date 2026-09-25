@@ -62,7 +62,7 @@ public class UsuarioTreinamentoService {
         }
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') or authService.isProprioUsuario(#idUsuario)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') or @authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public UsuarioTreinamentoResponseDTO patchStatus(Long idTreinamento, Long idUsuario, StatusTreinamento status){
         authService.configurarUsuarioAtual();

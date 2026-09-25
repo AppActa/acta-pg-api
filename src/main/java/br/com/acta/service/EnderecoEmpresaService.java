@@ -37,7 +37,7 @@ public class EnderecoEmpresaService {
         return enderecoMapper.toResponseList(enderecos);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public EnderecoResponseDTO inserirEndereco(Long idEmpresa, EnderecoRequestDTO dto) {
         authService.configurarUsuarioAtual();
@@ -49,7 +49,7 @@ public class EnderecoEmpresaService {
         return enderecoMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirEndereco(Long idEmpresa, Long idEndereco) {
         authService.configurarUsuarioAtual();

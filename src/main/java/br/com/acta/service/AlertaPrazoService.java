@@ -49,7 +49,7 @@ public class AlertaPrazoService {
         repo.gerarAlertasAtraso();
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#idUsuario)")
+    @PreAuthorize("@authService.isProprioUsuario(#idUsuario)")
     @Transactional
     public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta, Long idUsuario){
         authService.configurarUsuarioAtual();
