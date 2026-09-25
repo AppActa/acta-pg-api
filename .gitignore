@@ -43,3 +43,6 @@ skills/
 
 *.env
 *.json
+
+test/ignored/
+AGENTS.md

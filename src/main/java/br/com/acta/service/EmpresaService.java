@@ -56,7 +56,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         this.telefoneRepo = telefoneRepo;
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#id)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#id)")
     @Override
     @Transactional
     public EmpresaResponseDTO patch(Long id, Map<String, Object> campos) {
@@ -86,7 +86,7 @@ extends BaseService<EmpresaRequestDTO, EmpresaResponseDTO, Empresa> {
         return mapper.toResponseList(empresas);
     }
 
-    @PreAuthorize("isAuthenticated() and authService.isUsuarioByIdEmpresa(#id)")
+    @PreAuthorize("isAuthenticated() and @authService.isUsuarioByIdEmpresa(#id)")
     @Transactional(readOnly = true)
     @Override
     public EmpresaResponseDTO buscar(Long id) {

@@ -39,7 +39,7 @@ public class TelefoneService {
         return telefoneEmpresaMapper.toResponseList(telefones);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public TelefoneResponseDTO inserirTelefoneEmpresa(Long idEmpresa, TelefoneRequestDTO dto) {
         authService.configurarUsuarioAtual();
@@ -54,7 +54,7 @@ public class TelefoneService {
         return telefoneEmpresaMapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasRole('ADMIN') and authService.isUsuarioByIdEmpresa(#idEmpresa)")
+    @PreAuthorize("hasRole('ADMIN') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     @Transactional
     public void excluirTelefoneEmpresa(Long idEmpresa, Long idTelefone) {
         authService.configurarUsuarioAtual();

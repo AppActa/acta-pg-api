@@ -44,7 +44,7 @@ public class UsuarioCicloService {
         return mapper.toResponseList(usuarios);
     }
 
-    @PreAuthorize("authService.isProprioUsuario(#idUsuario) or hasAnyRole('ADMIN', 'GESTOR') and authService.isUsuarioEmpresa(#idUsuario)")
+    @PreAuthorize("@authService.isProprioUsuario(#idUsuario) or hasAnyRole('ADMIN', 'GESTOR') and @authService.isUsuarioEmpresa(#idUsuario)")
     @Transactional(readOnly = true)
     public List<UsuarioCicloResponseDTO> buscarPorUsuario(Long idUsuario){
         Usuario usuario = usuarioService.getEntity(idUsuario);
