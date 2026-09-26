@@ -1,17 +1,20 @@
 package br.com.acta.dto.core.colaborador;
 
-import br.com.acta.dto.core.contato.email.EmailResponseDTO;
-import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
-import br.com.acta.entity.enums.StatusGeral;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import java.time.LocalDate;
 import java.time.OffsetDateTime;
 import java.util.List;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.com.acta.dto.core.contato.email.EmailResponseDTO;
+import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
+import br.com.acta.entity.enums.StatusGeral;
 
 public record ColaboradorResponseDTO(
         Long id,
         String cpf,
         String nome,
+        String nickname,
         String cargo,
         String area,
 
