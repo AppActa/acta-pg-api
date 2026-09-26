@@ -21,6 +21,8 @@ public record CicloResponseDTO(
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
         LocalDate dataFimReal,
 
+        String iconeUrl,
+
         Long idEmpresa,
         Long idGestor,
         List<UsuarioCicloResponseDTO> colaboradores,
