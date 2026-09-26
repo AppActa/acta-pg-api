@@ -12,6 +12,7 @@ import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
+import br.com.acta.entity.enums.IconeCiclo;
 import br.com.acta.entity.enums.StatusCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.repository.padrao.CicloRepository;
@@ -30,8 +31,8 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     private final CicloRepository repo;
     private final CicloMapper mapper;
     private final PatchConfig patchConfig = new PatchConfig(
-            Set.of("titulo", "descricao", "dataInicio", "dataEstimadaFim", "idGestor", "idEmpresa"),
-            Set.of("titulo", "descricao", "dataEstimadaFim")
+            Set.of("titulo", "descricao", "dataInicio", "dataEstimadaFim", "iconeUrl", "idGestor", "idEmpresa"),
+            Set.of("titulo", "descricao", "dataEstimadaFim", "iconeUrl")
     );
     private final UsuarioService usuarioService;
     private final EmpresaService empresaService;
@@ -58,6 +59,9 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         if (campos.containsKey("dataEstimadaFim")) {
             Object dataObject = campos.get("dataEstimadaFim");
             ciclo.setDataEstimadaFim(ConversorObject.toLocalDate(dataObject, false));
+        }
+        if (campos.containsKey("iconeUrl")) {
+            ciclo.setIconeUrl(ConversorObject.toIconeCicloUrl(campos.get("iconeUrl")));
         }
 
         Ciclo salvo = repo.save(ciclo);
@@ -119,6 +123,9 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     protected void antesInserir(Ciclo ciclo, CicloRequestDTO dto) {
         Empresa empresa = empresaService.getEntity(dto.idEmpresa());
         Usuario gestor = usuarioService.getEntity(dto.idGestor());
+
+        if (ciclo.getIconeUrl() == null) ciclo.setIconeUrl(IconeCiclo.PEOPLE.getUrl());
+        else ciclo.setIconeUrl(ConversorObject.toIconeCicloUrl(ciclo.getIconeUrl()));
 
         ciclo.setStatus(StatusCiclo.PLANEJAMENTO);
         ciclo.setEmpresa(empresa);
