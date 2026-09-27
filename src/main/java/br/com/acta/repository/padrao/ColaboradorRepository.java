@@ -8,9 +8,9 @@ import java.util.List;
 import java.util.Optional;
 
 public interface ColaboradorRepository extends BaseRepository<Colaborador> {
-    List<Colaborador> findAllByStatus(StatusGeral status);
+    List<Colaborador> findByEmpresaIdAndStatus(Long idEmpresa, StatusGeral status);
     boolean existsByCpf(String cpf);
-    boolean existsByIdAndEmpresaId(Long id, Long empresaId);
-    Optional<Colaborador> findByIdAndEmpresaId(Long id, Long empresaId);
-    Optional<Colaborador> findByUsuarioIdAndEmpresaId(Long usuarioId, Long empresaId);
+    boolean existsByIdAndEmpresaId(Long id, Long idEmpresa);
+    Optional<Colaborador> findByIdAndEmpresaId(Long id, Long idEmpresa);
+    Optional<Colaborador> findByUsuarioIdAndEmpresaId(Long usuarioId, Long idEmpresa);
 }
