@@ -33,5 +33,6 @@ public interface ConviteMapper {
     @Mapping(target = "telefones", expression = "java(List.of(new TelefoneRequestDTO(request.telefone(), true)))")
     @Mapping(target = "usuario", expression = "java(new UsuarioRequestDTO(request.nome(), request.email(), null, request.tipo(), idEmpresa))")
     @Mapping(target = "idEmpresa", source = "idEmpresa")
+    @Mapping(target = "nickname", ignore = true)
     ColaboradorRequestDTO toColaboradorRequest(ConviteRequestDTO request, Long idEmpresa);
 }
