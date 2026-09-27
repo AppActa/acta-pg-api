@@ -31,9 +31,9 @@ public interface ColaboradorOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa);
+    ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa();
 
-    @Operation(summary = "Lista os colaboradores")
+    @Operation(summary = "Lista os colaboradores ativos da empresa autenticada")
     @ApiResponse(responseCode = "200", description = "Colaboradores encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = ColaboradorResponseDTO.class))))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse

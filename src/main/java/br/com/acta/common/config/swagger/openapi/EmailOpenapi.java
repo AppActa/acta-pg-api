@@ -29,18 +29,18 @@ public interface EmailOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<EmailResponseDTO>> buscarEmailEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa);
+    ResponseEntity<List<EmailResponseDTO>> buscarEmailEmpresa();
 
     @Operation(summary = "Adiciona um e-mail a uma empresa")
     @ApiResponse(responseCode = "201", description = "E-mail adicionado", content = @Content(schema = @Schema(implementation = EmailResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<EmailResponseDTO> inserirEmailEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @RequestBody(description = "Dados do e-mail", required = true) EmailRequestDTO dto);
+    ResponseEntity<EmailResponseDTO> inserirEmailEmpresa(@RequestBody(description = "Dados do e-mail", required = true) EmailRequestDTO dto);
 
     @Operation(summary = "Exclui um e-mail de uma empresa")
     @ApiResponse(responseCode = "204", description = "E-mail excluído")
     @ApiResourceResponses
-    ResponseEntity<Void> excluirEmailEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_EMAIL) Long idEmail);
+    ResponseEntity<Void> excluirEmailEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMAIL) Long idEmail);
 
     @Operation(summary = "Lista os e-mails de um colaborador")
     @ApiResponse(responseCode = "200", description = "E-mails encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = EmailResponseDTO.class))))

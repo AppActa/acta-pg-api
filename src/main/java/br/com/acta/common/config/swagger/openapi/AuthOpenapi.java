@@ -41,7 +41,7 @@ public interface AuthOpenapi {
     @ApiAuthenticationResponses
     @ApiConflictResponse
     @ApiBusinessRuleResponse
-    ResponseEntity<ColaboradorResponseDTO> convidar(@Parameter(description = "ID da empresa") Long idEmpresa, @RequestBody(description = "Dados do colaborador e acesso", required = true) @Valid ConviteRequestDTO request);
+    ResponseEntity<ColaboradorResponseDTO> convidar(@RequestBody(description = "Dados do colaborador e acesso", required = true) @Valid ConviteRequestDTO request);
 
     @Operation(summary = "Reenvia o convite de um colaborador pendente")
     @ApiResponse(responseCode = "204", description = "Convite reenviado")

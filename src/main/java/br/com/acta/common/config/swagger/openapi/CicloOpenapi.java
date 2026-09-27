@@ -31,7 +31,7 @@ public interface CicloOpenapi {
     @ApiResponse(responseCode = "200", description = "Ciclos encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = CicloResponseDTO.class))))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
-    ResponseEntity<List<CicloResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.FILTRO_ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_GESTOR) Long idGestor, @Parameter(description = SwaggerParameterDescriptions.FILTRO_STATUS) StatusCiclo status);
+    ResponseEntity<List<CicloResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_GESTOR) Long idGestor, @Parameter(description = SwaggerParameterDescriptions.FILTRO_STATUS) StatusCiclo status);
 
     @Operation(summary = "Busca um ciclo")
     @ApiResponse(responseCode = "200", description = "Ciclo encontrado", content = @Content(schema = @Schema(implementation = CicloResponseDTO.class)))

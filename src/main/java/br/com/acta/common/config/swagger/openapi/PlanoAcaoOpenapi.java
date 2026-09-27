@@ -46,7 +46,7 @@ public interface PlanoAcaoOpenapi {
     @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<PlanoAcaoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_CICLO) Long idCiclo, @RequestBody(description = "Dados do plano de ação", required = true) PlanoAcaoRequestDTO dto, @Parameter(description = SwaggerParameterDescriptions.ID_CRIADO_POR) Long idCriadoPor);
+    ResponseEntity<PlanoAcaoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_CICLO) Long idCiclo, @RequestBody(description = "Dados do plano de ação", required = true) PlanoAcaoRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente um plano de ação")
     @ApiResponse(responseCode = "200", description = "Plano de ação atualizado", content = @Content(schema = @Schema(implementation = PlanoAcaoResponseDTO.class)))

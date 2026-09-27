@@ -29,23 +29,23 @@ public interface EnderecoEmpresaOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<EnderecoResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
+    ResponseEntity<EnderecoResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
 
     @Operation(summary = "Lista os endereços de uma empresa")
     @ApiResponse(responseCode = "200", description = "Endereços encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = EnderecoResponseDTO.class))))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<EnderecoResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa);
+    ResponseEntity<List<EnderecoResponseDTO>> buscar();
 
     @Operation(summary = "Adiciona um endereço a uma empresa")
     @ApiResponse(responseCode = "201", description = "Endereço adicionado", content = @Content(schema = @Schema(implementation = EnderecoResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<EnderecoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @RequestBody(description = "Dados do endereço", required = true) EnderecoRequestDTO dto);
+    ResponseEntity<EnderecoResponseDTO> inserir(@RequestBody(description = "Dados do endereço", required = true) EnderecoRequestDTO dto);
 
     @Operation(summary = "Exclui um endereço de uma empresa")
     @ApiResponse(responseCode = "204", description = "Endereço excluído")
     @ApiResourceResponses
-    ResponseEntity<Void> excluir(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
+    ResponseEntity<Void> excluir(@Parameter(description = SwaggerParameterDescriptions.ID_ENDERECO) Long idEndereco);
 }

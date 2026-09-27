@@ -45,7 +45,7 @@ public interface VerificacaoResultadoOpenapi {
     @ApiResourceResponses
     @ApiBusinessRuleResponse
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<VerificacaoResultadoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_CICLO) Long idCiclo, @Parameter(description = SwaggerParameterDescriptions.ID_CRIADO_POR) Long idCriadoPor, @RequestBody(description = "Dados da verificação de resultado", required = true) VerificacaoResultadoRequestDTO dto);
+    ResponseEntity<VerificacaoResultadoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_CICLO) Long idCiclo, @RequestBody(description = "Dados da verificação de resultado", required = true) VerificacaoResultadoRequestDTO dto);
 
     @Operation(summary = "Atualiza parcialmente uma verificação")
     @ApiResponse(responseCode = "200", description = "Verificação atualizada", content = @Content(schema = @Schema(implementation = VerificacaoResultadoResponseDTO.class)))

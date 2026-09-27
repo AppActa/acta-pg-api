@@ -46,7 +46,7 @@ public interface PriorizacaoProblemaOpenapi {
     @ApiResponse(responseCode = "200", description = "Priorização atualizada", content = @Content(schema = @Schema(implementation = PriorizacaoProblemaResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<PriorizacaoProblemaResponseDTO> patch(@Parameter(description = SwaggerParameterDescriptions.ID_PROBLEMA) Long idProblema, @Parameter(description = SwaggerParameterDescriptions.ID_USUARIO) Long idUsuario, @RequestBody(description = SwaggerParameterDescriptions.CAMPOS_PRIORIZACAO, required = true) Map<String, Object> campos);
+    ResponseEntity<PriorizacaoProblemaResponseDTO> patch(@Parameter(description = SwaggerParameterDescriptions.ID_PROBLEMA) Long idProblema, @RequestBody(description = SwaggerParameterDescriptions.CAMPOS_PRIORIZACAO, required = true) Map<String, Object> campos);
 
     @Operation(summary = "Aplica o peso da priorização ao problema")
     @ApiResponse(responseCode = "200", description = "Peso aplicado", content = @Content(schema = @Schema(implementation = ProblemaResponseDTO.class)))

@@ -29,18 +29,18 @@ public interface TelefoneOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa);
+    ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneEmpresa();
 
     @Operation(summary = "Adiciona um telefone a uma empresa")
     @ApiResponse(responseCode = "201", description = "Telefone adicionado", content = @Content(schema = @Schema(implementation = TelefoneResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @RequestBody(description = "Dados do telefone", required = true) TelefoneRequestDTO dto);
+    ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(@RequestBody(description = "Dados do telefone", required = true) TelefoneRequestDTO dto);
 
     @Operation(summary = "Exclui um telefone de uma empresa")
     @ApiResponse(responseCode = "204", description = "Telefone excluído")
     @ApiResourceResponses
-    ResponseEntity<Void> excluirTelefoneEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.ID_TELEFONE) Long idTelefone);
+    ResponseEntity<Void> excluirTelefoneEmpresa(@Parameter(description = SwaggerParameterDescriptions.ID_TELEFONE) Long idTelefone);
 
     @Operation(summary = "Lista os telefones de um colaborador")
     @ApiResponse(responseCode = "200", description = "Telefones encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TelefoneResponseDTO.class))))
