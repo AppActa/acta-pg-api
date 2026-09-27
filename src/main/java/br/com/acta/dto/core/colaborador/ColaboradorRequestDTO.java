@@ -75,10 +75,5 @@ public record ColaboradorRequestDTO(
         @Schema(description = "Requisição de usuário do colaborador", implementation = UsuarioRequestDTO.class)
         @NotNull(message = "{validation.idUsuario.notnull}")
         @Valid
-        UsuarioRequestDTO usuario,
-
-        @Schema(description = "ID da empresa do colaborador", example = SwaggerRequestExamples.ID_EMPRESA)
-        @Positive(message = "{validation.idEmpresa.positive}")
-        @NotNull(message = "{validation.idEmpresa.notnull}")
-        Long idEmpresa
+        UsuarioRequestDTO usuario
 ) {}
