@@ -34,27 +34,19 @@ public interface AuthOpenapi {
     @ApiAuthenticationResponses
     @ApiNotFoundResponse
     @ApiConflictResponse
-    ResponseEntity<MeResponseDTO> ativar(
-            @Parameter(hidden = true) FirebaseIdentity identity,
-            @RequestBody(description = "Código alfanumérico recebido por e-mail", required = true) @Valid AtivarRequestDTO request
-    );
+    ResponseEntity<MeResponseDTO> ativar(@Parameter(hidden = true) FirebaseIdentity identity, @RequestBody(description = "Código alfanumérico recebido por e-mail", required = true) @Valid AtivarRequestDTO request);
 
     @Operation(summary = "Cadastra um colaborador e envia convite de acesso")
     @ApiResponse(responseCode = "201", description = "Convite criado e enviado", content = @Content(schema = @Schema(implementation = ColaboradorResponseDTO.class)))
     @ApiAuthenticationResponses
     @ApiConflictResponse
     @ApiBusinessRuleResponse
-    ResponseEntity<ColaboradorResponseDTO> convidar(
-            @Parameter(description = "ID da empresa") Long idEmpresa,
-            @RequestBody(description = "Dados do colaborador e acesso", required = true) @Valid ConviteRequestDTO request
-    );
+    ResponseEntity<ColaboradorResponseDTO> convidar(@Parameter(description = "ID da empresa") Long idEmpresa, @RequestBody(description = "Dados do colaborador e acesso", required = true) @Valid ConviteRequestDTO request);
 
     @Operation(summary = "Reenvia o convite de um colaborador pendente")
     @ApiResponse(responseCode = "204", description = "Convite reenviado")
     @ApiAuthenticationResponses
     @ApiConflictResponse
     @ApiBusinessRuleResponse
-    ResponseEntity<Void> reenviarConvite(
-            @Parameter(description = "ID do colaborador") Long idColaborador
-    );
+    ResponseEntity<Void> reenviarConvite(@Parameter(description = "ID do colaborador") Long idColaborador);
 }
