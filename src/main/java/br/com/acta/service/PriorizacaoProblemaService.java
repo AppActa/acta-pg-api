@@ -52,7 +52,7 @@ public class PriorizacaoProblemaService {
     public PriorizacaoProblemaResponseDTO inserir(Long idProblema, PriorizacaoProblemaRequestDTO dto){
         authService.configurarUsuarioAtual();
         Problema problema = problemaService.getEntity(idProblema);
-        Usuario usuario = usuarioService.getEntity(dto.idUsuario());
+        Usuario usuario = usuarioService.getEntity(authService.atual().idUsuario());
 
         Validador.validarMesmoCiclo(problema.getCiclo(), usuario.getCiclos());
 
@@ -74,12 +74,12 @@ public class PriorizacaoProblemaService {
         }
     }
 
-    @PreAuthorize("@authService.isProprioUsuario(#idUsuario)")
+    @PreAuthorize("isAuthenticated()")
     @Transactional
-    public PriorizacaoProblemaResponseDTO patch(Long idProblema, Long idUsuario, Map<String, Object> campos){
+    public PriorizacaoProblemaResponseDTO patch(Long idProblema, Map<String, Object> campos){
         authService.configurarUsuarioAtual();
         Validador.validarCampos(campos, patchConfig);
-        PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, idUsuario);
+        PriorizacaoProblema priorizacaoProblema = getEntity(idProblema, authService.atual().idUsuario());
 
         if (campos.containsKey("posicao")) priorizacaoProblema.setPosicao((Integer) campos.get("posicao"));
         if (campos.containsKey("pesoCalculado")) {

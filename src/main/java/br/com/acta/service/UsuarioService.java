@@ -89,7 +89,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         return mapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and @authService.isUsuarioEmpresa(#idEmpresa)")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') and @authService.isUsuarioByIdEmpresa(#idEmpresa)")
     public List<UsuarioResponseDTO> buscar(Long idEmpresa, TipoUsuario tipo) {
         List<Usuario> usuarios;
 
@@ -152,7 +152,7 @@ extends BaseService<UsuarioRequestDTO, UsuarioResponseDTO, Usuario> {
         if (repo.existsByEmailLoginIgnoreCase(dto.email())) throw new UniqueViolationException("E-mail");
 
         usuario.setStatus(StatusGeral.ATIVO);
-        usuario.setEmpresa(empresaService.getEntity(dto.idEmpresa()));
+        usuario.setEmpresa(empresaService.getEntity(atual().idEmpresa()));
     }
 
     @Override

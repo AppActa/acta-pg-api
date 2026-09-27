@@ -1,7 +1,6 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
-import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
@@ -104,12 +103,8 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
-    public List<CicloResponseDTO> buscarPorStatus(Long idEmpresa, Long idGestor, StatusCiclo status){
-        if (idEmpresa == null && idGestor == null) {
-            throw new InvalidRequestException("É necessário informar pelo menos o ID da empresa ou do gestor");
-        }
-
-        List<Ciclo> ciclos = repo.buscar(idEmpresa, idGestor, status);
+    public List<CicloResponseDTO> buscarPorStatus(Long idGestor, StatusCiclo status){
+        List<Ciclo> ciclos = repo.buscar(atual().idEmpresa(), idGestor, status);
         return mapper.toResponseList(ciclos);
     }
 
@@ -121,7 +116,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
     @Override
     protected void antesInserir(Ciclo ciclo, CicloRequestDTO dto) {
-        Empresa empresa = empresaService.getEntity(dto.idEmpresa());
+        Empresa empresa = empresaService.getEntity(atual().idEmpresa());
         Usuario gestor = usuarioService.getEntity(dto.idGestor());
 
         if (ciclo.getIconeUrl() == null) ciclo.setIconeUrl(IconeCiclo.PEOPLE.getUrl());

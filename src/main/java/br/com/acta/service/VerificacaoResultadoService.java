@@ -70,10 +70,10 @@ public class VerificacaoResultadoService extends BaseService<VerificacaoResultad
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
-    public VerificacaoResultadoResponseDTO inserir(Long idCiclo, VerificacaoResultadoRequestDTO dto, Long idCriadoPor){
+    public VerificacaoResultadoResponseDTO inserir(Long idCiclo, VerificacaoResultadoRequestDTO dto){
         configurarUsuarioAtual();
         Ciclo ciclo = cicloService.getEntity(idCiclo);
-        Usuario usuario = usuarioService.getEntity(idCriadoPor);
+        Usuario usuario = usuarioService.getEntity(atual().idUsuario());
         Validador.validarMesmoCiclo(ciclo, usuario.getCiclos());
 
         if (ciclo.getStatus() != StatusCiclo.VERIFICACAO) {

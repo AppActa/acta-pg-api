@@ -116,14 +116,13 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
-    public CausaRaizResponseDTO validar(Long idCausaRaiz, Long idUsuario, Boolean aceita){
+    public CausaRaizResponseDTO validar(Long idCausaRaiz, Boolean aceita){
         configurarUsuarioAtual();
         CausaRaiz causaRaiz = getEntity(idCausaRaiz);
-        Usuario usuario = usuarioService.getEntity(idUsuario);
+        Usuario usuario = usuarioService.getEntity(atual().idUsuario());
 
-        if (causaRaiz.getValidadaEm() != null){
-            throw new InvalidRequestException("A causa raiz já foi validada");
-        }
+        if (causaRaiz.getValidadaEm() != null) throw new InvalidRequestException("A causa raiz já foi validada");
+
 
         Validador.validarTipoUsuario(usuario, TipoUsuario.ADMIN, TipoUsuario.GESTOR);
         Validador.validarMesmoCiclo(causaRaiz.getCiclo(), usuario.getCiclos());
@@ -141,6 +140,4 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
         return repo.findByIdAndCicloEmpresaId(id, atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("Causa Raiz", id));
     }
-
-
 }
