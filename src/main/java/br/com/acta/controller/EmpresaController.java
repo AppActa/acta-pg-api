@@ -5,6 +5,7 @@ import br.com.acta.dto.core.empresa.EmpresaRequestDTO;
 import br.com.acta.dto.core.empresa.EmpresaResponseDTO;
 import br.com.acta.entity.enums.TamanhoEmpresa;
 import br.com.acta.service.EmpresaService;
+import br.com.acta.service.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -20,6 +21,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class EmpresaController implements EmpresaOpenapi {
     private final EmpresaService service;
+    private final AuthService authService;
 
     @GetMapping
     @Override
@@ -28,10 +30,10 @@ public class EmpresaController implements EmpresaOpenapi {
         return ResponseEntity.ok(empresas);
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/atual")
     @Override
-    public ResponseEntity<EmpresaResponseDTO> buscar(@PathVariable @Positive Long id) {
-        EmpresaResponseDTO empresa = service.buscar(id);
+    public ResponseEntity<EmpresaResponseDTO> buscar() {
+        EmpresaResponseDTO empresa = service.buscar(authService.atual().idEmpresa());
         return ResponseEntity.ok(empresa);
     }
 
@@ -42,17 +44,17 @@ public class EmpresaController implements EmpresaOpenapi {
         return ResponseEntity.status(201).body(empresa);
     }
 
-    @PatchMapping("/{id}")
+    @PatchMapping()
     @Override
-    public ResponseEntity<EmpresaResponseDTO> patch(@PathVariable @Positive Long id, @RequestBody Map<String, Object> campos) {
-        EmpresaResponseDTO empresa = service.patch(id, campos);
+    public ResponseEntity<EmpresaResponseDTO> patch(@RequestBody Map<String, Object> campos) {
+        EmpresaResponseDTO empresa = service.patch(authService.atual().idEmpresa(), campos);
         return ResponseEntity.ok(empresa);
     }
 
-    @DeleteMapping("/{id}")
+    @DeleteMapping()
     @Override
-    public ResponseEntity<Void> excluir(@PathVariable @Positive Long id) {
-        service.excluir(id);
+    public ResponseEntity<Void> excluir() {
+        service.excluir(authService.atual().idEmpresa());
         return ResponseEntity.noContent().build();
     }
 }

@@ -4,6 +4,7 @@ import br.com.acta.common.config.swagger.openapi.EmailOpenapi;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
 import br.com.acta.dto.core.contato.email.EmailResponseDTO;
 import br.com.acta.service.EmailService;
+import br.com.acta.service.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -18,25 +19,26 @@ import java.util.List;
 @RequiredArgsConstructor
 public class EmailController implements EmailOpenapi {
     private final EmailService service;
+    private final AuthService authService;
 
-    @GetMapping("/empresa/{idEmpresa}/email")
+    @GetMapping("/empresa/email")
     @Override
-    public ResponseEntity<List<EmailResponseDTO>> buscarEmailEmpresa(@PathVariable @Positive Long idEmpresa) {
-        List<EmailResponseDTO> emails = service.buscarEmailsEmpresa(idEmpresa);
+    public ResponseEntity<List<EmailResponseDTO>> buscarEmailEmpresa() {
+        List<EmailResponseDTO> emails = service.buscarEmailsEmpresa(authService.atual().idEmpresa());
         return ResponseEntity.ok(emails);
     }
 
-    @PostMapping("/empresa/{idEmpresa}/email/")
+    @PostMapping("/empresa/email/")
     @Override
-    public ResponseEntity<EmailResponseDTO> inserirEmailEmpresa(@PathVariable @Positive Long idEmpresa, @RequestBody @Valid EmailRequestDTO dto) {
-        EmailResponseDTO email = service.inserirEmailEmpresa(idEmpresa, dto);
+    public ResponseEntity<EmailResponseDTO> inserirEmailEmpresa(@RequestBody @Valid EmailRequestDTO dto) {
+        EmailResponseDTO email = service.inserirEmailEmpresa(authService.atual().idEmpresa(), dto);
         return ResponseEntity.status(201).body(email);
     }
 
-    @DeleteMapping("/empresa/{idEmpresa}/email/{idEmail}")
+    @DeleteMapping("/empresa/email/{idEmail}")
     @Override
-    public ResponseEntity<Void> excluirEmailEmpresa(@PathVariable @Positive Long idEmpresa, @PathVariable @Positive Long idEmail) {
-        service.excluirEmailEmpresa(idEmpresa, idEmail);
+    public ResponseEntity<Void> excluirEmailEmpresa(@PathVariable @Positive Long idEmail) {
+        service.excluirEmailEmpresa(authService.atual().idEmpresa(), idEmail);
         return ResponseEntity.noContent().build();
     }
 

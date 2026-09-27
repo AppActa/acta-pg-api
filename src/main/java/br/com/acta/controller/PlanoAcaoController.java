@@ -38,8 +38,8 @@ public class PlanoAcaoController implements PlanoAcaoOpenapi {
 
     @PostMapping("/ciclo/{idCiclo}/plano-acao")
     @Override
-    public ResponseEntity<PlanoAcaoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @Valid @RequestBody PlanoAcaoRequestDTO dto, @RequestParam @Positive Long idCriadoPor) {
-        PlanoAcaoResponseDTO plano = service.inserir(dto, idCiclo, idCriadoPor);
+    public ResponseEntity<PlanoAcaoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @Valid @RequestBody PlanoAcaoRequestDTO dto) {
+        PlanoAcaoResponseDTO plano = service.inserir(dto, idCiclo);
         return ResponseEntity.status(201).body(plano);
     }
 

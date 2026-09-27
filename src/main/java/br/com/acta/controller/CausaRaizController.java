@@ -50,8 +50,8 @@ public class CausaRaizController implements CausaRaizOpenapi {
 
     @PatchMapping("/causas-raiz/{id}/validar")
     @Override
-    public ResponseEntity<CausaRaizResponseDTO> validar(@PathVariable @Positive Long id, @RequestParam @Positive Long idUsuario, @RequestParam Boolean aceita) {
-        CausaRaizResponseDTO ciclo = service.validar(id, idUsuario, aceita);
+    public ResponseEntity<CausaRaizResponseDTO> validar(@PathVariable @Positive Long id, @RequestParam Boolean aceita) {
+        CausaRaizResponseDTO ciclo = service.validar(id, aceita);
         return ResponseEntity.ok(ciclo);
     }
 

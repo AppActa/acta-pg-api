@@ -9,6 +9,7 @@ import br.com.acta.dto.auth.ConviteRequestDTO;
 import br.com.acta.dto.auth.MeResponseDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
 import br.com.acta.service.ConviteService;
+import br.com.acta.service.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ import org.springframework.web.bind.annotation.RestController;
 public class AuthController implements AuthOpenapi {
     private final ConviteService conviteService;
     private final AuthMapper mapper;
+    private final AuthService authService;
 
     @GetMapping("/me")
     @Override
@@ -41,10 +43,10 @@ public class AuthController implements AuthOpenapi {
         return ResponseEntity.ok(conviteService.ativar(identity, request.token()));
     }
 
-    @PostMapping("/empresas/{idEmpresa}/convites")
+    @PostMapping("/empresas/me/convites")
     @Override
-    public ResponseEntity<ColaboradorResponseDTO> convidar(@PathVariable @Positive Long idEmpresa, @RequestBody @Valid ConviteRequestDTO request) {
-        return ResponseEntity.status(201).body(conviteService.convidar(idEmpresa, request));
+    public ResponseEntity<ColaboradorResponseDTO> convidar(@RequestBody @Valid ConviteRequestDTO request) {
+        return ResponseEntity.status(201).body(conviteService.convidar(authService.atual().idEmpresa(), request));
     }
 
     @PostMapping("/colaborador/{idColaborador}/convite")

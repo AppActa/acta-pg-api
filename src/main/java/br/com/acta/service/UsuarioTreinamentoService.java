@@ -66,6 +66,8 @@ public class UsuarioTreinamentoService {
     @Transactional
     public UsuarioTreinamentoResponseDTO patchStatus(Long idTreinamento, Long idUsuario, StatusTreinamento status){
         authService.configurarUsuarioAtual();
+        treinamentoService.getEntity(idTreinamento);
+        usuarioService.getEntity(idUsuario);
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
             throw new ModelNotFoundException("Usuário e treinamento", List.of(idUsuario, idTreinamento));
         }
@@ -89,6 +91,8 @@ public class UsuarioTreinamentoService {
     @Transactional
     public void excluir(Long idTreinamento, Long idUsuario){
         authService.configurarUsuarioAtual();
+        treinamentoService.getEntity(idTreinamento);
+        usuarioService.getEntity(idUsuario);
         if (!repo.existsByUsuarioIdAndTreinamentoId(idUsuario, idTreinamento)) {
             throw new ModelNotFoundException("Usuário e treinamento", List.of(idUsuario, idTreinamento));
         }
