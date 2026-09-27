@@ -1,6 +1,7 @@
 package br.com.acta.common.utils;
 
 import br.com.acta.common.handler.exception.InvalidRequestException;
+import br.com.acta.entity.enums.IconeCiclo;
 
 import java.math.BigDecimal;
 import java.time.LocalDate;
@@ -77,5 +78,13 @@ public final class ConversorObject {
         } catch (IllegalArgumentException iae) {
             throw new InvalidRequestException("O valor informado é inválido");
         }
+    }
+
+    public static String toIconeCicloUrl(Object valor) {
+        if (valor == null) throw new InvalidRequestException("A URL do ícone não pode ser removida");
+
+        String url = valor.toString();
+        if (!IconeCiclo.permite(url)) throw new InvalidRequestException("A URL do ícone informada não é permitida");
+        return url;
     }
 }

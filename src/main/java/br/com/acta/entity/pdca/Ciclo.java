@@ -33,6 +33,9 @@ public class Ciclo extends TituloDescricaoBase {
     @Column(name = "data_fim_real")
     private LocalDate dataFimReal;
 
+    @Column(name = "icone_url", nullable = false)
+    private String iconeUrl;
+
     @OneToMany(mappedBy = "ciclo", fetch = FetchType.LAZY)
     private Set<UsuarioCiclo> colaboradores;
 

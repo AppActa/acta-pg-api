@@ -1,11 +1,16 @@
 package br.com.acta.dto.pdca.ciclo;
 
-import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
-import com.fasterxml.jackson.annotation.JsonFormat;
-import io.swagger.v3.oas.annotations.media.Schema;
-import jakarta.validation.constraints.*;
-
 import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
+import io.swagger.v3.oas.annotations.media.Schema;
+import jakarta.validation.constraints.FutureOrPresent;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public record CicloRequestDTO(
         @Schema(description = "Título do ciclo", example = SwaggerRequestExamples.TITULO_CICLO)
@@ -29,6 +34,9 @@ public record CicloRequestDTO(
         @NotNull(message = "{validation.ciclo.dataEstimadaFim.notnull}")
         @FutureOrPresent(message = "{validation.ciclo.dataEstimadaFim.future}")
         LocalDate dataEstimadaFim,
+
+        @Schema(description = "URL do ícone do ciclo. Quando omitida, utiliza people-icon.svg")
+        String iconeUrl,
 
         @Schema(description = "ID da empresa", example = SwaggerRequestExamples.ID_EMPRESA)
         @NotNull(message = "{validation.idEmpresa.notnull}")

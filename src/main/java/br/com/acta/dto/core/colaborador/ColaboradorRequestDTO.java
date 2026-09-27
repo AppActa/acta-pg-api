@@ -1,18 +1,26 @@
 package br.com.acta.dto.core.colaborador;
 
+import java.time.LocalDate;
+import java.util.List;
+
+import org.hibernate.validator.constraints.br.CPF;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import br.com.acta.common.config.swagger.examples.SwaggerRequestExamples;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
-import com.fasterxml.jackson.annotation.JsonFormat;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.Valid;
-import jakarta.validation.constraints.*;
-import org.hibernate.validator.constraints.br.CPF;
-
-import java.time.LocalDate;
-import java.util.List;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Past;
+import jakarta.validation.constraints.PastOrPresent;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.Size;
 
 public record ColaboradorRequestDTO(
         @Schema(description = "CPF do colaborador", example = SwaggerRequestExamples.CPF, minLength = 11, maxLength = 11)
@@ -25,6 +33,10 @@ public record ColaboradorRequestDTO(
         @NotBlank(message = "{validation.colaborador.nome.notblank}")
         @Size(max = 160, message = "{validation.nome.size}")
         String nome,
+
+        @Schema(description = "Nome do colaborador exibido na interface", example = SwaggerRequestExamples.NOME, maxLength = 160)
+        @Size(max = 160, message = "{validation.colaborador.nickname.size}")
+        String nickname,
 
         @Schema(description = "Cargo do colaborador", example = SwaggerRequestExamples.CARGO, maxLength = 100)
         @NotBlank(message = "{validation.colaborador.cargo.notblank}")
