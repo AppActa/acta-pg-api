@@ -18,9 +18,10 @@ public record ProblemaRequestDTO(
         @Size(max = 1000, message = "{validation.descricao.size}")
         String descricao,
 
-        @Schema(description = "Peso do problema", example = SwaggerRequestExamples.PESO)
+        @Schema(description = "Peso do problema, de 0 a 1 (inclusive)", minimum = "0", maximum = "1", example = SwaggerRequestExamples.PESO)
         @NotNull(message = "{validation.peso.notnull}")
-        @Positive(message = "{validation.peso.positive}")
+        @DecimalMin(value = "0", message = "{validation.problema.peso.range}")
+        @DecimalMax(value = "1", message = "{validation.problema.peso.range}")
         @Digits(integer = 3, fraction = 2, message = "{validation.peso.digits}")
         BigDecimal peso,
 

@@ -1,6 +1,7 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
+import br.com.acta.common.handler.exception.InvalidRequestException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
 import br.com.acta.common.utils.ConversorObject;
@@ -20,6 +21,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -64,7 +66,10 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
         if (campos.containsKey("descricao")) problema.setDescricao((String) campos.get("descricao"));
         if (campos.containsKey("peso")) {
             Object pesoObject = campos.get("peso");
-            problema.setPeso(ConversorObject.toBigDecimal(pesoObject));
+            BigDecimal peso = ConversorObject.toBigDecimal(pesoObject);
+            if (peso.compareTo(BigDecimal.ZERO) < 0 || peso.compareTo(BigDecimal.ONE) > 0)
+                throw new InvalidRequestException("O peso do problema deve estar entre 0 e 1, inclusive.");
+            problema.setPeso(peso);
         }
 
         Problema salvo = repo.save(problema);
@@ -129,6 +134,7 @@ extends BaseService<ProblemaRequestDTO, ProblemaResponseDTO, Problema>{
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<ProblemaResponseDTO> buscar(Long idCiclo, StatusProblema status, Long idProblemaPai){
+        cicloService.getEntity(idCiclo);
         List<Problema> problemas;
 
         if (status == null && idProblemaPai == null){
