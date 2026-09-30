@@ -31,6 +31,13 @@ public class TarefaController implements TarefaOpenapi {
         return ResponseEntity.ok(tarefas);
     }
 
+    @GetMapping("/tarefa/minhas")
+    @Override
+    public ResponseEntity<List<TarefaResponseDTO>> buscarUsuario() {
+        List<TarefaResponseDTO> tarefas = service.buscarUsuario();
+        return ResponseEntity.ok(tarefas);
+    }
+
     @GetMapping("/tarefa/{id}")
     @Override
     public ResponseEntity<TarefaResponseDTO> buscar(@PathVariable @Positive Long id) {
