@@ -82,6 +82,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
+    @Transactional(readOnly = true)
     public List<ColaboradorResponseDTO> buscarPorEmpresa(Long idEmpresa){
         Empresa empresa = empresaService.getEntity(idEmpresa);
         Set<Colaborador> colaboradores = empresa.getColaboradores();

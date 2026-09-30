@@ -111,6 +111,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public Double avancoCiclo(Long id) {
+        getEntity(id);
         return repo.avancoCiclo(id);
     }
 

@@ -31,6 +31,7 @@ public class UsuarioTreinamentoService {
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<UsuarioTreinamentoResponseDTO> buscar(Long idTreinamento){
+        treinamentoService.getEntity(idTreinamento);
         List<UsuarioTreinamento> usuarios = repo.findByTreinamentoId(idTreinamento);
 
         return mapper.toResponseList(usuarios);
