@@ -1,19 +1,30 @@
 package br.com.acta.entity.core;
 
+import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
+
+import org.hibernate.annotations.JdbcTypeCode;
+import org.hibernate.type.SqlTypes;
+
 import br.com.acta.entity.base.auditoria.AuditoriaBase;
 import br.com.acta.entity.core.contato.EmailColaborador;
 import br.com.acta.entity.core.contato.TelefoneColaborador;
 import br.com.acta.entity.enums.StatusGeral;
-import jakarta.persistence.*;
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-import org.hibernate.annotations.JdbcTypeCode;
-import org.hibernate.type.SqlTypes;
-
-import java.time.LocalDate;
-import java.util.HashSet;
-import java.util.Set;
 
 @Entity
 @Table(name = "colaborador", schema = "public")
@@ -25,6 +36,9 @@ public class Colaborador extends AuditoriaBase {
 
     @Column(name = "nome", length = 160, nullable = false)
     private String nome;
+
+    @Column(name = "nickname", length = 160, nullable = false)
+    private String nickname;
 
     @Column(name = "cargo", length = 100, nullable = false)
     private String cargo;

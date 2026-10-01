@@ -1,17 +1,25 @@
 package br.com.acta.service;
 
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
+
+import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.RegexException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.core.colaborador.ColaboradorMapper;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
-import br.com.acta.dto.core.colaborador.ColaboradorMapper;
-import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
 import br.com.acta.dto.core.contato.email.EmailColaboradorMapper;
 import br.com.acta.dto.core.contato.telefone.TelefoneColaboradorMapper;
+import br.com.acta.dto.core.usuario.UsuarioResponseDTO;
 import br.com.acta.entity.core.Colaborador;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
@@ -25,13 +33,6 @@ import br.com.acta.repository.padrao.TarefaRepository;
 import br.com.acta.repository.padrao.TelefoneColaboradorRepository;
 import br.com.acta.service.base.BaseService;
 import br.com.caelum.stella.validation.CPFValidator;
-import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 @Service
 public class ColaboradorService extends BaseService<ColaboradorRequestDTO, ColaboradorResponseDTO, Colaborador> {
@@ -46,7 +47,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     private final TelefoneColaboradorMapper telefoneMapper;
     private final CPFValidator CPFValidator = new CPFValidator();
     private final PatchConfig patchConfig = new PatchConfig(
-            Set.of("cpf", "nome", "cargo", "area", "dataNascimento", "dataContratacao", "permissaoGestor", "status", "emails", "telefones", "usuario", "idEmpresa"),
+            Set.of("cpf", "nome", "nickname", "cargo", "area", "dataNascimento", "dataContratacao", "permissaoGestor", "status", "emails", "telefones", "usuario", "idEmpresa"),
             Set.of("nome", "cargo", "area", "permissaoGestor", "status")
     );
 
@@ -111,6 +112,9 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         colaborador.setEmpresa(empresa);
         colaborador.setUsuario(usuario);
         colaborador.setStatus(StatusGeral.ATIVO);
+        if (colaborador.getNickname() == null) {
+            colaborador.setNickname(colaborador.getNome());
+        }
 
         dto.emails().forEach(email -> {
             if (emailRepo.existsByContatoIgnoreCase(email.email())) throw new UniqueViolationException("E-mail");
