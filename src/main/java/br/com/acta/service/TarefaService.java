@@ -77,6 +77,13 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
        return mapper.toResponseList(tarefas);
     }
 
+    @PreAuthorize("isAuthenticated()")
+    @Transactional(readOnly = true)
+    public List<TarefaResponseDTO> buscarUsuario() {
+        List<Tarefa> tarefas = repo.findByResponsavelId(atual().idUsuario());
+        return mapper.toResponseList(tarefas);
+    }
+
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Transactional
     public TarefaResponseDTO inserir(Long idPlanoAcao, TarefaRequestDTO dto) {

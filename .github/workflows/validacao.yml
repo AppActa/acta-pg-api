@@ -47,7 +47,10 @@ jobs:
         run: psql -h localhost -U acta_test -d acta_test -f src/main/resources/sql/script.sql
 
       # compila e executa os testes com o profile test
-      - run: bash ./mvnw -B clean verify
+      - run: >-
+          bash ./mvnw -B -Daether.transport.http.retryHandler.count=5
+          -Daether.transport.http.retryHandler.serviceUnavailable=429,502,503
+          clean verify
 
   # procura vulnerabilidades no código java
   seguranca:
@@ -57,7 +60,7 @@ jobs:
       - uses: actions/checkout@v4
 
       # prepara o codeql para analisar java
-      - uses: github/codeql-action/init@v3
+      - uses: github/codeql-action/init@v4
         with:
           languages: java
           build-mode: manual
@@ -68,7 +71,10 @@ jobs:
           java-version: '17'
 
       # compila para disponibilizar as classes ao codeql
-      - run: bash ./mvnw -B clean package -DskipTests
+      - run: >-
+          bash ./mvnw -B -Daether.transport.http.retryHandler.count=5
+          -Daether.transport.http.retryHandler.serviceUnavailable=429,502,503
+          clean package -DskipTests
 
       # publica os alertas na aba security do github
-      - uses: github/codeql-action/analyze@v3
+      - uses: github/codeql-action/analyze@v4

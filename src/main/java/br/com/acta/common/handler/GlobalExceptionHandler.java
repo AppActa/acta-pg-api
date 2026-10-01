@@ -7,7 +7,6 @@ import org.springframework.dao.OptimisticLockingFailureException;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.http.converter.HttpMessageNotReadableException;
-import org.springframework.mail.MailException;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.security.authentication.AuthenticationCredentialsNotFoundException;
 import org.springframework.web.HttpMediaTypeNotAcceptableException;
@@ -179,13 +178,6 @@ public class GlobalExceptionHandler {
                 .body(new ErroResponse(List.of(bre.getMessage()), 422));
     }
 
-    @ExceptionHandler(MailException.class)
-    public ResponseEntity<ErroResponse> handleMail(MailException mailException){
-        log.error("Falha ao enviar convite pelo Brevo", mailException);
-        return ResponseEntity.status(HttpStatus.UNPROCESSABLE_CONTENT)
-                .body(new ErroResponse(List.of("Não foi possível enviar o convite por e-mail"), 422));
-    }
-
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErroResponse> handleValidation(MethodArgumentNotValidException manve){
         log.error("mensagem", manve);
@@ -209,11 +201,6 @@ public class GlobalExceptionHandler {
                         ? e.getDefaultMessage()
                         : "Um parâmetro informado é inválido")
                 .toList();
-        log.error("Detalhes da validação: {}", hmve.getParameterValidationResults().stream()
-                .map(r -> r.getMethodParameter().getParameterName() + ": " + r.getResolvableErrors().stream()
-                        .map(e -> e.getDefaultMessage()).toList())
-                .toList());
-
         return ResponseEntity.status(HttpStatus.BAD_REQUEST)
                 .body(new ErroResponse(mensagens, 400));
     }

@@ -107,6 +107,7 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<PlanoAcaoResponseDTO> buscar(Long id, StatusPlanoAcao status, Prioridade prioridade){
+        cicloService.getEntity(id);
         List<PlanoAcao> planosAcao;
 
         if (status == null && prioridade == null){

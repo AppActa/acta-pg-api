@@ -33,6 +33,6 @@ public class Treinamento extends TituloDescricaoBase {
     @JoinColumn(name = "id_responsavel", nullable = false)
     private Usuario responsavel;
 
-    @OneToMany(mappedBy = "treinamento")
+    @OneToMany(mappedBy = "treinamento", cascade = CascadeType.REMOVE)
     private Set<UsuarioTreinamento> participantes;
 }

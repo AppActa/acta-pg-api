@@ -37,6 +37,11 @@ public interface TarefaOpenapi {
     @ApiNotFoundResponse
     ResponseEntity<List<TarefaResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_ACAO) Long idPlanoAcao, @Parameter(description = SwaggerParameterDescriptions.FILTRO_STATUS) StatusTarefa status, @Parameter(description = SwaggerParameterDescriptions.FILTRO_ID_RESPONSAVEL) Long idResponsavel, @Parameter(description = SwaggerParameterDescriptions.FILTRO_PRIORIDADE) Prioridade prioridade);
 
+    @Operation(summary = "Lista as tarefas atribuídas ao usuário autenticado")
+    @ApiResponse(responseCode = "200", description = "Tarefas encontradas", content = @Content(array = @ArraySchema(schema = @Schema(implementation = TarefaResponseDTO.class))))
+    @ApiAuthenticationResponses
+    ResponseEntity<List<TarefaResponseDTO>> buscarUsuario();
+
     @Operation(summary = "Busca uma tarefa")
     @ApiResponse(responseCode = "200", description = "Tarefa encontrada", content = @Content(schema = @Schema(implementation = TarefaResponseDTO.class)))
     @ApiAuthenticationResponses

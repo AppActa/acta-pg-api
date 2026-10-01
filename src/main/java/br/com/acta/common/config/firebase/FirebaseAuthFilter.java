@@ -31,7 +31,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
 
     @Override
     protected boolean shouldNotFilter(HttpServletRequest request) throws ServletException {
-        return "/api/v1/health".equals(request.getServletPath());
+        return "/api/v1/health".equals(request.getServletPath()) || "/images/acta-logo.png".equals(request.getServletPath());
     }
 
     @Override

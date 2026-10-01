@@ -69,6 +69,7 @@ extends BaseService<CausaRaizRequestDTO, CausaRaizResponseDTO, CausaRaiz> {
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
     public List<CausaRaizResponseDTO> buscar(Long idCiclo, Long idProblema, Boolean aceita, Boolean principal){
+        cicloService.getEntity(idCiclo);
         List<CausaRaiz> causasRaiz = repo.buscar(idCiclo, idProblema, aceita, principal);
 
         return mapper.toResponseList(causasRaiz);

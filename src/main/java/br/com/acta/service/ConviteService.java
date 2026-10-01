@@ -3,8 +3,8 @@ package br.com.acta.service;
 import br.com.acta.common.client.BrevoClient;
 import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
 import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
-import br.com.acta.common.handler.exception.ForbiddenOperationException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
+import br.com.acta.common.utils.TokenUtils;
 import br.com.acta.dto.auth.AuthMapper;
 import br.com.acta.dto.auth.ConviteMapper;
 import br.com.acta.dto.auth.ConviteRequestDTO;
@@ -17,11 +17,7 @@ import br.com.acta.entity.core.Convite;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusGeral;
-import br.com.acta.repository.padrao.ColaboradorRepository;
-import br.com.acta.repository.padrao.ConviteRepository;
-import br.com.acta.repository.padrao.EmailColaboradorRepository;
-import br.com.acta.repository.padrao.TelefoneColaboradorRepository;
-import br.com.acta.repository.padrao.UsuarioRepository;
+import br.com.acta.repository.padrao.*;
 import jakarta.persistence.EntityManager;
 import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
@@ -29,18 +25,13 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.SecureRandom;
 import java.time.OffsetDateTime;
-import java.util.Base64;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class ConviteService {
-    private static final int VALIDADE_MINUTOS = 5;
-    private static final String CARACTERES_CODIGO = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    private static final int TAMANHO_CODIGO = 6;
+    private static final int VALIDADE_MINUTOS = 30;
 
     private final UsuarioRepository usuarioRepo;
     private final ColaboradorRepository colaboradorRepo;
@@ -55,7 +46,6 @@ public class ConviteService {
     private final BrevoClient brevoClient;
     private final EmailColaboradorRepository emailColaboradorRepo;
     private final TelefoneColaboradorRepository telefoneColaboradorRepo;
-    private final SecureRandom secureRandom = new SecureRandom();
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -81,7 +71,7 @@ public class ConviteService {
 
         Empresa empresa = empresaService.getEntity(idEmpresa);
         Usuario usuario = buscarUsuarioParaConvite(dto, empresa);
-        String codigo = gerarCodigo();
+        String codigo = TokenUtils.gerarCodigo();
         Convite convite = criarConvite(usuario, codigo);
 
         entityManager.flush();
@@ -100,7 +90,10 @@ public class ConviteService {
         if (colaborador.getStatus() != StatusGeral.PENDENTE || usuario.getStatus() != StatusGeral.PENDENTE)
             throw new UniqueViolationException("E-mail");
 
-        String codigo = gerarCodigo();
+        List<Convite> convitesPendentes = repo.findAllByUsuarioIdAndStatusAndExpiraEmAfter(usuario.getId(), "PENDENTE", OffsetDateTime.now());
+        convitesPendentes.forEach(convitePendente -> convitePendente.setStatus("REVOGADO"));
+
+        String codigo = TokenUtils.gerarCodigo();
         Convite convite = criarConvite(usuario, codigo);
 
         entityManager.flush();
@@ -112,7 +105,7 @@ public class ConviteService {
     }
 
     private Convite buscarConviteValido(String token, FirebaseIdentity identity) {
-        Convite convite = repo.findByTokenHash(hashToken(token)).orElseThrow(FirebaseAccessRevokedException::new);
+        Convite convite = repo.findByTokenHash(TokenUtils.hashToken(token)).orElseThrow(FirebaseAccessRevokedException::new);
 
         boolean valido = convite.getStatus().equals("PENDENTE")
                 && convite.getExpiraEm().isAfter(OffsetDateTime.now())
@@ -135,7 +128,9 @@ public class ConviteService {
     }
 
     private void ativarCadastro(Usuario usuario, Colaborador colaborador, Convite convite, String firebaseUid) {
-        entityManager.createNativeQuery("SELECT set_config('app.current_user_id', :id, true)").setParameter("id", usuario.getId().toString()).getSingleResult();
+        entityManager
+                .createNativeQuery("SELECT set_config('app.current_user_id', :id, true)")
+                .setParameter("id", usuario.getId().toString()).getSingleResult();
 
         usuario.setFirebaseUid(firebaseUid);
         usuario.setStatus(StatusGeral.ATIVO);
@@ -191,10 +186,6 @@ public class ConviteService {
         if (!usuario.getEmpresa().getId().equals(empresa.getId())) throw new UniqueViolationException("E-mail");
     }
 
-    private Usuario criarUsuarioPendente(ConviteRequestDTO dto, Empresa empresa) {
-        return usuarioRepo.save(mapper.toUsuarioPendente(dto, empresa));
-    }
-
     private Colaborador criarColaboradorPendente(ConviteRequestDTO dto, Empresa empresa, Usuario usuario) {
         ColaboradorRequestDTO request = mapper.toColaboradorRequest(dto);
         Colaborador colaborador = colaboradorMapper.toEntity(request);
@@ -207,31 +198,18 @@ public class ConviteService {
     }
 
     private Convite criarConvite(Usuario usuario, String token) {
+        if (repo.existsByUsuarioIdAndStatusAndExpiraEmAfter(usuario.getId(), "PENDENTE", OffsetDateTime.now()))
+            throw new UniqueViolationException("convite pendente válido");
+
         Convite convite = new Convite();
 
         convite.setUsuario(usuario);
         convite.setEmailDestino(usuario.getEmailLogin());
-        convite.setTokenHash(hashToken(token));
+        convite.setTokenHash(TokenUtils.hashToken(token));
         convite.setStatus("PENDENTE");
         convite.setExpiraEm(OffsetDateTime.now().plusMinutes(VALIDADE_MINUTOS));
         convite.setCriadoPor(usuarioService.getEntity(authService.atual().idUsuario()));
 
         return repo.save(convite);
-    }
-
-    private String gerarCodigo() {
-        StringBuilder codigo = new StringBuilder(TAMANHO_CODIGO);
-        for (int i = 0; i < TAMANHO_CODIGO; i++)
-            codigo.append(CARACTERES_CODIGO.charAt(secureRandom.nextInt(CARACTERES_CODIGO.length())));
-        return codigo.toString();
-    }
-
-    private String hashToken(String token) {
-        try {
-            byte[] hash = MessageDigest.getInstance("SHA-256").digest(token.getBytes(StandardCharsets.UTF_8));
-            return Base64.getEncoder().encodeToString(hash);
-        } catch (java.security.NoSuchAlgorithmException exception) {
-            throw new IllegalStateException("SHA-256 indisponível", exception);
-        }
     }
 }

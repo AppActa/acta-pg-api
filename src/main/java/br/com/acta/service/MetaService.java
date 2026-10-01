@@ -39,6 +39,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     private final MetaMapper mapper;
     private final UsuarioService usuarioService;
     private final PlanoAcaoService planoAcaoService;
+    private final CicloService cicloService;
     private final PatchConfig patchConfig = new PatchConfig(
             Set.of("objetivo", "responsaveis", "status", "prioridade", "valorBase", "valorAlvo", "unidadeMedida", "prazo", "area", "categoria"),
             Set.of("objetivo", "valorAlvo", "prazo", "prioridade", "area", "categoria")
@@ -51,12 +52,13 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
                 .orElseThrow(() -> new ModelNotFoundException("Meta", id));
     }
 
-    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, UsuarioMapper usuarioMapper, AuthService authService) {
+    public MetaService(MetaRepository repo, MetaMapper mapper, UsuarioService usuarioService, PlanoAcaoService planoAcaoService, CicloService cicloService, UsuarioMapper usuarioMapper, AuthService authService) {
         super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.usuarioService = usuarioService;
         this.planoAcaoService = planoAcaoService;
+        this.cicloService = cicloService;
         this.usuarioMapper = usuarioMapper;
     }
 
@@ -153,6 +155,7 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
     @PreAuthorize("isAuthenticated()")
     @Transactional
     public List<MetaResponseDTO> buscar(Long idCiclo, StatusMeta status, Prioridade prioridade) {
+        cicloService.getEntity(idCiclo);
         List<Meta> metas;
 
         if (status == null && prioridade == null){
