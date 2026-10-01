@@ -38,7 +38,7 @@ public interface UsuarioOpenapi {
     @ApiResponse(responseCode = "200", description = "Usuários encontrados", content = @Content(array = @ArraySchema(schema = @Schema(implementation = UsuarioResponseDTO.class))))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
-    ResponseEntity<List<UsuarioResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long idEmpresa, @Parameter(description = SwaggerParameterDescriptions.TIPO_USUARIO) TipoUsuario tipo);
+    ResponseEntity<List<UsuarioResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.TIPO_USUARIO) TipoUsuario tipo);
 
     @Operation(summary = "Busca um usuário")
     @ApiResponse(responseCode = "200", description = "Usuário encontrado", content = @Content(schema = @Schema(implementation = UsuarioResponseDTO.class)))

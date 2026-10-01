@@ -36,8 +36,8 @@ public class VerificacaoResultadoController implements VerificacaoResultadoOpena
 
     @PostMapping("/ciclos/{idCiclo}/verificacoes")
     @Override
-    public ResponseEntity<VerificacaoResultadoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @RequestParam @Positive Long idCriadoPor, @Valid @RequestBody VerificacaoResultadoRequestDTO dto){
-        VerificacaoResultadoResponseDTO resultado = service.inserir(idCiclo, dto, idCriadoPor);
+    public ResponseEntity<VerificacaoResultadoResponseDTO> inserir(@PathVariable @Positive Long idCiclo, @Valid @RequestBody VerificacaoResultadoRequestDTO dto){
+        VerificacaoResultadoResponseDTO resultado = service.inserir(idCiclo, dto);
         return ResponseEntity.status(201).body(resultado);
     }
 

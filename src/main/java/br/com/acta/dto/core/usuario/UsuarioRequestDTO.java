@@ -23,11 +23,6 @@ public record UsuarioRequestDTO(
 
         @Schema(description = "Tipo do usuário", example = SwaggerRequestExamples.TIPO_USUARIO, implementation = TipoUsuario.class)
         @NotNull(message = "{validation.usuario.tipo.notnull}")
-        TipoUsuario tipo,
-
-        @Schema(description = "ID da empresa associada ao usuário", example = SwaggerRequestExamples.ID_EMPRESA)
-        @NotNull(message = "{validation.idEmpresa.notnull}")
-        @Positive(message = "{validation.idEmpresa.positive}")
-        Long idEmpresa
+        TipoUsuario tipo
 ) {
 }

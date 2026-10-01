@@ -123,13 +123,13 @@ extends BaseService<PlanoAcaoRequestDTO, PlanoAcaoResponseDTO, PlanoAcao> {
     }
 
     @Transactional
-    public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo, Long idCriadoPor) {
+    public PlanoAcaoResponseDTO inserir(PlanoAcaoRequestDTO dto, Long idCiclo) {
         configurarUsuarioAtual();
         PlanoAcao planoAcao = mapper.toEntity(dto);
         Ciclo ciclo = cicloService.getEntity(idCiclo);
         Validador.validarCicloAberto(ciclo);
 
-        Usuario criadoPor = usuarioService.getEntity(idCriadoPor);
+        Usuario criadoPor = usuarioService.getEntity(atual().idUsuario());
         Validador.validarMesmoCiclo(ciclo, criadoPor.getCiclos());
 
         planoAcao.setCiclo(ciclo);

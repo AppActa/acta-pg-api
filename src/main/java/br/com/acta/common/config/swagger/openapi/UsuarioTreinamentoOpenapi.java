@@ -38,13 +38,13 @@ public interface UsuarioTreinamentoOpenapi {
     @ApiUnsupportedMediaTypeResponse
     ResponseEntity<UsuarioTreinamentoResponseDTO> inserir(@Parameter(description = SwaggerParameterDescriptions.ID_TREINAMENTO) Long id, @RequestBody(description = "Dados do vínculo entre usuário e treinamento", required = true) UsuarioTreinamentoRequestDTO dto);
 
-    @Operation(summary = "Atualiza o status do usuário no treinamento")
+    @Operation(summary = "Atualiza o status do usuário em um treinamento da empresa autenticada")
     @ApiResponse(responseCode = "200", description = "Status atualizado", content = @Content(schema = @Schema(implementation = UsuarioTreinamentoResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
     ResponseEntity<UsuarioTreinamentoResponseDTO> patchStatus(@Parameter(description = SwaggerParameterDescriptions.ID_TREINAMENTO) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_USUARIO) Long idUsuario, @Parameter(description = SwaggerParameterDescriptions.NOVO_STATUS) StatusTreinamento status);
 
-    @Operation(summary = "Remove um usuário do treinamento")
+    @Operation(summary = "Remove um usuário de um treinamento da empresa autenticada")
     @ApiResponse(responseCode = "204", description = "Usuário removido")
     @ApiResourceResponses
     @ApiBusinessRuleResponse

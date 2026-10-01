@@ -23,8 +23,8 @@ public class CicloController implements CicloOpenapi {
 
     @GetMapping
     @Override
-    public ResponseEntity<List<CicloResponseDTO>> buscar(@RequestParam(required = false) @Positive Long idEmpresa, @RequestParam(required = false) @Positive Long idGestor, @RequestParam(required = false) StatusCiclo status) {
-        List<CicloResponseDTO> ciclos = service.buscarPorStatus(idEmpresa, idGestor, status);
+    public ResponseEntity<List<CicloResponseDTO>> buscar(@RequestParam(required = false) @Positive Long idGestor, @RequestParam(required = false) StatusCiclo status) {
+        List<CicloResponseDTO> ciclos = service.buscarPorStatus(idGestor, status);
 
         return ResponseEntity.ok(ciclos);
     }

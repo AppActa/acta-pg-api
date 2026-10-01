@@ -9,11 +9,6 @@ import jakarta.validation.constraints.Positive;
 import java.math.BigDecimal;
 
 public record PriorizacaoProblemaRequestDTO(
-        @Schema(description = "ID do usuário", example = SwaggerRequestExamples.ID_USUARIO)
-        @NotNull(message = "{validation.idUsuario.notnull}")
-        @Positive(message = "{validation.idUsuario.positive}")
-        Long idUsuario,
-
         @Schema(description = "Posição da priorização", example = SwaggerRequestExamples.POSICAO)
         @NotNull(message = "{validation.priorizacao.posicao.notnull}")
         @Positive(message = "{validation.priorizacao.posicao.positive}")

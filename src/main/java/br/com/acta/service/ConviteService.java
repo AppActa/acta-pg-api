@@ -196,7 +196,7 @@ public class ConviteService {
     }
 
     private Colaborador criarColaboradorPendente(ConviteRequestDTO dto, Empresa empresa, Usuario usuario) {
-        ColaboradorRequestDTO request = mapper.toColaboradorRequest(dto, empresa.getId());
+        ColaboradorRequestDTO request = mapper.toColaboradorRequest(dto);
         Colaborador colaborador = colaboradorMapper.toEntity(request);
 
         colaborador.setEmpresa(empresa);

@@ -4,6 +4,7 @@ import br.com.acta.common.config.swagger.openapi.TelefoneOpenapi;
 import br.com.acta.dto.core.contato.telefone.TelefoneRequestDTO;
 import br.com.acta.dto.core.contato.telefone.TelefoneResponseDTO;
 import br.com.acta.service.TelefoneService;
+import br.com.acta.service.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -18,25 +19,26 @@ import java.util.List;
 @RequestMapping(value = "/api/v1", produces = MediaType.APPLICATION_JSON_VALUE)
 public class TelefoneController implements TelefoneOpenapi {
     private final TelefoneService service;
+    private final AuthService authService;
 
-    @GetMapping("/empresa/{idEmpresa}/telefone")
+    @GetMapping("/empresa/telefone")
     @Override
-    public ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneEmpresa(@PathVariable @Positive Long idEmpresa) {
-        List<TelefoneResponseDTO> telefones = service.buscarTelefonesEmpresa(idEmpresa);
+    public ResponseEntity<List<TelefoneResponseDTO>> buscarTelefoneEmpresa() {
+        List<TelefoneResponseDTO> telefones = service.buscarTelefonesEmpresa(authService.atual().idEmpresa());
         return ResponseEntity.ok(telefones);
     }
 
-    @PostMapping("/empresa/{idEmpresa}/telefone/")
+    @PostMapping("/empresa/telefone/")
     @Override
-    public ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(@PathVariable @Positive Long idEmpresa, @RequestBody @Valid TelefoneRequestDTO dto) {
-        TelefoneResponseDTO telefone = service.inserirTelefoneEmpresa(idEmpresa, dto);
+    public ResponseEntity<TelefoneResponseDTO> inserirTelefoneEmpresa(@RequestBody @Valid TelefoneRequestDTO dto) {
+        TelefoneResponseDTO telefone = service.inserirTelefoneEmpresa(authService.atual().idEmpresa(), dto);
         return ResponseEntity.status(201).body(telefone);
     }
 
-    @DeleteMapping("/empresa/{idEmpresa}/telefone/{idTelefone}")
+    @DeleteMapping("/empresa/telefone/{idTelefone}")
     @Override
-    public ResponseEntity<Void> excluirTelefoneEmpresa(@PathVariable @Positive Long idEmpresa, @PathVariable @Positive Long idTelefone) {
-        service.excluirTelefoneEmpresa(idEmpresa, idTelefone);
+    public ResponseEntity<Void> excluirTelefoneEmpresa(@PathVariable @Positive Long idTelefone) {
+        service.excluirTelefoneEmpresa(authService.atual().idEmpresa(), idTelefone);
         return ResponseEntity.noContent().build();
     }
 

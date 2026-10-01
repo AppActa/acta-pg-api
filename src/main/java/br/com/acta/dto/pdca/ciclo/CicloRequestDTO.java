@@ -38,11 +38,6 @@ public record CicloRequestDTO(
         @Schema(description = "URL do ícone do ciclo. Quando omitida, utiliza people-icon.svg")
         String iconeUrl,
 
-        @Schema(description = "ID da empresa", example = SwaggerRequestExamples.ID_EMPRESA)
-        @NotNull(message = "{validation.idEmpresa.notnull}")
-        @Positive(message = "{validation.idEmpresa.positive}")
-        Long idEmpresa,
-
         @Schema(description = "ID do gestor", example = SwaggerRequestExamples.ID_GESTOR)
         @NotNull(message = "{validation.ciclo.idGestor.notnull}")
         @Positive(message = "{validation.ciclo.idGestor.positive}")

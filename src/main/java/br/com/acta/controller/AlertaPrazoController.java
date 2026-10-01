@@ -24,8 +24,8 @@ public class AlertaPrazoController implements AlertaPrazoOpenapi {
 
     @PatchMapping("/{id}")
     @Override
-    public ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@PathVariable @Positive Long idTarefa, @PathVariable @Positive Long id, @RequestParam @Positive Long idUsuario) {
-        AlertaPrazoResponseDTO alerta = service.marcarLido(idTarefa, id, idUsuario);
+    public ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@PathVariable @Positive Long idTarefa, @PathVariable @Positive Long id) {
+        AlertaPrazoResponseDTO alerta = service.marcarLido(idTarefa, id);
         return ResponseEntity.ok(alerta);
     }
 }

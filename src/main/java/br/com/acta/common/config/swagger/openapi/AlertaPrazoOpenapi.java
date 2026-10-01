@@ -30,5 +30,5 @@ public interface AlertaPrazoOpenapi {
     @ApiResponse(responseCode = "200", description = "Alerta marcado como lido", content = @Content(schema = @Schema(implementation = AlertaPrazoResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
-    ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long idTarefa, @Parameter(description = SwaggerParameterDescriptions.ID_ALERTA) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_USUARIO) Long idUsuario);
+    ResponseEntity<AlertaPrazoResponseDTO> marcarLido(@Parameter(description = SwaggerParameterDescriptions.ID_TAREFA) Long idTarefa, @Parameter(description = SwaggerParameterDescriptions.ID_ALERTA) Long id);
 }

@@ -22,7 +22,7 @@ public final class SwaggerOpenapiDescriptions {
             A API permite:
 
             - Criar e consultar usuários;
-            - Filtrar usuários por empresa e tipo;
+            - Filtrar usuários da empresa autenticada por tipo;
             - Consultar os ciclos de um usuário;
             - Atualizar dados e remover a foto de perfil;
             - Inativar um usuário.
@@ -45,7 +45,7 @@ public final class SwaggerOpenapiDescriptions {
             A API permite:
 
             - Criar e consultar colaboradores;
-            - Consultar colaboradores de uma empresa;
+            - Consultar colaboradores da empresa autenticada;
             - Atualizar parcialmente os dados de um colaborador;
             - Inativar um colaborador.
             """;
@@ -239,7 +239,7 @@ public final class SwaggerOpenapiDescriptions {
             
             - Criar um novo ciclo;
             - Consultar ciclos;
-            - Filtrar ciclos por empresa, gestor e status;
+            - Filtrar ciclos da empresa autenticada por gestor e status;
             - Atualizar parcialmente dados de um ciclo aberto;
             - Controlar a progressão de status;
             - Cancelar um ciclo.

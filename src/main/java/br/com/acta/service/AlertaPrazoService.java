@@ -49,13 +49,13 @@ public class AlertaPrazoService {
         repo.gerarAlertasAtraso();
     }
 
-    @PreAuthorize("@authService.isProprioUsuario(#idUsuario)")
+    @PreAuthorize("isAuthenticated()")
     @Transactional
-    public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta, Long idUsuario){
+    public AlertaPrazoResponseDTO marcarLido(Long idTarefa, Long idAlerta){
         authService.configurarUsuarioAtual();
         AlertaPrazo alertaPrazo = getEntity(idTarefa, idAlerta);
 
-        Validador.validarMesmoId(idUsuario, alertaPrazo.getUsuarioDestino().getId(), true);
+        Validador.validarMesmoId(authService.atual().idUsuario(), alertaPrazo.getUsuarioDestino().getId(), true);
 
         alertaPrazo.setLidoEm(OffsetDateTime.now());
         AlertaPrazo salvo = repo.save(alertaPrazo);

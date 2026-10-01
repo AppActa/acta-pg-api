@@ -38,7 +38,7 @@ public interface EmpresaOpenapi {
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiNotFoundResponse
-    ResponseEntity<EmpresaResponseDTO> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long id);
+    ResponseEntity<EmpresaResponseDTO> buscar();
 
     @Operation(summary = "Cria uma empresa")
     @ApiResponse(responseCode = "201", description = "Empresa criada", content = @Content(schema = @Schema(implementation = EmpresaResponseDTO.class)))
@@ -52,10 +52,10 @@ public interface EmpresaOpenapi {
     @ApiResponse(responseCode = "200", description = "Empresa atualizada", content = @Content(schema = @Schema(implementation = EmpresaResponseDTO.class)))
     @ApiResourceResponses
     @ApiUnsupportedMediaTypeResponse
-    ResponseEntity<EmpresaResponseDTO> patch(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long id, @RequestBody(description = SwaggerParameterDescriptions.CAMPOS_EMPRESA, required = true) Map<String, Object> campos);
+    ResponseEntity<EmpresaResponseDTO> patch(@RequestBody(description = SwaggerParameterDescriptions.CAMPOS_EMPRESA, required = true) Map<String, Object> campos);
 
     @Operation(summary = "Inativa uma empresa")
     @ApiResponse(responseCode = "204", description = "Empresa inativada")
     @ApiResourceResponses
-    ResponseEntity<Void> excluir(@Parameter(description = SwaggerParameterDescriptions.ID_EMPRESA) Long id);
+    ResponseEntity<Void> excluir();
 }

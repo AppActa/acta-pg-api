@@ -4,6 +4,7 @@ import br.com.acta.common.config.swagger.openapi.ColaboradorOpenapi;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.colaborador.ColaboradorResponseDTO;
 import br.com.acta.service.ColaboradorService;
+import br.com.acta.service.AuthService;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.Positive;
 import lombok.RequiredArgsConstructor;
@@ -20,11 +21,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class ColaboradorController implements ColaboradorOpenapi {
     private final ColaboradorService service;
+    private final AuthService authService;
 
-    @GetMapping("empresa/{idEmpresa}")
+    @GetMapping("/empresa")
     @Override
-    public ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa(@PathVariable @Positive Long idEmpresa){
-        List<ColaboradorResponseDTO> colaboradores = service.buscarPorEmpresa(idEmpresa);
+    public ResponseEntity<List<ColaboradorResponseDTO>> buscarPorEmpresa(){
+        List<ColaboradorResponseDTO> colaboradores = service.buscarPorEmpresa(authService.atual().idEmpresa());
         return ResponseEntity.ok(colaboradores);
     }
 

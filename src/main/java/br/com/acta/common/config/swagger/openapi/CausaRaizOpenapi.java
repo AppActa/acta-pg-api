@@ -56,7 +56,7 @@ public interface CausaRaizOpenapi {
     @ApiResponse(responseCode = "200", description = "Causa-raiz validada", content = @Content(schema = @Schema(implementation = CausaRaizResponseDTO.class)))
     @ApiResourceResponses
     @ApiBusinessRuleResponse
-    ResponseEntity<CausaRaizResponseDTO> validar(@Parameter(description = SwaggerParameterDescriptions.ID_CAUSA_RAIZ) Long id, @Parameter(description = SwaggerParameterDescriptions.ID_USUARIO) Long idUsuario, @Parameter(description = SwaggerParameterDescriptions.ACEITA_CAUSA_RAIZ) Boolean aceita);
+    ResponseEntity<CausaRaizResponseDTO> validar(@Parameter(description = SwaggerParameterDescriptions.ID_CAUSA_RAIZ) Long id, @Parameter(description = SwaggerParameterDescriptions.ACEITA_CAUSA_RAIZ) Boolean aceita);
 
     @Operation(summary = "Exclui uma causa-raiz")
     @ApiResponse(responseCode = "204", description = "Causa-raiz excluída")

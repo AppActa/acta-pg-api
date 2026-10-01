@@ -67,7 +67,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
     @Override
     public List<ColaboradorResponseDTO> buscar() {
-        List<Colaborador> colaboradores = repo.findAllByStatus(StatusGeral.ATIVO);
+        List<Colaborador> colaboradores = repo.findByEmpresaIdAndStatus(atual().idEmpresa(), StatusGeral.ATIVO);
         return mapper.toResponseList(colaboradores);
     }
 
@@ -93,7 +93,6 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
     protected void antesInserir(Colaborador colaborador, ColaboradorRequestDTO dto) {
         if (!CPFValidator.isEligible(dto.cpf())) throw new RegexException("CPF");
         if (repo.existsByCpf(dto.cpf())) throw new UniqueViolationException("CPF");
-        Validador.validarMesmoId(dto.idEmpresa(), dto.usuario().idEmpresa(), true);
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -104,7 +103,7 @@ public class ColaboradorService extends BaseService<ColaboradorRequestDTO, Colab
         Colaborador colaborador = mapper.toEntity(dto);
         antesInserir(colaborador, dto);
 
-        Empresa empresa = empresaService.getEntity(dto.idEmpresa());
+        Empresa empresa = empresaService.getEntity(atual().idEmpresa());
 
         UsuarioResponseDTO usuarioResp = usuarioService.inserir(dto.usuario());
         Usuario usuario = usuarioService.getEntity(usuarioResp.id());

@@ -35,10 +35,10 @@ public class PriorizacaoProblemaController implements PriorizacaoProblemaOpenapi
         return ResponseEntity.status(201).body(priorizacao);
     }
 
-    @PatchMapping("/{idUsuario}")
+    @PatchMapping
     @Override
-    public ResponseEntity<PriorizacaoProblemaResponseDTO> patch(@PathVariable @Positive Long idProblema, @PathVariable @Positive Long idUsuario, @RequestBody Map<String, Object> campos) {
-        PriorizacaoProblemaResponseDTO priorizacao = service.patch(idProblema, idUsuario, campos);
+    public ResponseEntity<PriorizacaoProblemaResponseDTO> patch(@PathVariable @Positive Long idProblema, @RequestBody Map<String, Object> campos) {
+        PriorizacaoProblemaResponseDTO priorizacao = service.patch(idProblema, campos);
         return ResponseEntity.ok(priorizacao);
     }
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import br.com.acta.common.config.swagger.openapi.UsuarioOpenapi;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.service.UsuarioCicloService;
+import br.com.acta.service.AuthService;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -32,6 +33,7 @@ import lombok.RequiredArgsConstructor;
 public class UsuarioController implements UsuarioOpenapi {
     private final UsuarioService service;
     private final UsuarioCicloService usuarioCicloService;
+    private final AuthService authService;
 
     @GetMapping("/ciclos-usuario/{idUsuario}")
     @Override
@@ -40,10 +42,10 @@ public class UsuarioController implements UsuarioOpenapi {
         return ResponseEntity.ok(ciclos);
     }
 
-    @GetMapping("/empresa/{idEmpresa}")
+    @GetMapping("/empresa")
     @Override
-    public ResponseEntity<List<UsuarioResponseDTO>> buscar(@PathVariable @Positive Long idEmpresa, @RequestParam(required = false) TipoUsuario tipo) {
-        List<UsuarioResponseDTO> usuarios = service.buscar(idEmpresa, tipo);
+    public ResponseEntity<List<UsuarioResponseDTO>> buscar(@RequestParam(required = false) TipoUsuario tipo) {
+        List<UsuarioResponseDTO> usuarios = service.buscar(authService.atual().idEmpresa(), tipo);
         return ResponseEntity.ok(usuarios);
     }
 
