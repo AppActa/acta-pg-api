@@ -12,6 +12,9 @@ extends BaseMapper<UsuarioCicloRequestDTO, UsuarioCicloResponseDTO, UsuarioCiclo
     @Mapping(source = "usuario.id", target = "idUsuario")
     @Mapping(source = "ciclo.id", target = "idCiclo")
     @Mapping(source = "usuario.nome", target = "nomeUsuario")
+    @Mapping(source = "ciclo.status", target = "statusCiclo")
+    @Mapping(source = "ciclo.titulo", target = "nomeCiclo")
+    @Mapping(source = "ciclo.iconeUrl", target = "iconeUrl")
     @Override
     UsuarioCicloResponseDTO toResponse(UsuarioCiclo usuarioCiclo);
 
