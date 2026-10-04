@@ -1,10 +1,10 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
-import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
 import br.com.acta.common.config.swagger.annotation.ApiNotFoundResponse;
+import br.com.acta.common.config.swagger.annotation.ApiResourceResponses;
 import br.com.acta.common.config.swagger.annotation.ApiUnsupportedMediaTypeResponse;
 import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
 import br.com.acta.common.config.swagger.examples.SwaggerParameterDescriptions;
@@ -16,9 +16,9 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.media.ArraySchema;
 import io.swagger.v3.oas.annotations.media.Content;
 import io.swagger.v3.oas.annotations.media.Schema;
+import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import org.springframework.http.ResponseEntity;
 
 import java.util.List;
@@ -26,7 +26,6 @@ import java.util.Map;
 
 @Tag(name = "Empresas", description = SwaggerOpenapiDescriptions.EMPRESA_CONTROLLER)
 public interface EmpresaOpenapi {
-
     @Operation(summary = "Lista as empresas")
     @ApiResponse(responseCode = "200", description = "Empresas encontradas", content = @Content(array = @ArraySchema(schema = @Schema(implementation = EmpresaResponseDTO.class))))
     @ApiAuthenticationResponses
