@@ -33,8 +33,10 @@ public class AuthController implements AuthOpenapi {
 
     @GetMapping("/me")
     @Override
-    public ResponseEntity<MeResponseDTO> me(@AuthenticationPrincipal UsuarioAutenticado usuario) {
-        return ResponseEntity.ok(mapper.toMeResponse(usuario));
+    public ResponseEntity<MeResponseDTO> me(@AuthenticationPrincipal FirebaseIdentity identity) {
+        UsuarioAutenticado usuario = authService.buscarParaMe(identity);
+        MeResponseDTO dto = mapper.toMeResponse(usuario);
+        return ResponseEntity.ok(dto);
     }
 
     @PostMapping("/auth/ativar")

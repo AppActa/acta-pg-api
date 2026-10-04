@@ -1,6 +1,9 @@
 package br.com.acta.service;
 
 import br.com.acta.common.config.firebase.UsuarioAutenticado;
+import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
+import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
+import br.com.acta.dto.auth.AuthMapper;
 import br.com.acta.repository.padrao.ColaboradorRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import jakarta.persistence.EntityManager;
@@ -20,6 +23,7 @@ import java.util.Objects;
 public class AuthService {
     private final UsuarioRepository repo;
     private final ColaboradorRepository colaboradorRepo;
+    private final AuthMapper authMapper;
 
     @PersistenceContext
     private EntityManager entityManager;
@@ -31,6 +35,13 @@ public class AuthService {
             throw new AuthenticationCredentialsNotFoundException("Usuário não autenticado");
 
         return usuario;
+    }
+
+    @Transactional(readOnly = true)
+    public UsuarioAutenticado buscarParaMe(FirebaseIdentity identity) {
+        return repo.findByFirebaseUid(identity.firebaseUid())
+                .map(authMapper::toUsuarioAutenticado)
+                .orElseThrow(FirebaseAccessRevokedException::new);
     }
 
     // só executa se existir uma transação aberta

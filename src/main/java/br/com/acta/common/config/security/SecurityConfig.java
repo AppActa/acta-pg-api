@@ -94,6 +94,9 @@ public class SecurityConfig {
 
                         // filtro ainda nao procura usuario no banco, so valida a identidade firebase
                         .requestMatchers(HttpMethod.POST, "/api/v1/auth/ativar").hasAuthority("ROLE_FIREBASE")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/onboarding/inicio").hasAuthority("ROLE_FIREBASE")
+                        .requestMatchers(HttpMethod.POST, "/api/v1/onboarding/gestor").hasAuthority("ROLE_FIREBASE")
+                        .requestMatchers(HttpMethod.GET, "/api/v1/me").hasAuthority("ROLE_FIREBASE")
 
                         // o restante so segue depois que o filtro montou o usuario autenticado
                         .anyRequest().authenticated()
