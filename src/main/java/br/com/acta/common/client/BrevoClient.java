@@ -31,20 +31,30 @@ public class BrevoClient {
     private String url;
 
     public void enviarConvite(String email, String nome, OffsetDateTime expiraEm, String token) {
+        String html = carregarTemplate("convite-usuario.html")
+                .replace("{{nome}}", HtmlUtils.htmlEscape(nome))
+                .replace("{{expiraEm}}", expiraEm.format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm")))
+                .replace("{{logoUrl}}", HtmlUtils.htmlEscape(url.replaceAll("/+$", "") + "/images/acta-logo.png"))
+                .replace("{{codigo}}", HtmlUtils.htmlEscape(token));
+
+        enviarEmail(email, "Convite para acessar o ACTA", html);
+    }
+
+    public void enviarConviteAdmin(String email, String nome, String empresa, OffsetDateTime expiraEm, String token) {
+        String html = carregarTemplate("convite-admin.html")
+                .replace("{{nome}}", HtmlUtils.htmlEscape(nome))
+                .replace("{{empresa}}", HtmlUtils.htmlEscape(empresa))
+                .replace("{{expiraEm}}", expiraEm.format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm")))
+                .replace("{{logoUrl}}", HtmlUtils.htmlEscape(url.replaceAll("/+$", "") + "/images/acta-logo.png"))
+                .replace("{{codigo}}", HtmlUtils.htmlEscape(token));
+
+        enviarEmail(email, "Convite para administrar uma empresa no ACTA", html);
+    }
+
+    private void enviarEmail(String email, String assunto, String html) {
+        Map<String, Object> mensagem = montarMensagem(email, assunto, html);
+
         try {
-            String html = carregarTemplate()
-                    .replace("{{nome}}", HtmlUtils.htmlEscape(nome))
-                    .replace("{{expiraEm}}", expiraEm.format(DateTimeFormatter.ofPattern("dd/MM/yyyy 'às' HH:mm")))
-                    .replace("{{logoUrl}}", HtmlUtils.htmlEscape(url.replaceAll("/+$", "") + "/images/acta-logo.png"))
-                    .replace("{{codigo}}", HtmlUtils.htmlEscape(token));
-
-            Map<String, Object> mensagem = Map.of(
-                    "sender", Map.of("name", "ACTA", "email", senderEmail),
-                    "to", List.of(Map.of("email", email)),
-                    "subject", "Convite para acessar o ACTA",
-                    "htmlContent", html
-            );
-
             REST_CLIENT.post()
                     .uri("https://api.brevo.com/v3/smtp/email").contentType(MediaType.APPLICATION_JSON)
                     .header("api-key", apiKey)
@@ -54,8 +64,17 @@ public class BrevoClient {
         }
     }
 
-    private String carregarTemplate() {
-        try (InputStream input = new ClassPathResource("templates/email/convite-usuario.html").getInputStream()) {
+    private Map<String, Object> montarMensagem(String email, String assunto, String html) {
+        return Map.of(
+                "sender", Map.of("name", "ACTA", "email", senderEmail),
+                "to", List.of(Map.of("email", email)),
+                "subject", assunto,
+                "htmlContent", html
+        );
+    }
+
+    private String carregarTemplate(String template) {
+        try (InputStream input = new ClassPathResource("templates/email/" + template).getInputStream()) {
             return new String(input.readAllBytes(), StandardCharsets.UTF_8);
         } catch (IOException ioe) {
             throw new BusinessRuleException("Não foi possível carregar o e-mail de convite");
