@@ -26,9 +26,10 @@ public interface OnboardingOpenapi {
     ResponseEntity<OnboardingResponseDTO> iniciar(@Parameter(hidden = true) FirebaseIdentity identity, @RequestBody(description = "Dados do gestor e CNPJ da empresa", required = true, content = @Content(schema = @Schema(implementation = OnboardingInicioRequestDTO.class))) OnboardingInicioRequestDTO dto);
 
     @Operation(summary = "Cadastra a empresa e seu primeiro gestor")
-    @ApiResponse(responseCode = "201", description = "Cadastro criado aguardando liberação", content = @Content(schema = @Schema(implementation = OnboardingResponseDTO.class)))
+    @ApiResponse(responseCode = "201", description = "Empresa criada e primeiro gestor ativado", content = @Content(schema = @Schema(implementation = OnboardingResponseDTO.class)))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiConflictResponse
     ResponseEntity<OnboardingResponseDTO> cadastrarEmpresa(@Parameter(hidden = true) FirebaseIdentity identity, @RequestBody(description = "Dados do gestor, empresa e endereço principal", required = true, content = @Content(schema = @Schema(implementation = OnboardingRequestDTO.class))) OnboardingRequestDTO dto);
+
 }

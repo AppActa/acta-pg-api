@@ -31,6 +31,8 @@ import br.com.acta.repository.padrao.ConviteRepository;
 import br.com.acta.repository.padrao.EmpresaRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.caelum.stella.validation.CNPJValidator;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
@@ -55,6 +57,9 @@ public class OnboardingService {
     private final BrevoClient brevoClient;
     private final CNPJValidator cnpjValidator = new CNPJValidator();
 
+    @PersistenceContext
+    private EntityManager entityManager;
+
     @PreAuthorize("hasAuthority('ROLE_FIREBASE')")
     @Transactional
     public OnboardingResponseDTO iniciar(FirebaseIdentity identity, OnboardingInicioRequestDTO dto) {
@@ -67,13 +72,18 @@ public class OnboardingService {
         Empresa empresa = empresaRepo.findByCnpj(dto.cnpj()).orElse(null);
         if (empresa == null) return onboardingMapper.solicitarDadosEmpresa();
 
+        // Empresas pendentes não têm administrador ativo para um convite
+        if (empresa.getStatus() == StatusGeral.PENDENTE) {
+            return new OnboardingResponseDTO(true, false, false, empresa.getId(), empresa.getStatus(), null, null, null);
+        }
+
         Usuario criadoPor = usuarioRepo.findByTipoAndStatusAndEmpresaId(TipoUsuario.ADMIN, StatusGeral.ATIVO, empresa.getId())
             .stream()
             .findFirst()
             .orElseThrow(() -> new BusinessRuleException("A empresa não possui um administrador ativo"));
 
-        Usuario usuario = criarUsuarioPendente(dto.gestor(), identity.email(), empresa);
-        Colaborador colaborador = criarColaboradorPendente(dto.gestor(), identity.email(), empresa, usuario);
+        Usuario usuario = criarUsuario(dto.gestor(), identity.email(), empresa, null, StatusGeral.PENDENTE);
+        Colaborador colaborador = criarColaborador(dto.gestor(), identity.email(), empresa, usuario, StatusGeral.PENDENTE);
         usuario.setColaborador(colaborador);
 
         String codigo = TokenUtils.gerarCodigo();
@@ -102,6 +112,8 @@ public class OnboardingService {
         if (usuarioRepo.existsByEmailLoginIgnoreCase(identity.email())) throw new UniqueViolationException("E-mail");
         if (colaboradorRepo.existsByCpf(dto.gestor().cpf())) throw new UniqueViolationException("CPF");
 
+        configurarAuditoriaOnboardingInicial();
+
         EmpresaRequestDTO empresaRequest = new EmpresaRequestDTO(
                 dto.empresa().cnpj(),
                 dto.empresa().nome(),
@@ -120,11 +132,11 @@ public class OnboardingService {
                         true)));
 
         Empresa empresa = empresaMapper.toEntity(empresaRequest);
-        empresa.setStatus(StatusGeral.PENDENTE);
+        empresa.setStatus(StatusGeral.ATIVO);
         Empresa empresaSalva = empresaRepo.save(empresa);
 
-        Usuario usuario = criarUsuarioPendente(dto.gestor(), identity.email(), empresaSalva, identity.firebaseUid());
-        Colaborador colaborador = criarColaboradorPendente(dto.gestor(), identity.email(), empresaSalva, usuario);
+        Usuario usuario = criarUsuario(dto.gestor(), identity.email(), empresaSalva, identity.firebaseUid(), StatusGeral.ATIVO);
+        Colaborador colaborador = criarColaborador(dto.gestor(), identity.email(), empresaSalva, usuario, StatusGeral.ATIVO);
         usuario.setColaborador(colaborador);
 
         return onboardingMapper.toResponse(usuario, false, false, false);
@@ -135,19 +147,20 @@ public class OnboardingService {
             throw new FirebaseAccessRevokedException();
     }
 
-    private Usuario criarUsuarioPendente(OnboardingRequestDTO.Gestor gestor, String email, Empresa empresa) {
-        return criarUsuarioPendente(gestor, email, empresa, null);
+    private void configurarAuditoriaOnboardingInicial() {
+        // ID 0 é o ator reservado aos eventos do onboarding sem perfil ACTA
+        entityManager.createNativeQuery("SELECT set_config('app.current_user_id', '0', true)").getSingleResult();
     }
 
-    private Usuario criarUsuarioPendente(OnboardingRequestDTO.Gestor gestor, String email, Empresa empresa, String firebaseUid) {
+    private Usuario criarUsuario(OnboardingRequestDTO.Gestor gestor, String email, Empresa empresa, String firebaseUid, StatusGeral status) {
         UsuarioRequestDTO request = new UsuarioRequestDTO(gestor.nome(), email.trim(), firebaseUid, TipoUsuario.ADMIN);
         Usuario usuario = usuarioMapper.toEntity(request);
-        usuario.setStatus(StatusGeral.PENDENTE);
+        usuario.setStatus(status);
         usuario.setEmpresa(empresa);
         return usuarioRepo.save(usuario);
     }
 
-    private Colaborador criarColaboradorPendente(OnboardingRequestDTO.Gestor gestor, String email, Empresa empresa, Usuario usuario) {
+    private Colaborador criarColaborador(OnboardingRequestDTO.Gestor gestor, String email, Empresa empresa, Usuario usuario, StatusGeral status) {
         UsuarioRequestDTO usuarioRequest = new UsuarioRequestDTO(gestor.nome(), email, usuario.getFirebaseUid(), TipoUsuario.ADMIN);
         ColaboradorRequestDTO request = new ColaboradorRequestDTO(
                 gestor.cpf(),
@@ -163,7 +176,7 @@ public class OnboardingService {
                 usuarioRequest);
 
         Colaborador colaborador = colaboradorMapper.toEntity(request);
-        colaborador.setStatus(StatusGeral.PENDENTE);
+        colaborador.setStatus(status);
         colaborador.setEmpresa(empresa);
         colaborador.setUsuario(usuario);
         return colaboradorRepo.save(colaborador);
