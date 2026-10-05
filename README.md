@@ -92,7 +92,9 @@ Ao executar em contêiner, também disponibilize as credenciais de servidor do F
 - Público: `GET /api/v1/health`, Swagger UI e OpenAPI.
 - Demais rotas: `Authorization: Bearer <FIREBASE_ID_TOKEN>`.
 
-Após o login Firebase, use `POST /auth/ativar` para vincular uma identidade a um usuário ACTA existente, ativo e com e-mail verificado. Consulte `GET /me` para obter o contexto autenticado.
+Após o login Firebase, use `GET /me` para consultar o estado do perfil. Uma identidade Firebase válida ainda sem perfil ACTA recebe `estadoPerfil: "CADASTRO_NAO_INICIADO"` e pode iniciar o onboarding; um perfil localizado recebe `estadoPerfil: "PERFIL_CRIADO"` e os dados do usuário. A ausência de perfil não significa sessão inválida. Para vincular um usuário existente, use `POST /auth/ativar` com convite e e-mail verificado.
+
+Na auditoria do cadastro inicial de empresa, `auditoria.log_auditoria.id_usuario = 0` é reservado para identificar operações iniciadas por uma identidade Firebase verificada antes da existência de um usuário ACTA. A API define `app.current_user_id = 0` apenas na transação e no ramo de criação de uma empresa nova; o UID Firebase permanece vinculado ao usuário criado. O valor `0` não representa um usuário ACTA.
 
 > Custom token, refresh token e senha **não** são Firebase ID Tokens e não devem ser usados no cabeçalho `Authorization`.
 
