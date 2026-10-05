@@ -24,7 +24,7 @@ import org.springframework.http.ResponseEntity;
 public interface AuthOpenapi {
 
     @Operation(summary = "Consulta o usuário autenticado")
-    @ApiResponse(responseCode = "200", description = "Usuário autenticado, inclusive quando o cadastro está pendente", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
+    @ApiResponse(responseCode = "200", description = "Identidade Firebase válida; estadoPerfil informa PERFIL_CRIADO ou CADASTRO_NAO_INICIADO", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
     @ApiAuthenticationResponses
     ResponseEntity<MeResponseDTO> me(@Parameter(hidden = true) FirebaseIdentity identity);
 
