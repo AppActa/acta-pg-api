@@ -69,6 +69,8 @@ public class OnboardingService {
         if (colaboradorRepo.existsByCpf(dto.gestor().cpf())) throw new UniqueViolationException("CPF");
         if (!cnpjValidator.isEligible(dto.cnpj())) throw new RegexException("CNPJ");
 
+        configurarAuditoriaOnboardingInicial();
+
         Empresa empresa = empresaRepo.findByCnpj(dto.cnpj()).orElse(null);
         if (empresa == null) return onboardingMapper.solicitarDadosEmpresa();
 
