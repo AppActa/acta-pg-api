@@ -7,6 +7,7 @@ import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface AuthMapper {
+    @Mapping(target = "estadoPerfil", constant = "PERFIL_CRIADO")
     MeResponseDTO toMeResponse(UsuarioAutenticado usuario);
 
     @Mapping(source = "id", target = "idUsuario")

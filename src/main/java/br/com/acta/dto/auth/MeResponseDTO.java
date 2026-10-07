@@ -1,5 +1,6 @@
 package br.com.acta.dto.auth;
 
+import br.com.acta.entity.enums.EstadoPerfil;
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TipoUsuario;
 
@@ -13,5 +14,6 @@ public record MeResponseDTO(
         String nomeEmpresa,
         TipoUsuario tipo,
         boolean permissaoGestor,
-        StatusGeral status
+        StatusGeral status,
+        EstadoPerfil estadoPerfil
 ) { }

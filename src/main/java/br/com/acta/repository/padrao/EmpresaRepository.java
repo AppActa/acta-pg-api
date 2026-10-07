@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface EmpresaRepository extends BaseRepository<Empresa> {
     Optional<Empresa> findByIdAndId(Long id, Long idEmpresa);
+    Optional<Empresa> findByCnpj(String cnpj);
     boolean existsByCnpj(String cnpj);
     List<Empresa> findAllByStatus(StatusGeral status);
     List<Empresa> findByTamanhoAndStatus(TamanhoEmpresa tamanho, StatusGeral status);

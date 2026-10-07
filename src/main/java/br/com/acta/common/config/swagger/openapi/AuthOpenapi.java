@@ -1,7 +1,6 @@
 package br.com.acta.common.config.swagger.openapi;
 
 import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
-import br.com.acta.common.config.firebase.UsuarioAutenticado;
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBusinessRuleResponse;
 import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
@@ -25,9 +24,9 @@ import org.springframework.http.ResponseEntity;
 public interface AuthOpenapi {
 
     @Operation(summary = "Consulta o usuário autenticado")
-    @ApiResponse(responseCode = "200", description = "Usuário autenticado", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
+    @ApiResponse(responseCode = "200", description = "Identidade Firebase válida; estadoPerfil informa PERFIL_CRIADO ou CADASTRO_NAO_INICIADO", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))
     @ApiAuthenticationResponses
-    ResponseEntity<MeResponseDTO> me(@Parameter(hidden = true) UsuarioAutenticado usuario);
+    ResponseEntity<MeResponseDTO> me(@Parameter(hidden = true) FirebaseIdentity identity);
 
     @Operation(summary = "Ativa o usuário autenticado com código de convite")
     @ApiResponse(responseCode = "200", description = "Usuário ativado", content = @Content(schema = @Schema(implementation = MeResponseDTO.class)))

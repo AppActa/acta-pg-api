@@ -26,6 +26,9 @@ import tools.jackson.databind.ObjectMapper;
 @RequiredArgsConstructor
 public class FirebaseAuthFilter extends OncePerRequestFilter {
     private static final String AUTH = "/api/v1/auth/ativar";
+    private static final String ONBOARDING = "/api/v1/onboarding/inicio";
+    private static final String ONBOARDING_EMPRESA = "/api/v1/onboarding/gestor";
+    private static final String ME = "/api/v1/me";
     private final FirebaseUtils utils;
     private final ObjectMapper mapper;
 
@@ -50,7 +53,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
 
             FirebaseToken idToken = utils.verificarIdToken(token);
 
-            if (ehRotaAutenticacao(request)) {
+            if (ehRotaIdentidadeFirebase(request)) {
                 Principal principal = new FirebaseIdentity(idToken.getUid(), idToken.getEmail(), idToken.isEmailVerified());
                 utils.autenticar(request, principal, List.of(new SimpleGrantedAuthority("ROLE_FIREBASE")));
             } else {
@@ -59,7 +62,7 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
             }
 
             filterChain.doFilter(request, response);
-        } catch (BadCredentialsException bce){
+        } catch (BadCredentialsException bce) {
             SecurityContextHolder.clearContext();
             responderErro(response, HttpStatus.UNAUTHORIZED, "O ID Token do Firebase não existe ou está inválido");
         } catch (AccessDeniedException ade) {
@@ -75,11 +78,16 @@ public class FirebaseAuthFilter extends OncePerRequestFilter {
         }
     }
 
-    private boolean ehRotaAutenticacao(HttpServletRequest request) {
-        return request.getServletPath().equals(AUTH) && "POST".equalsIgnoreCase(request.getMethod());
+    private boolean ehRotaIdentidadeFirebase(HttpServletRequest request) {
+        String path = request.getServletPath();
+        String method = request.getMethod();
+        return (path.equals(AUTH) && "POST".equalsIgnoreCase(method))
+                || (path.equals(ONBOARDING) && "POST".equalsIgnoreCase(method))
+                || (path.equals(ONBOARDING_EMPRESA) && "POST".equalsIgnoreCase(method))
+                || (path.equals(ME) && "GET".equalsIgnoreCase(method));
     }
 
-    private void responderErro(HttpServletResponse resp, HttpStatus status,  String mensagem) throws IOException {
+    private void responderErro(HttpServletResponse resp, HttpStatus status, String mensagem) throws IOException {
         resp.setStatus(status.value());
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
