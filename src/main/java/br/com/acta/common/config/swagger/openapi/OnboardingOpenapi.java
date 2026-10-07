@@ -19,7 +19,7 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "Onboarding", description = "Fluxo de entrada de administradores e criação de empresas")
 public interface OnboardingOpenapi {
     @Operation(summary = "Verifica a empresa e inicia o onboarding do gestor")
-    @ApiResponse(responseCode = "200", description = "Empresa identificada ou próxima etapa liberada", content = @Content(schema = @Schema(implementation = OnboardingResponseDTO.class)))
+    @ApiResponse(responseCode = "200", description = "Empresa identificada, orientação para solicitar convite a um ADMIN ativo ou próxima etapa liberada", content = @Content(schema = @Schema(implementation = OnboardingResponseDTO.class)))
     @ApiAuthenticationResponses
     @ApiBadRequestResponse
     @ApiConflictResponse

@@ -11,6 +11,7 @@ public record OnboardingResponseDTO(
         StatusGeral statusEmpresa,
         Long idUsuario,
         TipoUsuario tipoUsuario,
-        StatusGeral statusUsuario
+        StatusGeral statusUsuario,
+        String mensagem
 ) {
 }
