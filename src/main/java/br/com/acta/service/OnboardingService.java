@@ -1,12 +1,9 @@
 package br.com.acta.service;
 
-import br.com.acta.common.client.BrevoClient;
 import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
-import br.com.acta.common.handler.exception.BusinessRuleException;
 import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
 import br.com.acta.common.handler.exception.RegexException;
 import br.com.acta.common.handler.exception.UniqueViolationException;
-import br.com.acta.common.utils.TokenUtils;
 import br.com.acta.dto.core.colaborador.ColaboradorMapper;
 import br.com.acta.dto.core.colaborador.ColaboradorRequestDTO;
 import br.com.acta.dto.core.contato.email.EmailRequestDTO;
@@ -21,13 +18,11 @@ import br.com.acta.dto.core.empresa.endereco.EnderecoRequestDTO;
 import br.com.acta.dto.core.usuario.UsuarioMapper;
 import br.com.acta.dto.core.usuario.UsuarioRequestDTO;
 import br.com.acta.entity.core.Colaborador;
-import br.com.acta.entity.core.Convite;
 import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.enums.TipoUsuario;
 import br.com.acta.repository.padrao.ColaboradorRepository;
-import br.com.acta.repository.padrao.ConviteRepository;
 import br.com.acta.repository.padrao.EmpresaRepository;
 import br.com.acta.repository.padrao.UsuarioRepository;
 import br.com.caelum.stella.validation.CNPJValidator;
@@ -38,23 +33,18 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.OffsetDateTime;
 import java.util.List;
 
 @Service
 @RequiredArgsConstructor
 public class OnboardingService {
-    private static final int VALIDADE_CONVITE_MINUTOS = 30;
-
     private final EmpresaRepository empresaRepo;
     private final UsuarioRepository usuarioRepo;
     private final ColaboradorRepository colaboradorRepo;
-    private final ConviteRepository conviteRepo;
     private final EmpresaMapper empresaMapper;
     private final ColaboradorMapper colaboradorMapper;
     private final UsuarioMapper usuarioMapper;
     private final OnboardingMapper onboardingMapper;
-    private final BrevoClient brevoClient;
     private final CNPJValidator cnpjValidator = new CNPJValidator();
 
     @PersistenceContext
@@ -74,34 +64,8 @@ public class OnboardingService {
         Empresa empresa = empresaRepo.findByCnpj(dto.cnpj()).orElse(null);
         if (empresa == null) return onboardingMapper.solicitarDadosEmpresa();
 
-        // Empresas pendentes não têm administrador ativo para um convite
-        if (empresa.getStatus() == StatusGeral.PENDENTE) {
-            return new OnboardingResponseDTO(true, false, false, empresa.getId(), empresa.getStatus(), null, null, null);
-        }
-
-        Usuario criadoPor = usuarioRepo.findByTipoAndStatusAndEmpresaId(TipoUsuario.ADMIN, StatusGeral.ATIVO, empresa.getId())
-            .stream()
-            .findFirst()
-            .orElseThrow(() -> new BusinessRuleException("A empresa não possui um administrador ativo"));
-
-        Usuario usuario = criarUsuario(dto.gestor(), identity.email(), empresa, null, StatusGeral.PENDENTE);
-        Colaborador colaborador = criarColaborador(dto.gestor(), identity.email(), empresa, usuario, StatusGeral.PENDENTE);
-        usuario.setColaborador(colaborador);
-
-        String codigo = TokenUtils.gerarCodigo();
-        Convite convite = new Convite();
-        convite.setUsuario(usuario);
-        convite.setEmailDestino(usuario.getEmailLogin());
-        convite.setTokenHash(TokenUtils.hashToken(codigo));
-        convite.setStatus("PENDENTE");
-        convite.setExpiraEm(OffsetDateTime.now().plusMinutes(VALIDADE_CONVITE_MINUTOS));
-        convite.setCriadoPor(criadoPor);
-        Convite conviteSalvo = conviteRepo.save(convite);
-
-        conviteRepo.flush();
-        brevoClient.enviarConviteAdmin(conviteSalvo.getEmailDestino(), usuario.getNome(), empresa.getNome(), conviteSalvo.getExpiraEm(), codigo);
-
-        return onboardingMapper.toResponse(usuario, true, true, false);
+        return new OnboardingResponseDTO(true, false, false, empresa.getId(), empresa.getStatus(), null, null, null,
+                "Esta empresa já possui cadastro. Peça a um ADMIN ativo da empresa para convidar você.");
     }
 
     @PreAuthorize("hasAuthority('ROLE_FIREBASE')")

@@ -27,10 +27,11 @@ public interface OnboardingMapper {
                 dados.statusEmpresa(),
                 dados.idUsuario(),
                 dados.tipoUsuario(),
-                dados.statusUsuario());
+                dados.statusUsuario(),
+                null);
     }
 
     default OnboardingResponseDTO solicitarDadosEmpresa() {
-        return new OnboardingResponseDTO(false, false, true, null, null, null, null, null);
+        return new OnboardingResponseDTO(false, false, true, null, null, null, null, null, null);
     }
 }
