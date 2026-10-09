@@ -105,7 +105,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         return mapper.toResponse(salvo);
     }
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR', 'COLABORADOR')")
     @Transactional
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         configurarUsuarioAtual();
