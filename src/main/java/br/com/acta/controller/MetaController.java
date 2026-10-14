@@ -31,6 +31,13 @@ public class MetaController implements MetaOpenapi {
         return ResponseEntity.ok(metas);
     }
 
+    @GetMapping("/plano-acao/{idPlanoAcao}/meta")
+    @Override
+    public ResponseEntity<List<MetaResponseDTO>> buscarPorPlanoAcao(@PathVariable @Positive Long idPlanoAcao) {
+        List<MetaResponseDTO> metas = service.buscarPorPlanoAcao(idPlanoAcao);
+        return ResponseEntity.ok(metas);
+    }
+
     @GetMapping("/meta/{id}")
     @Override
     public ResponseEntity<MetaResponseDTO> buscar(@PathVariable @Positive Long id) {

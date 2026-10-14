@@ -35,6 +35,13 @@ public interface MetaOpenapi {
     @ApiBadRequestResponse
     ResponseEntity<List<MetaResponseDTO>> buscar(@Parameter(description = SwaggerParameterDescriptions.ID_CICLO) Long idCiclo, @Parameter(description = SwaggerParameterDescriptions.FILTRO_STATUS) StatusMeta status, @Parameter(description = SwaggerParameterDescriptions.FILTRO_PRIORIDADE) Prioridade prioridade);
 
+    @Operation(summary = "Lista as metas de um plano de ação")
+    @ApiResponse(responseCode = "200", description = "Metas encontradas", content = @Content(array = @ArraySchema(schema = @Schema(implementation = MetaResponseDTO.class))))
+    @ApiAuthenticationResponses
+    @ApiBadRequestResponse
+    @ApiNotFoundResponse
+    ResponseEntity<List<MetaResponseDTO>> buscarPorPlanoAcao(@Parameter(description = SwaggerParameterDescriptions.ID_PLANO_ACAO) Long idPlanoAcao);
+
     @Operation(summary = "Busca uma meta")
     @ApiResponse(responseCode = "200", description = "Meta encontrada", content = @Content(schema = @Schema(implementation = MetaResponseDTO.class)))
     @ApiAuthenticationResponses

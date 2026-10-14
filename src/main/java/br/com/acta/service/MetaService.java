@@ -173,6 +173,14 @@ extends BaseService<MetaRequestDTO, MetaResponseDTO, Meta> {
 
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
+    public List<MetaResponseDTO> buscarPorPlanoAcao(Long idPlanoAcao) {
+        planoAcaoService.getEntity(idPlanoAcao);
+        List<Meta> metas = repo.findByPlanoAcaoId(idPlanoAcao);
+        return mapper.toResponseList(metas);
+    }
+
+    @PreAuthorize("isAuthenticated()")
+    @Transactional(readOnly = true)
     public List<UsuarioSummaryResponseDTO> buscarResponsaveis(Long id){
         Meta meta = getEntity(id);
         Set<Usuario> responsaveis = meta.getResponsaveis();

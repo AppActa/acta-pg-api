@@ -10,6 +10,7 @@ import java.util.Optional;
 
 public interface MetaRepository extends BaseRepository<Meta> {
     Optional<Meta> findByIdAndCicloEmpresaId(Long id, Long idEmpresa);
+    List<Meta> findByPlanoAcaoId(Long idPlanoAcao);
     List<Meta> findByCicloId(Long idCiclo);
     List<Meta> findByResponsaveisId(Long idResponsavel);
     List<Meta> findByCicloIdAndStatus(Long cicloId, StatusMeta status);
