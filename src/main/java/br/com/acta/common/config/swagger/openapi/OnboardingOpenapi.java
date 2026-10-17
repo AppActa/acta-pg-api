@@ -4,6 +4,7 @@ import br.com.acta.common.config.firebase.FirebaseAuthFilter.FirebaseIdentity;
 import br.com.acta.common.config.swagger.annotation.ApiAuthenticationResponses;
 import br.com.acta.common.config.swagger.annotation.ApiBadRequestResponse;
 import br.com.acta.common.config.swagger.annotation.ApiConflictResponse;
+import br.com.acta.common.config.swagger.examples.SwaggerOpenapiDescriptions;
 import br.com.acta.dto.core.empresa.OnboardingInicioRequestDTO;
 import br.com.acta.dto.core.empresa.OnboardingRequestDTO;
 import br.com.acta.dto.core.empresa.OnboardingResponseDTO;
@@ -16,7 +17,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import org.springframework.http.ResponseEntity;
 
-@Tag(name = "Onboarding", description = "Fluxo de entrada de administradores e criação de empresas")
+@Tag(name = "Onboarding", description = SwaggerOpenapiDescriptions.ONBOARDING_CONTROLLER)
 public interface OnboardingOpenapi {
     @Operation(summary = "Verifica a empresa e inicia o onboarding do gestor")
     @ApiResponse(responseCode = "200", description = "Empresa identificada, orientação para solicitar convite a um ADMIN ativo ou próxima etapa liberada", content = @Content(schema = @Schema(implementation = OnboardingResponseDTO.class)))

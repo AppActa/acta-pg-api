@@ -1,6 +1,8 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.*;
+import br.com.acta.common.client.FcmApiClient;
+import br.com.acta.dto.evento.TipoEventoNotificacao;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
@@ -29,17 +31,19 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     private final TarefaMapper mapper;
     private final PlanoAcaoService planoAcaoService;
     private final UsuarioService usuarioService;
+    private final FcmApiClient fcmApiClient;
     private final PatchConfig patchConfigConfig = new PatchConfig(
             Set.of("titulo", "descricao", "prioridade", "dataInicioReal", "dataFimReal", "dataFimPrevista", "idResponsavel", "status"),
             Set.of("titulo", "descricao", "prioridade", "dataFimPrevista")
     );
 
-    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService) {
+    public TarefaService(TarefaRepository repo, TarefaMapper mapper, PlanoAcaoService planoAcaoService, UsuarioService usuarioService, AuthService authService, FcmApiClient fcmApiClient) {
         super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.planoAcaoService = planoAcaoService;
         this.usuarioService = usuarioService;
+        this.fcmApiClient = fcmApiClient;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
@@ -102,6 +106,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         tarefa.setStatus(StatusTarefa.PENDENTE);
 
         Tarefa salvo = repo.save(tarefa);
+        fcmApiClient.publicarAtribuicao(salvo.getId(), planoAcao.getCiclo().getEmpresa().getId(), usuario.getId());
         return mapper.toResponse(salvo);
     }
 
@@ -110,6 +115,7 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
     public TarefaResponseDTO patchStatus(Long id, TarefaStatusUpdateDTO dto){
         configurarUsuarioAtual();
         Tarefa tarefa = getEntity(id);
+        StatusTarefa statusAnterior = tarefa.getStatus();
         Validador.validarCicloAberto(tarefa.getPlanoAcao().getCiclo());
         if (!tarefa.getStatus().podeAtualizarStatus(dto.status())) {
             throw new StatusUpdateException(tarefa.getStatus().toString(), dto.status().toString());
@@ -139,6 +145,13 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
 
         tarefa.setStatus(dto.status());
         Tarefa salva = repo.save(tarefa);
+
+        if (statusAnterior != dto.status() && dto.status() == StatusTarefa.BLOQUEADA) {
+            fcmApiClient.publicarStatusTarefa(TipoEventoNotificacao.TAREFA_BLOQUEADA, salva.getId(), tarefa.getPlanoAcao().getCiclo().getEmpresa().getId(), tarefa.getResponsavel().getId());
+        } else if (statusAnterior == StatusTarefa.BLOQUEADA && dto.status() == StatusTarefa.EM_ANDAMENTO) {
+            fcmApiClient.publicarStatusTarefa(TipoEventoNotificacao.TAREFA_DESBLOQUEADA, salva.getId(), tarefa.getPlanoAcao().getCiclo().getEmpresa().getId(), tarefa.getResponsavel().getId());
+        }
+
         return mapper.toResponse(salva);
     }
 
@@ -152,8 +165,13 @@ extends BaseService<TarefaRequestDTO, TarefaResponseDTO, Tarefa> {
         Validador.validarMesmoCiclo(tarefa.getPlanoAcao().getCiclo(), responsavel.getCiclos());
         Validador.validarTarefaAberta(tarefa);
 
+        Long responsavelAnterior = tarefa.getResponsavel().getId();
+        Long idEmpresa = tarefa.getPlanoAcao().getCiclo().getEmpresa().getId();
+        boolean reatribuida = !responsavelAnterior.equals(responsavel.getId());
+
         tarefa.setResponsavel(responsavel);
         Tarefa salvo = repo.save(tarefa);
+        if (reatribuida) fcmApiClient.publicarReatribuicao(salvo.getId(), idEmpresa, responsavel.getId());
         return mapper.toResponse(salvo);
     }
 

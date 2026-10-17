@@ -201,15 +201,6 @@ public final class SwaggerOpenapiDescriptions {
             - Excluir efeitos secundários.
             """;
 
-    public static final String ALERTA_PRAZO_CONTROLLER = """
-            Endpoints responsáveis pelos alertas de prazo das tarefas.
-
-            A API permite:
-
-            - Consultar o alerta de uma tarefa;
-            - Marcar um alerta como lido.
-            """;
-
     public static final String ENDERECO_EMPRESA_CONTROLLER = """
             Endpoints responsáveis pelos endereços das empresas.
 

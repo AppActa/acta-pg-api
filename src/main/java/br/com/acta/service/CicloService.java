@@ -3,9 +3,11 @@ package br.com.acta.service;
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.ModelNotFoundException;
 import br.com.acta.common.handler.exception.StatusUpdateException;
+import br.com.acta.common.client.FcmApiClient;
 import br.com.acta.common.utils.ConversorObject;
 import br.com.acta.common.utils.PatchConfig;
 import br.com.acta.common.utils.Validador;
+import br.com.acta.dto.evento.TipoEventoNotificacao;
 import br.com.acta.dto.pdca.ciclo.CicloMapper;
 import br.com.acta.dto.pdca.ciclo.CicloRequestDTO;
 import br.com.acta.dto.pdca.ciclo.CicloResponseDTO;
@@ -13,6 +15,8 @@ import br.com.acta.entity.core.Empresa;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.IconeCiclo;
 import br.com.acta.entity.enums.StatusCiclo;
+import br.com.acta.entity.enums.StatusGeral;
+import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
@@ -35,13 +39,15 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     );
     private final UsuarioService usuarioService;
     private final EmpresaService empresaService;
+    private final FcmApiClient fcmApiClient;
 
-    public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService) {
+    public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService, FcmApiClient fcmApiClient) {
         super(repo, mapper, authService);
         this.repo = repo;
         this.mapper = mapper;
         this.empresaService = empresaService;
         this.usuarioService = usuarioService;
+        this.fcmApiClient = fcmApiClient;
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")
@@ -72,12 +78,15 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     public CicloResponseDTO patchStatus(Long id, StatusCiclo status){
         configurarUsuarioAtual();
         Ciclo ciclo = getEntity(id);
+        StatusCiclo statusAnterior = ciclo.getStatus();
 
         if (status == StatusCiclo.CONCLUIDO) {
             if (!repo.podeEncerrarCiclo(id)) throw new ActiveEntityDeletionException("ciclo");
 
             repo.encerrarCiclo(id);
             Ciclo cicloConcluido = getEntity(id);
+            if (statusAnterior != StatusCiclo.CONCLUIDO && cicloConcluido.getStatus() == StatusCiclo.CONCLUIDO)
+                notificarParticipantes(cicloConcluido, TipoEventoNotificacao.CICLO_CONCLUIDO);
             return mapper.toResponse(cicloConcluido);
         }
 
@@ -85,6 +94,9 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
 
         ciclo.setStatus(status);
         Ciclo salvo = repo.save(ciclo);
+        if (statusAnterior != status && (status == StatusCiclo.PAUSADO || status == StatusCiclo.CANCELADO))
+            notificarParticipantes(salvo, status == StatusCiclo.PAUSADO
+                    ? TipoEventoNotificacao.CICLO_PAUSADO : TipoEventoNotificacao.CICLO_CANCELADO);
         return mapper.toResponse(salvo);
     }
 
@@ -99,6 +111,7 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
         ciclo.setStatus(StatusCiclo.CANCELADO);
 
         repo.save(ciclo);
+        notificarParticipantes(ciclo, TipoEventoNotificacao.CICLO_CANCELADO);
     }
 
     @PreAuthorize("isAuthenticated()")
@@ -145,5 +158,20 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     public Ciclo getEntity(Long id) {
         return repo.findByIdAndEmpresaId(id, atual().idEmpresa())
                 .orElseThrow(() -> new ModelNotFoundException("Ciclo", id));
+    }
+
+    private void notificarParticipantes(Ciclo ciclo, TipoEventoNotificacao tipo) {
+        Long idAtor = atual().idUsuario();
+        List<Long> destinatarios = ciclo.getColaboradores().stream()
+                .map(UsuarioCiclo::getUsuario)
+                .filter(usuario -> usuario.getStatus() == StatusGeral.ATIVO && !usuario.getId().equals(idAtor))
+                .map(Usuario::getId)
+                .distinct()
+                .toList();
+        if (destinatarios.isEmpty()) return;
+        Long cicloId = ciclo.getId();
+        Long empresaId = ciclo.getEmpresa().getId();
+
+        fcmApiClient.publicarStatusCiclo(tipo, cicloId, empresaId, destinatarios);
     }
 }
