@@ -1,0 +1,13 @@
+package br.com.acta.dto.evento;
+
+public enum TipoEventoNotificacao {
+    TAREFA_REATRIBUIDA,
+    TAREFA_ATRIBUIDA,
+    TAREFA_BLOQUEADA,
+    TAREFA_DESBLOQUEADA,
+    CICLO_MEMBRO_ADICIONADO,
+    CICLO_PAUSADO,
+    CICLO_CANCELADO,
+    CICLO_CONCLUIDO,
+    TREINAMENTO_ATRIBUIDO
+}
