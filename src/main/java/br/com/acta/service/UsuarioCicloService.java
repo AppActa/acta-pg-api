@@ -1,11 +1,13 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.*;
+import br.com.acta.common.client.FcmApiClient;
 import br.com.acta.common.utils.Validador;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloRequestDTO;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.PapelCiclo;
+import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.dto.join.usuario_ciclo.UsuarioCicloMapper;
@@ -29,6 +31,7 @@ public class UsuarioCicloService {
     private final UsuarioCicloMapper mapper;
     private final UsuarioCicloRepository repo;
     private final AuthService authService;
+    private final FcmApiClient fcmApiClient;
 
     protected UsuarioCiclo getEntity(Long idUsuario, Long idCiclo){
         return repo.findByUsuarioIdAndCicloIdAndCicloEmpresaId(idUsuario, idCiclo, authService.atual().idEmpresa())
@@ -70,12 +73,20 @@ public class UsuarioCicloService {
         usuarioCiclo.setUsuario(usuario);
 
         // proteção contra race condition
+        UsuarioCiclo salvo;
         try {
-            UsuarioCiclo salvo = repo.saveAndFlush(usuarioCiclo);
-            return mapper.toResponse(salvo);
+            salvo = repo.saveAndFlush(usuarioCiclo);
         } catch (DataIntegrityViolationException dive){
             throw new UniqueViolationException("Usuário", "Ciclo");
         }
+
+        if (usuario.getStatus() == StatusGeral.ATIVO) {
+            Long idCicloNotificacao = ciclo.getId();
+            Long idEmpresa = ciclo.getEmpresa().getId();
+            Long idUsuario = usuario.getId();
+            fcmApiClient.publicarMembroAdicionadoCiclo(idCicloNotificacao, idEmpresa, idUsuario);
+        }
+        return mapper.toResponse(salvo);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR')")

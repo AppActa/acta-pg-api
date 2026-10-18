@@ -1,10 +1,12 @@
 package br.com.acta.service;
 
 import br.com.acta.common.handler.exception.*;
+import br.com.acta.common.client.FcmApiClient;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoRequestDTO;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoResponseDTO;
 import br.com.acta.entity.core.Usuario;
 import br.com.acta.entity.enums.StatusTreinamento;
+import br.com.acta.entity.enums.StatusGeral;
 import br.com.acta.entity.join.UsuarioTreinamento;
 import br.com.acta.entity.pdca.Treinamento;
 import br.com.acta.dto.join.usuario_treinamento.UsuarioTreinamentoMapper;
@@ -27,6 +29,7 @@ public class UsuarioTreinamentoService {
     private final UsuarioTreinamentoMapper mapper;
     private final TreinamentoService treinamentoService;
     private final UsuarioService usuarioService;
+    private final FcmApiClient fcmApiClient;
 
     @PreAuthorize("isAuthenticated()")
     @Transactional(readOnly = true)
@@ -55,12 +58,20 @@ public class UsuarioTreinamentoService {
         usuarioTreinamento.setStatus(StatusTreinamento.PENDENTE);
 
         // proteção contra race condition
+        UsuarioTreinamento salvo;
         try {
-            UsuarioTreinamento salvo = repo.saveAndFlush(usuarioTreinamento);
-            return mapper.toResponse(salvo);
+            salvo = repo.saveAndFlush(usuarioTreinamento);
         } catch (DataIntegrityViolationException dive){
             throw new UniqueViolationException("Usuário", "Treinamento");
         }
+
+        if (Boolean.TRUE.equals(treinamento.getObrigatorio()) && usuario.getStatus() == StatusGeral.ATIVO) {
+            Long idTreinamentoNotificacao = treinamento.getId();
+            Long idEmpresa = treinamento.getCiclo().getEmpresa().getId();
+            Long idUsuario = usuario.getId();
+            fcmApiClient.publicarTreinamentoAtribuido(idTreinamentoNotificacao, idEmpresa, idUsuario);
+        }
+        return mapper.toResponse(salvo);
     }
 
     @PreAuthorize("hasAnyRole('ADMIN', 'GESTOR') or @authService.isProprioUsuario(#idUsuario)")

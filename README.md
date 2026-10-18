@@ -4,7 +4,7 @@ API REST do ACTA para apoiar o ciclo **PDCA** (*Plan, Do, Check, Act*): organiza
 
 ## 📌 Visão geral
 
-A API é a camada de persistência, regras de negócio e autorização do ecossistema ACTA. Gerencia empresas, pessoas, ciclos PDCA, problemas, causas-raiz, planos de ação, 5W2H, tarefas, metas, treinamentos, verificações de resultado, alertas e efeitos secundários.
+A API é a camada de persistência, regras de negócio e autorização do ecossistema ACTA. Gerencia empresas, pessoas, ciclos PDCA, problemas, causas-raiz, planos de ação, 5W2H, tarefas, metas, treinamentos, verificações de resultado e efeitos secundários.
 
 Clientes autenticam no Firebase e enviam o **Firebase ID Token** para consumir as rotas protegidas.
 
@@ -21,7 +21,7 @@ Esse padrão foi adotado para **evitar duplicação de código, manter uniforme 
 - Gestão de empresas, usuários, colaboradores e contatos.
 - Ciclos PDCA, participantes, problemas, priorização e causas-raiz.
 - Planos de ação, 5W2H, tarefas, dependências, metas e treinamentos.
-- Verificação de resultados, efeitos secundários e alertas de prazo.
+- Verificação de resultados, efeitos secundários e eventos internos de notificação após reatribuição de tarefa.
 - Health check da API e do banco em `GET /api/v1/health`.
 
 ## 🛠️ Tecnologias
@@ -59,6 +59,10 @@ FIREBASE_PROJECT_ID=seu-projeto-firebase
 | `DB_URL`, `DB_USER`, `DB_PASSWORD` | Conexão PostgreSQL |
 | `FIREBASE_PROJECT_ID` | Propriedade `firebase.project-id` da aplicação |
 | `GOOGLE_APPLICATION_CREDENTIALS` | Caminho da credencial de servidor, quando aplicável ao ambiente local |
+| `ACTA_FCM_API_URL` | Endereço base da FCM API (padrão: `http://localhost:8000`) |
+| `ACTA_FCM_INTERNAL_TOKEN` | Segredo serviço-a-serviço enviado somente a `/internal/v1/eventos` |
+
+O app chama diretamente os endpoints autenticados de dispositivo da FCM API para registrar ou revogar o destino; a PG API não replica essas rotas. A PG API publica `TAREFA_ATRIBUIDA`, `TAREFA_REATRIBUIDA`, `TAREFA_BLOQUEADA` e `TAREFA_DESBLOQUEADA` após o commit PostgreSQL, usando `ACTA_FCM_INTERNAL_TOKEN`. Se a FCM API falhar ou estiver indisponível após esse commit, a tarefa permanece alterada e o evento pode ser perdido; esta integração síncrona ainda não possui outbox ou retentativa.
 
 O [`.env.example`](.env.example) é somente uma referência; `PEPPER` não é lida pelo `application.properties` atual.
 
@@ -110,7 +114,7 @@ Todas as rotas abaixo exigem Firebase ID Token, exceto `GET /api/v1/health`.
 | Ciclo | `GET/POST /ciclo`, `GET/PATCH/DELETE /ciclo/{id}`, `PATCH /ciclo/{id}/status`, participantes em `/ciclo/{idCiclo}/usuario` |
 | Problemas | `/ciclo/{idCiclo}/problema`, `/ciclos/{idCiclo}/problema`, `/problema/{id}`, `/problema/{idProblema}/priorizacao`, `/ciclos/{idCiclo}/causas-raiz`, `/causas-raiz/{id}` |
 | Planos e execução | `/ciclo/{idCiclo}/plano-acao`, `/plano-acao/{id}`, `/plano-acao/{idPlanoAcao}/5w2h`, `/plano-acao/{idPlanoAcao}/tarefa`, `/tarefa/{id}` |
-| Acompanhamento | `/ciclos/{idCiclo}/meta`, `/meta/{id}`, `/ciclo/{idCiclo}/treinamento`, `/treinamento/{id}`, `/tarefa/{idTarefa}/alerta` |
+| Acompanhamento | `/ciclos/{idCiclo}/meta`, `/meta/{id}`, `/ciclo/{idCiclo}/treinamento`, `/treinamento/{id}` |
 | Verificação | `/ciclos/{idCiclo}/verificacoes`, `/verificacoes/{id}`, `/verificacao/{idResultado}/efeito-secundario` |
 
 O Swagger contém métodos, parâmetros, enumerações, esquemas e todas as rotas derivadas dos controllers.
