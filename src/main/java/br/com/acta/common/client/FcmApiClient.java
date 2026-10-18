@@ -10,10 +10,10 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 import org.springframework.transaction.support.TransactionSynchronization;
 import org.springframework.transaction.support.TransactionSynchronizationManager;
-
 import java.time.OffsetDateTime;
 import java.time.ZoneOffset;
 import java.util.List;
+import java.util.UUID;
 
 @Component
 public class FcmApiClient {
@@ -26,11 +26,13 @@ public class FcmApiClient {
     private String internalToken;
 
     public void publicarReatribuicao(long idTarefa, long idEmpresa, long idDestinatario) {
-        publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_REATRIBUIDA, "tarefa-reatribuida", idTarefa, idEmpresa, idDestinatario));
+        String chave = "tarefa-reatribuida-" + idTarefa + "-" + idDestinatario + "-" + UUID.randomUUID();
+        publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_REATRIBUIDA, chave, idTarefa, idEmpresa, idDestinatario));
     }
 
     public void publicarAtribuicao(long idTarefa, long idEmpresa, long idDestinatario) {
-        publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_ATRIBUIDA, "tarefa-atribuida", idTarefa, idEmpresa, idDestinatario));
+        String chave = "tarefa-atribuida-" + idTarefa + "-" + idDestinatario;
+        publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_ATRIBUIDA, chave, idTarefa, idEmpresa, idDestinatario));
     }
 
     public void publicarStatusTarefa(TipoEventoNotificacao tipo, long idTarefa, long idEmpresa, long idDestinatario) {
@@ -39,7 +41,8 @@ public class FcmApiClient {
             case TAREFA_DESBLOQUEADA -> "tarefa-desbloqueada";
             default -> throw new BusinessRuleException("Tipo de evento de tarefa não permitido");
         };
-        publicarAposCommit(() -> publicarEventoTarefa(tipo, prefixo, idTarefa, idEmpresa, idDestinatario));
+        String chave = prefixo + "-" + idTarefa + "-" + idDestinatario + "-" + UUID.randomUUID();
+        publicarAposCommit(() -> publicarEventoTarefa(tipo, chave, idTarefa, idEmpresa, idDestinatario));
     }
 
     public void publicarMembroAdicionadoCiclo(long idCiclo, long idEmpresa, long idDestinatario) {
@@ -78,9 +81,8 @@ public class FcmApiClient {
                 });
     }
 
-    private void publicarEventoTarefa(TipoEventoNotificacao tipo, String prefixo, long idTarefa, long idEmpresa, long idDestinatario) {
+    private void publicarEventoTarefa(TipoEventoNotificacao tipo, String deduplicacao, long idTarefa, long idEmpresa, long idDestinatario) {
         String id = Long.toString(idTarefa);
-        String deduplicacao = prefixo + "-" + id + "-" + idDestinatario;
         enviarEvento(new EventoNotificacaoRequestDTO(deduplicacao, tipo.name(), OffsetDateTime.now(ZoneOffset.UTC), idEmpresa, List.of(idDestinatario), "TAREFA", id, "acta://tarefas/" + id, deduplicacao));
     }
 
