@@ -1,5 +1,5 @@
 package br.com.acta.service.base;
-import br.com.acta.common.config.firebase.UsuarioAutenticado;
+import br.com.acta.common.config.security.AuthContext;
 import br.com.acta.dto.mapper.base.BaseMapper;
 import br.com.acta.repository.base.BaseRepository;
 import br.com.acta.service.AuthService;
@@ -17,7 +17,7 @@ implements BaseCRUD<REQ, RESP> {
     protected final BaseMapper<REQ, RESP, ENT> mapper;
     protected final AuthService authService;
 
-    protected UsuarioAutenticado atual() {
+    protected AuthContext atual() {
         return authService.atual();
     }
 
