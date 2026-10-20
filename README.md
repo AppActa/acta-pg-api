@@ -31,7 +31,7 @@ Esse padrão foi adotado para **evitar duplicação de código, manter uniforme 
 | Java | 17 |
 | Spring Boot | 4.1.0 |
 | PostgreSQL | Driver runtime; versão do servidor não definida |
-| Firebase Admin SDK | 9.10.0 |
+| Spring `RestClient` | integração com `acta-auth-api` |
 | Springdoc OpenAPI | 3.0.0 |
 | MapStruct | 1.6.3 |
 | Docker | Dockerfile presente |
@@ -42,7 +42,7 @@ Também utiliza Maven Wrapper, Lombok, Argon2, Caelum Stella e libphonenumber.
 
 - JDK 17 e PostgreSQL acessível.
 - Esquema de banco compatível com as entidades: a aplicação usa `spring.jpa.hibernate.ddl-auto=validate` e não cria tabelas.
-- Projeto Firebase e credenciais de servidor disponíveis via *Application Default Credentials*.
+- `acta-auth-api` acessível pela PG.
 - Docker, caso a execução seja por imagem.
 
 Defina as variáveis abaixo no ambiente ou em um `.env` local. Nunca versione senhas, tokens ou arquivos de credencial.
@@ -51,14 +51,15 @@ Defina as variáveis abaixo no ambiente ou em um `.env` local. Nunca versione se
 DB_URL=jdbc:postgresql://localhost:5432/acta
 DB_USER=seu_usuario_local
 DB_PASSWORD=sua_senha_local
-FIREBASE_PROJECT_ID=seu-projeto-firebase
+ACTA_AUTH_API_URL=http://localhost:8081
 ```
 
 | Variável | Uso |
 | --- | --- |
 | `DB_URL`, `DB_USER`, `DB_PASSWORD` | Conexão PostgreSQL |
-| `FIREBASE_PROJECT_ID` | Propriedade `firebase.project-id` da aplicação |
-| `GOOGLE_APPLICATION_CREDENTIALS` | Caminho da credencial de servidor, quando aplicável ao ambiente local |
+| `ACTA_AUTH_API_URL` | Endereço base da `acta-auth-api` (padrão: `http://localhost:8081`) |
+| `ACTA_AUTH_API_CONNECT_TIMEOUT` | Tempo limite de conexão com a Auth API (padrão: `2s`) |
+| `ACTA_AUTH_API_READ_TIMEOUT` | Tempo limite de resposta da Auth API (padrão: `3s`) |
 | `ACTA_FCM_API_URL` | Endereço base da FCM API (padrão: `http://localhost:8000`) |
 | `ACTA_FCM_INTERNAL_TOKEN` | Segredo serviço-a-serviço enviado somente a `/internal/v1/eventos` |
 
@@ -76,7 +77,7 @@ O [`.env.example`](.env.example) é somente uma referência; `PEPPER` não é li
 ./mvnw spring-boot:run
 ```
 
-A API usa a porta `8080`. Com banco e Firebase configurados, consulte `http://localhost:8080/api/v1/health`.
+A API usa a porta `8080`. Com banco e `acta-auth-api` configurados, consulte `http://localhost:8080/api/v1/health`.
 
 ### Docker
 
@@ -87,16 +88,16 @@ docker build -t acta-pg-api .
 docker run --rm -p 8080:8080 --env-file .env acta-pg-api
 ```
 
-Ao executar em contêiner, também disponibilize as credenciais de servidor do Firebase de forma segura; não as copie para a imagem.
+Ao executar em contêiner, configure `ACTA_AUTH_API_URL` para a instância acessível da API de autenticação.
 
 ## 📚 Documentação e autenticação
 
 - Swagger UI: `http://localhost:8080/swagger-ui/index.html`
 - OpenAPI: `http://localhost:8080/v3/api-docs`
 - Público: `GET /api/v1/health`, Swagger UI e OpenAPI.
-- Demais rotas: `Authorization: Bearer <FIREBASE_ID_TOKEN>`.
+- Demais rotas: `Authorization: Bearer <FIREBASE_ID_TOKEN>`, validado pela `acta-auth-api`.
 
-Após o login Firebase, use `GET /me` para consultar o estado do perfil. Uma identidade Firebase válida ainda sem perfil ACTA recebe `estadoPerfil: "CADASTRO_NAO_INICIADO"` e pode iniciar o onboarding; um perfil localizado recebe `estadoPerfil: "PERFIL_CRIADO"` e os dados do usuário. A ausência de perfil não significa sessão inválida. Para vincular um usuário existente, use `POST /auth/ativar` com convite e e-mail verificado.
+Os fluxos de identidade ficam na `acta-auth-api`: consulta de perfil (`GET /me`), ativação, onboarding e convites. A PG não expõe cópias dessas rotas.
 
 Na auditoria do cadastro inicial de empresa, `auditoria.log_auditoria.id_usuario = 0` é reservado para identificar operações iniciadas por uma identidade Firebase verificada antes da existência de um usuário ACTA. A API define `app.current_user_id = 0` apenas na transação e no ramo de criação de uma empresa nova; o UID Firebase permanece vinculado ao usuário criado. O valor `0` não representa um usuário ACTA.
 
@@ -108,7 +109,6 @@ Todas as rotas abaixo exigem Firebase ID Token, exceto `GET /api/v1/health`.
 
 | Domínio | Rotas |
 | --- | --- |
-| Sessão | `POST /auth/ativar`, `GET /me` |
 | Empresa | `GET/POST /empresa`, `GET/PATCH/DELETE /empresa/{id}`; endereços, e-mails e telefones em `/empresa/{idEmpresa}/...` |
 | Pessoas | `GET/POST /colaborador`, `GET/PATCH/DELETE /colaborador/{id}`; `POST /usuario`, `GET/PATCH/DELETE /usuario/{id}` |
 | Ciclo | `GET/POST /ciclo`, `GET/PATCH/DELETE /ciclo/{id}`, `PATCH /ciclo/{id}/status`, participantes em `/ciclo/{idCiclo}/usuario` |
@@ -179,7 +179,7 @@ O formato confirmado é:
 - `dto/` e `dto/mapper/`: contratos e mapeamento MapStruct.
 - `common/`: segurança, validação, patch, Swagger e erros.
 
-A API é stateless. `common/config/security/SecurityConfig.java` registra `FirebaseAuthFilter`, enquanto `FirebaseUtils` valida token, revogação e status de usuário, empresa e colaborador. `AuthService` e `@PreAuthorize` nos serviços aplicam regras de proprietário, papel e escopo da empresa.
+A API é stateless. `AuthApiFilter` encaminha o Bearer token à `acta-auth-api` e monta o contexto de usuário aprovado. A PG mantém as regras dos recursos, o escopo da empresa e `app.current_user_id` nas próprias transações.
 
 ## 📁 Estrutura
 
