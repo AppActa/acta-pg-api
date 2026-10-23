@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthApiClient client, ObjectMapper mapper){
-        http.csrf(AbstractHttpConfigurer::disable)
+        http
                 .cors(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
