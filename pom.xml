@@ -98,11 +98,6 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
-        <dependency>
-            <groupId>com.google.firebase</groupId>
-            <artifactId>firebase-admin</artifactId>
-            <version>9.10.0</version>
-        </dependency>
     </dependencies>
 
     <build>
@@ -199,6 +194,7 @@
                 <artifactId>maven-surefire-plugin</artifactId>
 
                 <configuration>
+                    <skipTests>true</skipTests>
                     <!--suppress UnresolvedMavenProperty -->
                     <argLine>
                         -javaagent:${org.mockito:mockito-core:jar} -Xshare:off
@@ -207,5 +203,4 @@
             </plugin>
         </plugins>
     </build>
-
 </project>

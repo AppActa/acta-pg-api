@@ -25,8 +25,6 @@ import com.google.i18n.phonenumbers.NumberParseException;
 import br.com.acta.common.handler.exception.ActiveEntityDeletionException;
 import br.com.acta.common.handler.exception.BusinessRuleException;
 import br.com.acta.common.handler.exception.CircularDependencyException;
-import br.com.acta.common.handler.exception.FirebaseAccessRevokedException;
-import br.com.acta.common.handler.exception.FirebaseIdTokenException;
 import br.com.acta.common.handler.exception.ForbiddenOperationException;
 import br.com.acta.common.handler.exception.ImmutableFieldException;
 import br.com.acta.common.handler.exception.InexistentFieldException;
@@ -45,20 +43,6 @@ import lombok.extern.slf4j.Slf4j;
 @ControllerAdvice
 @Slf4j
 public class GlobalExceptionHandler {
-    @ExceptionHandler(FirebaseIdTokenException.class)
-    public ResponseEntity<ErroResponse> handleFirebaseIdToken(FirebaseIdTokenException fite){
-        log.error("mensagem", fite);
-        return ResponseEntity.status(HttpStatus.UNAUTHORIZED)
-                .body(new ErroResponse(List.of(fite.getMessage()), 401));
-    }
-
-    @ExceptionHandler(FirebaseAccessRevokedException.class)
-    public ResponseEntity<ErroResponse> handleFirebaseAccessRevoked(FirebaseAccessRevokedException fare){
-        log.error("mensagem", fare);
-        return ResponseEntity.status(HttpStatus.FORBIDDEN)
-                .body(new ErroResponse(List.of(fare.getMessage()), 403));
-    }
-
     @ExceptionHandler(AuthenticationCredentialsNotFoundException.class)
     public ResponseEntity<ErroResponse> handleAuthenticationCredentialsNotFound(AuthenticationCredentialsNotFoundException acnfe){
         log.error("mensagem", acnfe);
