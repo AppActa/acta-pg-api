@@ -13,10 +13,10 @@ import org.springframework.http.ResponseEntity;
 @Tag(name = "Saúde", description = SwaggerOpenapiDescriptions.HEALTH_CONTROLLER)
 public interface HealthOpenapi {
 
-    @Operation(summary = "Verifica a saúde da API", security = {})
+    @Operation(summary = "Verifica a saúde da API")
     @ApiResponses({
-            @ApiResponse(responseCode = "200", description = "API e banco de dados disponíveis", content = @Content(schema = @Schema(implementation = HealthResponseDTO.class))),
-            @ApiResponse(responseCode = "503", description = "Banco de dados indisponível", content = @Content(schema = @Schema(implementation = HealthResponseDTO.class)))
+            @ApiResponse(responseCode = "200", description = "API, banco, Auth API e FCM disponíveis", content = @Content(schema = @Schema(implementation = HealthResponseDTO.class))),
+            @ApiResponse(responseCode = "503", description = "Um ou mais componentes indisponíveis", content = @Content(schema = @Schema(implementation = HealthResponseDTO.class)))
     })
     ResponseEntity<HealthResponseDTO> verificar();
 }

@@ -30,6 +30,13 @@ public class FcmApiClient {
         publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_REATRIBUIDA, chave, idTarefa, idEmpresa, idDestinatario));
     }
 
+    public boolean verificarSaude() {
+        try {
+            REST_CLIENT.get().uri("/api/v1/health").retrieve().toBodilessEntity();
+            return true;
+        } catch (RestClientException rce) { return false; }
+    }
+
     public void publicarAtribuicao(long idTarefa, long idEmpresa, long idDestinatario) {
         String chave = "tarefa-atribuida-" + idTarefa + "-" + idDestinatario;
         publicarAposCommit(() -> publicarEventoTarefa(TipoEventoNotificacao.TAREFA_ATRIBUIDA, chave, idTarefa, idEmpresa, idDestinatario));

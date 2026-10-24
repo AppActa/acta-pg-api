@@ -4,6 +4,7 @@ import br.com.acta.common.config.security.AuthContext;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 @RequiredArgsConstructor
 public class AuthApiClient {
@@ -15,5 +16,12 @@ public class AuthApiClient {
                 .header(HttpHeaders.AUTHORIZATION, authorization)
                 .retrieve()
                 .body(AuthContext.class);
+    }
+
+    public boolean verificarSaude() {
+        try {
+            authApiRestClient.get().uri("/api/v1/health").retrieve().toBodilessEntity();
+            return true;
+        } catch (RestClientException rce) { return false; }
     }
 }
