@@ -7,6 +7,8 @@ import java.time.OffsetDateTime;
 public record HealthResponseDTO(
         HealthStatus status,
         HealthStatus banco,
+        HealthStatus auth,
+        HealthStatus fcm,
         String mensagem,
 
         @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ssXXX")
