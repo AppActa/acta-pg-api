@@ -52,7 +52,7 @@ public class SecurityConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, AuthApiClient client, ObjectMapper mapper){
-        http.csrf(AbstractHttpConfigurer::disable)
+        http.csrf(csrf -> csrf.ignoringRequestMatchers("/api/**"))
                 .cors(Customizer.withDefaults())
                 .formLogin(AbstractHttpConfigurer::disable)
                 .httpBasic(AbstractHttpConfigurer::disable)
@@ -71,7 +71,7 @@ public class SecurityConfig {
     }
 
     private void erro(ObjectMapper mapper, HttpServletResponse resp, HttpStatus status, String msg) throws IOException {
-        resp.setStatus(HttpStatus.UNAUTHORIZED.value());
+        resp.setStatus(status.value());
         resp.setContentType(MediaType.APPLICATION_JSON_VALUE);
         resp.setCharacterEncoding(StandardCharsets.UTF_8.name());
 
