@@ -18,12 +18,17 @@ import java.util.UUID;
 @Component
 public class FcmApiClient {
     private static final RestClient REST_CLIENT = RestClient.create();
+    private final RestClient healthClient;
 
-    @Value("${acta.fcm-api.url:}")
-    private String baseUrl;
+    private final String baseUrl;
 
     @Value("${acta.fcm-api.internal-token:}")
     private String internalToken;
+
+    public FcmApiClient(@Value("${acta.fcm-api.url:}") String baseUrl) {
+        this.baseUrl = baseUrl;
+        this.healthClient = RestClient.builder().baseUrl(baseUrl.replaceAll("/+$", "")).build();
+    }
 
     public void publicarReatribuicao(long idTarefa, long idEmpresa, long idDestinatario) {
         String chave = "tarefa-reatribuida-" + idTarefa + "-" + idDestinatario + "-" + UUID.randomUUID();
@@ -32,7 +37,7 @@ public class FcmApiClient {
 
     public boolean verificarSaude() {
         try {
-            REST_CLIENT.get().uri("/api/v1/health").retrieve().toBodilessEntity();
+            healthClient.get().uri("/api/v1/health").retrieve().toBodilessEntity();
             return true;
         } catch (RestClientException rce) { return false; }
     }
