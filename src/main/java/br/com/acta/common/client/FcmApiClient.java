@@ -37,7 +37,7 @@ public class FcmApiClient {
 
     public boolean verificarSaude() {
         try {
-            healthClient.get().uri("/api/v1/health").retrieve().toBodilessEntity();
+            healthClient.get().uri("/health").retrieve().toBodilessEntity();
             return true;
         } catch (RestClientException rce) { return false; }
     }
