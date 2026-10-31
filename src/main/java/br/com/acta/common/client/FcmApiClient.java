@@ -5,6 +5,7 @@ import br.com.acta.dto.evento.EventoNotificacaoRequestDTO;
 import br.com.acta.dto.evento.TipoEventoNotificacao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
@@ -17,7 +18,9 @@ import java.util.UUID;
 
 @Component
 public class FcmApiClient {
-    private static final RestClient REST_CLIENT = RestClient.create();
+    private static final RestClient REST_CLIENT = RestClient.builder()
+            .requestFactory(new SimpleClientHttpRequestFactory())
+            .build();
     private final RestClient healthClient;
 
     private final String baseUrl;
