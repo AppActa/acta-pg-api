@@ -20,6 +20,8 @@ import br.com.acta.entity.join.UsuarioCiclo;
 import br.com.acta.entity.pdca.Ciclo;
 import br.com.acta.repository.padrao.CicloRepository;
 import br.com.acta.service.base.BaseService;
+import jakarta.persistence.EntityManager;
+import jakarta.persistence.PersistenceContext;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -40,6 +42,8 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
     private final UsuarioService usuarioService;
     private final EmpresaService empresaService;
     private final FcmApiClient fcmApiClient;
+    @PersistenceContext
+    private EntityManager entityManager;
 
     public CicloService(CicloRepository repo, CicloMapper mapper, UsuarioService usuarioService, EmpresaService empresaService, AuthService authService, FcmApiClient fcmApiClient) {
         super(repo, mapper, authService);
@@ -84,10 +88,9 @@ extends BaseService <CicloRequestDTO, CicloResponseDTO, Ciclo>{
             if (!repo.podeEncerrarCiclo(id)) throw new ActiveEntityDeletionException("ciclo");
 
             repo.encerrarCiclo(id);
-            Ciclo cicloConcluido = getEntity(id);
-            if (statusAnterior != StatusCiclo.CONCLUIDO && cicloConcluido.getStatus() == StatusCiclo.CONCLUIDO)
-                notificarParticipantes(cicloConcluido, TipoEventoNotificacao.CICLO_CONCLUIDO);
-            return mapper.toResponse(cicloConcluido);
+            entityManager.refresh(ciclo);
+            if (statusAnterior != StatusCiclo.CONCLUIDO && ciclo.getStatus() == StatusCiclo.CONCLUIDO) notificarParticipantes(ciclo, TipoEventoNotificacao.CICLO_CONCLUIDO);
+            return mapper.toResponse(ciclo);
         }
 
         if (!ciclo.getStatus().podeAtualizarStatus(status)) throw new StatusUpdateException(ciclo.getStatus().toString(), status.toString());
